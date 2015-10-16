@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="trustStoreType">jks</entry>
+    <entry key="trustStoreFile">truststore.jks</entry>
+    <entry key="trustStorePassword">changeit</entry>
+
+    <entry key="proxyHost2">10.64.1.1</entry>
+    <entry key="proxyPort">8080</entry>
+
+    <entry key="keyStoreType">PKCS12</entry>
+    <entry key="keyStoreFile">ca.ip6.li.macbook.p12</entry>
+    <entry key="keyStorePassword">geheim</entry>
+
+    <entry key="caName">ip6li user ca</entry>
+    <entry key="CertificateProfileName">ip6.li user ca certificate profile</entry>
+    <entry key="EndEntityProfileName">ip6.li user ca entity profile</entry>
+</properties>
