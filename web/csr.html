@@ -39,43 +39,47 @@
             </select>
         </p>
 
-        <p>
+        <div>
 
-        <div id="cn_group" class="input_group">
-            <label for="cn" style="font-weight:bold">cn:</label>
-            <input type="text" id="cn"/>
+            <div id="cn_group" class="input_group">
+                <label for="cn" style="font-weight:bold">cn:</label>
+                <input type="text" id="cn"/>
+            </div>
+
+            <div id="c_group" class="input_group">
+                <label for="country" style="font-weight:bold">Country:</label>
+                <select id="country"></select>
+            </div>
+
         </div>
 
-        <div id="c_group" class="input_group">
-            <label for="country" style="font-weight:bold">Country:</label>
-            <select id="country"/>
+        <div id="div_create">
+            <a id="create" onclick="create_PKCS10($('#cn').val(),$('#country').val());">Create</a>
         </div>
-    </p>
 
-<a id="create" onclick="create_PKCS10($('#cn').val(),$('#country').val());">Create</a>
+        <a id="parse" style="display: none;" onclick="parse_PKCS10();">Parse</a>
+        <a id="verify" style="display: none;" onclick="verify_PKCS10();">Verify</a>
 
-<a id="parse" style="display: none;" onclick="parse_PKCS10();">Parse</a>
-<a id="verify" style="display: none;" onclick="verify_PKCS10();">Verify</a>
+        <div id="password"></div>
 
-<div id="password"/>
-
-</div>
-<div id="pkcs10-data-block" style="display:none;">
-    <h2 id="pkcs10-subject-cn"></h2>
-
-    <div class="two-col">
-        <p class="subject">Subject:</p>
-        <ul id="pkcs10-subject"></ul>
     </div>
-    <p><span class="type">Public Key Size (Bits):</span> <span id="keysize">key size</span></p>
+    <div id="pkcs10-data-block" style="display:none;">
+        <h2 id="pkcs10-subject-cn"></h2>
 
-    <p><span class="type">Signature Algorithm:</span> <span id="sig-algo">signature algorithm</span></p>
+        <div class="two-col">
+            <p class="subject">Subject:</p>
+            <ul id="pkcs10-subject"></ul>
+        </div>
+        <p><span class="type">Public Key Size (Bits):</span> <span id="keysize">key size</span></p>
 
-    <div id="pkcs10-attributes" class="two-col" style="display:none;">
-        <p class="subject">Attributes:</p>
-        <ul id="pkcs10-exten"></ul>
+        <p><span class="type">Signature Algorithm:</span> <span id="sig-algo">signature algorithm</span></p>
+
+        <div id="pkcs10-attributes" class="two-col" style="display:none;">
+            <p class="subject">Attributes:</p>
+            <ul id="pkcs10-exten"></ul>
+        </div>
+
     </div>
-</div>
 </div>
 <div id="spinner"></div>
 
