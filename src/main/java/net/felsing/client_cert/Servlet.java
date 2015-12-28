@@ -1,10 +1,9 @@
 package net.felsing.client_cert;
 
-import net.felsing.client_cert.ejbca.*;
-import net.felsing.client_cert.utilities.EjbcaToolBox;
-import net.felsing.client_cert.utilities.LoadProperties;
-import net.felsing.client_cert.utilities.TLS_Utils;
-import org.json.simple.JSONObject;
+import net.felsing.client_cert.utilities.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,54 +13,66 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
+import java.util.HashMap;
 import java.util.Properties;
-
-import org.apache.cxf.endpoint.Client;
-import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.transport.http.HTTPConduit;
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
-
-
 
 
 /**
  * Created by cf on 23.08.15.
+ * <p>
+ * Servlet handler
  */
+
 
 @WebServlet(urlPatterns = "/req")
 public class Servlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(Servlet.class);
 
-    private boolean servletIsReady=false;
+    private boolean servletIsReady = false;
     private static Properties properties = null;
 
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
 
-        StringBuffer sb=new StringBuffer();
-        String line=null;
+        StringBuffer sb = new StringBuffer();
+        String line;
         try {
             BufferedReader bufferedReader = req.getReader();
-            while ((line=bufferedReader.readLine())!=null) {
-                sb.append(line+"\n");
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line + "\n");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
         }
 
-        PrintWriter pw=resp.getWriter();
-        EjbcaToolBox ejbcaToolBox=new EjbcaToolBox(properties);
+        PrintWriter pw = null;
+        try {
+            pw = resp.getWriter();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
 
-        //String caList=ejbcaToolBox.getAvailableCas().toJSONString();
-        //pw.print(caList);
+        JsonProcessor jsonProcessor=new JsonProcessor();
+        String subject = jsonProcessor.getSubject(sb.toString());
+        String pkcs10req=jsonProcessor.getCertificate(sb.toString());
+        HashMap<String,String> attributes=CertificateFabric.getAttributes(subject);
 
-        String pem=ejbcaToolBox.ejbcaCertificateRequest("JoeTest","geheim1234567",sb.toString(),"joe.test@felsing.net");
+        attributes.forEach((k,v)->{
+            System.out.println("key: "+k+", value: "+v);
+        });
+
+        EjbcaToolBox ejbcaToolBox = new EjbcaToolBox(properties);
+        String cn=attributes.get("cn");
+        String email="joe.test@example.com";
+        try {
+            email = attributes.get("e_");
+        } catch (NullPointerException e) {
+            logger.warn("E-Mail ist null");
+        }
+        String password=Utilities.generatePassword();
+        String pem=ejbcaToolBox.ejbcaCertificateRequest("Joe Test",password,pkcs10req,"joe.test@example.net");
         pw.print(pem);
 
         pw.flush();
@@ -69,9 +80,9 @@ public class Servlet extends HttpServlet {
 
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(!servletIsReady) return;
-        PrintWriter pw=resp.getWriter();
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!servletIsReady) return;
+        PrintWriter pw = resp.getWriter();
 
         pw.println("Hello world!");
         pw.flush();
@@ -81,15 +92,26 @@ public class Servlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        String realPath=getServletContext().getRealPath("/WEB-INF/classes/client-cert.xml");
-        properties= LoadProperties.load(realPath);
+        String realPath = getServletContext().getRealPath("/WEB-INF/classes/client-cert.xml");
+        properties = LoadProperties.load(realPath);
         String fileName;
-        fileName=properties.getProperty("trustStoreFile");
-        properties.setProperty("trustStoreFile",getServletContext().getRealPath("/WEB-INF/classes/"+fileName));
-        fileName=properties.getProperty("keyStoreFile");
-        properties.setProperty("keyStoreFile",getServletContext().getRealPath("/WEB-INF/classes/"+fileName));
+        assert properties != null;
+        fileName = properties.getProperty(Constants.trustStoreFile);
+        properties.setProperty(Constants.trustStoreFile, getServletContext().getRealPath("/WEB-INF/classes/" + fileName));
+        fileName = properties.getProperty(Constants.keyStoreFile);
+        properties.setProperty(Constants.keyStoreFile, getServletContext().getRealPath("/WEB-INF/classes/" + fileName));
 
-        servletIsReady=true;
+        servletIsReady = true;
     }
+
+
+    public boolean validateReq(String req) {
+        if (req.length() > Constants.maxReqLength) {
+            return false;
+        }
+
+        return true;
+    }
+
 
 }  //class

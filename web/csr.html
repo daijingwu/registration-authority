@@ -7,15 +7,6 @@
 
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
-
-    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-    <script type="application/javascript" src="js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/PKI.js/org/pkijs/common.js"></script>
-    <script type="text/javascript" src="js/ASN1.js/org/pkijs/asn1.js"></script>
-    <script type="text/javascript" src="js/PKI.js/org/pkijs/x509_schema.js"></script>
-    <script type="text/javascript" src="js/PKI.js/org/pkijs/x509_simpl.js"></script>
-    <script type="text/javascript" src="js/forge.min.js"></script>
-    <script type="text/javascript" src="js/csr.js"></script>
 </head>
 
 <body>
@@ -41,6 +32,11 @@
 
         <div>
 
+            <div id="email_group" class="input_group">
+                <label for="email" style="font-weight:bold">email:</label>
+                <input type="text" id="email"/>
+            </div>
+
             <div id="cn_group" class="input_group">
                 <label for="cn" style="font-weight:bold">cn:</label>
                 <input type="text" id="cn"/>
@@ -54,7 +50,7 @@
         </div>
 
         <div id="div_create">
-            <a id="create" onclick="create_PKCS10($('#cn').val(),$('#country').val());">Create</a>
+            <a id="create" onclick="create_PKCS10($('#cn').val(),$('#email').val(),$('#country').val());">Create</a>
         </div>
 
         <a id="parse" style="display: none;" onclick="parse_PKCS10();">Parse</a>
@@ -83,6 +79,14 @@
 </div>
 <div id="spinner"></div>
 
+<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+<script type="application/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/PKI.js/org/pkijs/common.js"></script>
+<script type="text/javascript" src="js/ASN1.js/org/pkijs/asn1.js"></script>
+<script type="text/javascript" src="js/PKI.js/org/pkijs/x509_schema.js"></script>
+<script type="text/javascript" src="js/PKI.js/org/pkijs/x509_simpl.js"></script>
+<script type="text/javascript" src="js/forge.min.js"></script>
+<script type="text/javascript" src="js/csr.js"></script>
 
 </body>
 </html>

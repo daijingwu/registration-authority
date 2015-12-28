@@ -52,7 +52,7 @@ function stringToArrayBuffer(str) {
 //*********************************************************************************
 // #region Create PKCS#10
 //*********************************************************************************
-function create_PKCS10(cn, country) {
+function create_PKCS10(cn, email, country) {
     // #region Initial variables
     var sequence = Promise.resolve();
 
@@ -118,6 +118,10 @@ function create_PKCS10(cn, country) {
     pkcs10_simpl.subject.types_and_values.push(
         new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
             {type: "2.5.4.3", value: new org.pkijs.asn1.UTF8STRING({value: cn})}
+        ));
+    pkcs10_simpl.subject.types_and_values.push(
+        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
+            {type: "1.2.840.113549.1.9.1", value: new org.pkijs.asn1.UTF8STRING({value: email})}
         ));
 
     pkcs10_simpl.attributes = new Array();
@@ -222,12 +226,16 @@ function create_PKCS10(cn, country) {
 
     sequence.then(
         function(result) {
+            var ajaxData={};
+            ajaxData.pkcs10=result;
+            JSON.stringify(ajaxData);
+
             $('create').hide();
             openDialog();
             var jqxhr = $.ajax({
                 url: "/req",
                 method: "POST",
-                data: result
+                data: JSON.stringify(ajaxData)
             })
                 .done(function(certificateChain) {
                     closeDialog();

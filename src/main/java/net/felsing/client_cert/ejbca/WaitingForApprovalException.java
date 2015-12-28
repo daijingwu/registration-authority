@@ -51,8 +51,8 @@ public class WaitingForApprovalException {
      * <p>
      * Sie rufen diese "catch-all"-Eigenschaft aus folgendem Grund ab: 
      * Der Feldname "ApprovalId" wird von zwei verschiedenen Teilen eines Schemas verwendet. Siehe: 
-     * Zeile 670 von file:/Users/cf/IdeaProjects/client-cert/src/main/java/net/felsing/client_cert/ejbca/ejbcaws.wsdl
-     * Zeile 669 von file:/Users/cf/IdeaProjects/client-cert/src/main/java/net/felsing/client_cert/ejbca/ejbcaws.wsdl
+     * Zeile 670 von file:/Users/cf/IdeaProjects/ejbca-new-ra/src/main/java/net/felsing/client_cert/ejbca/ejbcaws2.wsdl
+     * Zeile 669 von file:/Users/cf/IdeaProjects/ejbca-new-ra/src/main/java/net/felsing/client_cert/ejbca/ejbcaws2.wsdl
      * <p>
      * Um diese Eigenschaft zu entfernen, wenden Sie eine Eigenschaftenanpassung für eine
      * der beiden folgenden Deklarationen an, um deren Namen zu ändern: 

@@ -4,6 +4,25 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <session-config>
+        <session-timeout>600</session-timeout>
+
+        <cookie-config>
+            <http-only>true</http-only>
+            <!-- Set in Production mode
+            <secure>true</secure>
+            -->
+        </cookie-config>
+
+        <tracking-mode>COOKIE</tracking-mode>
+
+    </session-config>
+
+    <context-param>
+        <param-name>log4jConfiguration</param-name>
+        <param-value>/WEB-INF/log4j2.xml</param-value>
+    </context-param>
+
     <welcome-file-list>
         <welcome-file>csr.html</welcome-file>
     </welcome-file-list>

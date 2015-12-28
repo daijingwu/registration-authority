@@ -1,14 +1,12 @@
 package net.felsing.client_cert.utilities;
 
+import com.google.gson.JsonObject;
 import net.felsing.client_cert.ejbca.*;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.json.simple.JSONObject;
-
 import javax.xml.namespace.QName;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -60,14 +58,14 @@ public class EjbcaToolBox {
     }
 
 
-    public JSONObject getAvailableCas() {
-        JSONObject jsonObject=new JSONObject();
+    public JsonObject getAvailableCas() {
+        JsonObject jsonObject=new JsonObject();
         try {
             java.util.List<NameAndId> _getAvailableCAs__return = port.getAvailableCAs();
             _getAvailableCAs__return.forEach((k) -> {
                 int id=k.getId();
                 String name=k.getName();
-                jsonObject.put(Integer.toString(id),name);
+                jsonObject.addProperty(Integer.toString(id),name);
                 System.out.println("getAvailableCAs.result: " + Integer.toString(id) + " : " + name);
             });
 
@@ -83,29 +81,29 @@ public class EjbcaToolBox {
     }
 
 
-    public JSONObject ejbcaFindUser (String username) {
+    public JsonObject ejbcaFindUser (String username) {
 
         UserMatch userMatch=new UserMatch();
         userMatch.setMatchtype(0);
         userMatch.setMatchvalue(username);
         userMatch.setMatchwith(0);
 
-        JSONObject jsonObject=new JSONObject();
+        JsonObject jsonObject=new JsonObject();
         int count=0;
         try {
             List<UserDataVOWS> found=port.findUser(userMatch);
             count=found.size();
-            jsonObject.put("found", Integer.toString(count));
+            jsonObject.addProperty("found", Integer.toString(count));
         } catch (Exception e) {
             e.printStackTrace();
-            jsonObject.put("result", "failed");
+            jsonObject.addProperty("result", "failed");
         }
 
         return jsonObject;
     }
 
 
-    public JSONObject ejbcaEditUser (String username,
+    public JsonObject ejbcaEditUser (String username,
                              String password,
                              String email
     ) {
@@ -123,12 +121,12 @@ public class EjbcaToolBox {
         userDataVOWS.setTokenType("USERGENERATED");
         userDataVOWS.setUsername(username);
 
-        JSONObject jsonObject=new JSONObject();
+        JsonObject jsonObject=new JsonObject();
         try {
             port.editUser(userDataVOWS);
         } catch (Exception e) {
             e.printStackTrace();
-            jsonObject.put("result","failed");
+            jsonObject.addProperty("result","failed");
         }
 
         return jsonObject;
