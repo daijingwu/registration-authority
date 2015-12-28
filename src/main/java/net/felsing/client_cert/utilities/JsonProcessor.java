@@ -34,8 +34,15 @@ public class JsonProcessor {
 
     public String getSubject(String req) {
         CertificateFabric certificateFabric = new CertificateFabric();
-        return certificateFabric.getReqData(getCertificate(req));
+        String subject;
+        try {
+            subject=certificateFabric.getReqData(getCertificate(req).replace("œ","@"));
+        } catch (NullPointerException e) {
+            subject=null;
+        }
+        return subject;
     }
+
 
 } // class
 

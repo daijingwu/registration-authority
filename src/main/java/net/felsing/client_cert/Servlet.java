@@ -36,7 +36,7 @@ public class Servlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String line;
         try {
             BufferedReader bufferedReader = req.getReader();
@@ -59,20 +59,21 @@ public class Servlet extends HttpServlet {
         String pkcs10req=jsonProcessor.getCertificate(sb.toString());
         HashMap<String,String> attributes=CertificateFabric.getAttributes(subject);
 
-        attributes.forEach((k,v)->{
-            System.out.println("key: "+k+", value: "+v);
-        });
+        attributes.forEach((k,v)-> System.out.println("key: "+k+", value: "+v));
 
         EjbcaToolBox ejbcaToolBox = new EjbcaToolBox(properties);
         String cn=attributes.get("cn");
-        String email="joe.test@example.com";
+        String email=null;
         try {
-            email = attributes.get("e_");
+            email = attributes.get("e");
         } catch (NullPointerException e) {
-            logger.warn("E-Mail ist null");
+            logger.warn("E-Mail is null");
         }
         String password=Utilities.generatePassword();
-        String pem=ejbcaToolBox.ejbcaCertificateRequest("Joe Test",password,pkcs10req,"joe.test@example.net");
+        System.out.println("email: "+email);
+        String pem=ejbcaToolBox.ejbcaCertificateRequest(cn,password,pkcs10req,email);
+
+        assert pw != null;
         pw.print(pem);
 
         pw.flush();
@@ -103,15 +104,5 @@ public class Servlet extends HttpServlet {
 
         servletIsReady = true;
     }
-
-
-    public boolean validateReq(String req) {
-        if (req.length() > Constants.maxReqLength) {
-            return false;
-        }
-
-        return true;
-    }
-
 
 }  //class
