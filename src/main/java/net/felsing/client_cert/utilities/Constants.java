@@ -10,6 +10,13 @@ public final class Constants {
 
     public static final String trustStoreFile="trustStoreFile";
     public static final String keyStoreFile="keyStoreFile";
+    public static final String trustStorePassword="trustStorePassword";
+
+    public static final String proxyHost="proxyHost";
+    public static final String proxyPort="proxyPort";
+    public static final String proxyUser="proxyUser";
+    public static final String proxyPassword="proxyPassword";
+
     public static final String emergencyPropertiesFile="/WEB-INF/classes/client-cert.xml";
     public static final String DEBUG="DEBUG";
     public static final int maxReqLength=16384;

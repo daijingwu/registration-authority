@@ -2,7 +2,6 @@ package net.felsing.client_cert.utilities;
 
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
-
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.security.KeyStore;
@@ -26,22 +25,24 @@ public class TLS_Utils {
     // ----
     // Some other methods and things
     // ---
-    public static final TLSClientParameters getTlsParams() {
+    public static TLSClientParameters getTlsParams() {
         return tlsParams;
     }
 
 
-    public static final void initializeConduitForSSL(Properties properties) throws Exception {
+    public static void initializeConduitForSSL(Properties properties) throws Exception {
 
-        String trustStoreFile = properties.getProperty("trustStoreFile");
-        String keyStoreFile = properties.getProperty("keyStoreFile");
+        String trustStoreFile = properties.getProperty(Constants.trustStoreFile);
+        String keyStoreFile = properties.getProperty(Constants.keyStoreFile);
         TrustManagerFactory tmf = null;
         KeyManagerFactory kmf = null;
 
         // set truststore
         if (trustStoreFile!=null) {
-            String trustStorePassword = properties.getProperty("trustStorePassword");
-            KeyStore trustStore = KeyStore.getInstance(properties.getProperty("trustStoreType"));
+            String trustStorePassword = properties.getProperty(Constants.trustStorePassword);
+            //KeyStore trustStore = KeyStore.getInstance(properties.getProperty("trustStoreType"));
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+
             trustStore.load(new FileInputStream(trustStoreFile),
                     trustStorePassword.toCharArray());
 

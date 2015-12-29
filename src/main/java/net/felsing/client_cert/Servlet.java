@@ -1,10 +1,12 @@
 package net.felsing.client_cert;
 
+
 import net.felsing.client_cert.utilities.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +43,7 @@ public class Servlet extends HttpServlet {
         try {
             BufferedReader bufferedReader = req.getReader();
             while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -59,23 +61,21 @@ public class Servlet extends HttpServlet {
         String pkcs10req=jsonProcessor.getCertificate(sb.toString());
         HashMap<String,String> attributes=CertificateFabric.getAttributes(subject);
 
-        attributes.forEach((k,v)-> System.out.println("key: "+k+", value: "+v));
-
         EjbcaToolBox ejbcaToolBox = new EjbcaToolBox(properties);
         String cn=attributes.get("cn");
-        String email=null;
         try {
-            email = attributes.get("e");
+            String email = attributes.get("e");
+            String country = attributes.get("c");
+
+            String password=Utilities.generatePassword();
+            String pem=ejbcaToolBox.ejbcaCertificateRequest(cn,password,pkcs10req,email,country);
+            assert pw != null;
+            pw.print(pem);
         } catch (NullPointerException e) {
-            logger.warn("E-Mail is null");
+            logger.warn("Parameter missing: "+e.getMessage());
         }
-        String password=Utilities.generatePassword();
-        System.out.println("email: "+email);
-        String pem=ejbcaToolBox.ejbcaCertificateRequest(cn,password,pkcs10req,email);
 
-        assert pw != null;
-        pw.print(pem);
-
+        assert pw!=null;
         pw.flush();
     }
 
@@ -93,15 +93,10 @@ public class Servlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        String realPath = getServletContext().getRealPath("/WEB-INF/classes/client-cert.xml");
-        properties = LoadProperties.load(realPath);
-        String fileName;
-        assert properties != null;
-        fileName = properties.getProperty(Constants.trustStoreFile);
-        properties.setProperty(Constants.trustStoreFile, getServletContext().getRealPath("/WEB-INF/classes/" + fileName));
-        fileName = properties.getProperty(Constants.keyStoreFile);
-        properties.setProperty(Constants.keyStoreFile, getServletContext().getRealPath("/WEB-INF/classes/" + fileName));
 
+        properties=PropertyLoader.getProperties();
+
+        assert properties != null;
         servletIsReady = true;
     }
 
