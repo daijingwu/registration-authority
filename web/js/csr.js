@@ -247,12 +247,8 @@ function create_PKCS10(cn, email, country) {
                     $('#password').empty().append(password);
 
                     var a = document.createElement("a");
-                    a.download = "certificate.p12";
-                    a.filename = "certificate.p12";
-                    a.title = "download certificate";
-                    a.href = uriContent;
-
-                    //window.location.href=uriContent;
+                    var blob = new File([b64toBlob(uriContent,"application/x-pkcs12")], "certificate.p12");
+                    a.href = URL.createObjectURL(blob);
                     window.location.href=a;
                 })
                 .fail(function() {
@@ -266,6 +262,31 @@ function create_PKCS10(cn, email, country) {
 }
 
 
+function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+}
+
+
 function genPKCS12(privateKey,certificateChain,password) {
 
     var pki = forge.pki;
@@ -274,8 +295,8 @@ function genPKCS12(privateKey,certificateChain,password) {
     // generate a p12 using AES (default)
     //var p12Asn1 = forge.pkcs12.toPkcs12Asn1(
     //  privateKey, certificateChain, 'password');
-    var p12Asn1 = forge.pkcs12.toPkcs12Asn1(
-        privateKey, certificateChain, password);
+    //var p12Asn1 = forge.pkcs12.toPkcs12Asn1(
+    //    privateKey, certificateChain, password);
 
     // generate a p12 that can be imported by Chrome/Firefox
     // (requires the use of Triple DES instead of AES)
@@ -287,9 +308,7 @@ function genPKCS12(privateKey,certificateChain,password) {
     var p12Der = forge.asn1.toDer(p12Asn1).getBytes();
     var p12b64 = forge.util.encode64(p12Der);
 
-    var uriContent = "data:application/x-pkcs12;charset=utf-8;base64," + p12b64;
-
-    return uriContent;
+    return p12b64;
 }
 
 
