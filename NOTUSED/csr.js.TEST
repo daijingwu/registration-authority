@@ -233,27 +233,18 @@ function create_PKCS10(cn, email, country) {
             $('create').hide();
             openDialog();
             var jqxhr = $.ajax({
-                    url: "/req",
-                    method: "POST",
-                    data: JSON.stringify(ajaxData)
-                })
+                url: "/req",
+                method: "POST",
+                data: JSON.stringify(ajaxData)
+            })
                 .done(function(certificateChain) {
                     closeDialog();
                     $('#create').hide();
                     var password=genPassword();
                     var uriContent=genPKCS12(privateKeyPem,certificateChain,password);
-                    var labelPassword="Your Password:";
-                    $('#lbl_password').empty().append(labelPassword);
-                    $('#password').empty().append(password);
-
-                    var a = document.createElement("a");
-                    a.download = "certificate.p12";
-                    a.filename = "certificate.p12";
-                    a.title = "download certificate";
-                    a.href = uriContent;
-
-                    //window.location.href=uriContent;
-                    window.location.href=a;
+                    $('#password').empty().append("Your password: "+password);
+                    window.location.href=uriContent;
+                    //alert( "success" );
                 })
                 .fail(function() {
                     alert( "error" );
@@ -263,6 +254,165 @@ function create_PKCS10(cn, email, country) {
                 });
         }
     )
+}
+
+
+//*********************************************************************************
+// #endregion
+//*********************************************************************************
+// #region Parse existing PKCS#10
+//*********************************************************************************
+function parse_PKCS10() {
+    // #region Initial activities
+    document.getElementById("pkcs10-subject").innerHTML = "";
+    document.getElementById("pkcs10-exten").innerHTML = "";
+
+    document.getElementById("pkcs10-data-block").style.display = "none";
+    document.getElementById("pkcs10-attributes").style.display = "none";
+    // #endregion
+
+    // #region Decode existing PKCS#10
+    var stringPEM = document.getElementById("pem-text-block").value.replace(/(-----(BEGIN|END) CERTIFICATE REQUEST-----|\n)/g, '');
+
+    var asn1 = org.pkijs.fromBER(stringToArrayBuffer(window.atob(stringPEM)));
+    var pkcs10_simpl = new org.pkijs.simpl.PKCS10({schema: asn1.result});
+    // #endregion
+
+    // #region Parse and display information about "subject"
+    var typemap = {
+        "2.5.4.6": "C",
+        "2.5.4.10": "OU",
+        "2.5.4.11": "O",
+        "2.5.4.3": "CN",
+        "2.5.4.7": "L",
+        "2.5.4.8": "S",
+        "2.5.4.12": "T",
+        "2.5.4.42": "GN",
+        "2.5.4.43": "I",
+        "2.5.4.4": "SN",
+        "1.2.840.113549.1.9.1": "E-mail"
+    };
+
+    for (var i = 0; i < pkcs10_simpl.subject.types_and_values.length; i++) {
+        var typeval = typemap[pkcs10_simpl.subject.types_and_values[i].type];
+        if (typeof typeval === "undefined")
+            typeval = pkcs10_simpl.subject.types_and_values[i].type;
+
+        var subjval = pkcs10_simpl.subject.types_and_values[i].value.value_block.value;
+        var ulrow = "<li><p><span>" + typeval + "</span> " + subjval + "</p></li>";
+
+        document.getElementById("pkcs10-subject").innerHTML = document.getElementById("pkcs10-subject").innerHTML + ulrow;
+        if (typeval == "CN")
+            document.getElementById("pkcs10-subject-cn").innerHTML = subjval;
+    }
+    // #endregion
+
+    // #region Put information about public key size
+    var publicKeySize = "< unknown >";
+
+    if (pkcs10_simpl.subjectPublicKeyInfo.algorithm.algorithm_id.indexOf("1.2.840.113549") !== (-1)) {
+        var asn1_publicKey = org.pkijs.fromBER(pkcs10_simpl.subjectPublicKeyInfo.subjectPublicKey.value_block.value_hex);
+        var rsa_publicKey_simple = new org.pkijs.simpl.x509.RSAPublicKey({schema: asn1_publicKey.result});
+        var modulus_view = new Uint8Array(rsa_publicKey_simple.modulus.value_block.value_hex);
+        var modulus_bit_length = 0;
+
+        if (modulus_view[0] === 0x00)
+            modulus_bit_length = (rsa_publicKey_simple.modulus.value_block.value_hex.byteLength - 1) * 8;
+        else
+            modulus_bit_length = rsa_publicKey_simple.modulus.value_block.value_hex.byteLength * 8;
+
+        publicKeySize = modulus_bit_length.toString();
+    }
+
+    document.getElementById("keysize").innerHTML = publicKeySize;
+    // #endregion
+
+    // #region Put information about signature algorithm
+    var algomap = {
+        "1.2.840.113549.1.1.2": "MD2 with RSA",
+        "1.2.840.113549.1.1.4": "MD5 with RSA",
+        "1.2.840.10040.4.3": "SHA1 with DSA",
+        "1.2.840.10045.4.1": "SHA1 with ECDSA",
+        "1.2.840.10045.4.3.2": "SHA256 with ECDSA",
+        "1.2.840.10045.4.3.3": "SHA384 with ECDSA",
+        "1.2.840.10045.4.3.4": "SHA512 with ECDSA",
+        "1.2.840.113549.1.1.10": "RSA-PSS",
+        "1.2.840.113549.1.1.5": "SHA1 with RSA",
+        "1.2.840.113549.1.1.14": "SHA224 with RSA",
+        "1.2.840.113549.1.1.11": "SHA256 with RSA",
+        "1.2.840.113549.1.1.12": "SHA384 with RSA",
+        "1.2.840.113549.1.1.13": "SHA512 with RSA"
+    };
+
+    var signatureAlgorithm = algomap[pkcs10_simpl.signatureAlgorithm.algorithm_id];
+    if (typeof signatureAlgorithm === "undefined")
+        signatureAlgorithm = pkcs10_simpl.signatureAlgorithm.algorithm_id;
+    else
+        signatureAlgorithm = signatureAlgorithm + " (" + pkcs10_simpl.signatureAlgorithm.algorithm_id + ")";
+
+    document.getElementById("sig-algo").innerHTML = signatureAlgorithm;
+    // #endregion
+
+    // #region Put information about PKCS#10 attributes
+    if ("attributes" in pkcs10_simpl) {
+        for (var i = 0; i < pkcs10_simpl.attributes.length; i++) {
+            var typeval = pkcs10_simpl.attributes[i].type;
+            var subjval = "";
+
+            for (var j = 0; j < pkcs10_simpl.attributes[i].values.length; j++) {
+                if ((pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.UTF8STRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.BMPSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.UNIVERSALSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.NUMERICSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.PRINTABLESTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.TELETEXSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.VIDEOTEXSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.IA5STRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.GRAPHICSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.VISIBLESTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.GENERALSTRING) ||
+                    (pkcs10_simpl.attributes[i].values[j] instanceof org.pkijs.asn1.CHARACTERSTRING)) {
+                    subjval = subjval + ((subjval.length === 0) ? "" : ";") + pkcs10_simpl.attributes[i].values[j].value_block.value;
+                }
+                else {
+                    subjval = subjval + ((subjval.length === 0) ? "" : ";") + pkcs10_simpl.attributes[i].values[j].block_name();
+                }
+            }
+
+            var ulrow = "<li><p><span>" + typeval + "</span> " + subjval + "</p></li>";
+            document.getElementById("pkcs10-exten").innerHTML = document.getElementById("pkcs10-exten").innerHTML + ulrow;
+        }
+
+        document.getElementById("pkcs10-attributes").style.display = "block";
+    }
+    // #endregion
+
+    document.getElementById("pkcs10-data-block").style.display = "block";
+}
+//*********************************************************************************
+// #endregion
+//*********************************************************************************
+// #region Verify existing PKCS#10
+//*********************************************************************************
+function verify_PKCS10() {
+    // #region Decode existing PKCS#10
+    var stringPEM = document.getElementById("pem-text-block").value.replace(/(-----(BEGIN|END) CERTIFICATE REQUEST-----|\n)/g, '');
+
+    var asn1 = org.pkijs.fromBER(stringToArrayBuffer(window.atob(stringPEM)));
+    var pkcs10_simpl = new org.pkijs.simpl.PKCS10({schema: asn1.result});
+    // #endregion
+
+    // #region Verify PKCS#10
+    pkcs10_simpl.verify().
+        then(
+        function (result) {
+            alert("Verification passed: " + result);
+        },
+        function (error) {
+            alert("Error during verification: " + error);
+        }
+    );
+    // #endregion
 }
 
 
@@ -295,8 +445,8 @@ function genPKCS12(privateKey,certificateChain,password) {
 
 function genPassword() {
     var text="";
-    var possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!§$%&/()=?#'+*~-_.:,;|";
-    for (var i=0;i<32;i++) {
+    var possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i=0;i<16;i++) {
         text+=possible.charAt(Math.floor(Math.random()*possible.length));
     }
     return text;
@@ -371,7 +521,6 @@ $(document).ready(function() {
 
 });
 
-
 function loadCountries () {
     $.get("json/countries.min.json")
         .then(function(data) {
@@ -386,4 +535,3 @@ function loadCountries () {
 
         });
 }
-

@@ -4,7 +4,7 @@ body {
 }
 
 .wrapper {
-    width: 600px;
+    width: 50em;
     margin: 50px auto;
     padding: 50px;
     border: solid 2px #CCC;
@@ -15,12 +15,15 @@ body {
     background: #FFF;
 }
 
-#add-pkcs10-block label {
+
+#add-pkcs10-block {
     display: block;
     font: bold 18px/22px Helvetica, Arial, sans-serif;
     margin: 0 0 8px;
 }
 
+
+/*
 #pem-text-block {
     width: 500px;
     border: solid 1px #999;
@@ -34,7 +37,9 @@ body {
     -webkit-box-shadow: 0 0 5px 5px #EFEFEF inset;
     padding: 20px;
 }
+*/
 
+/*
 #add-pkcs10-block a {
     display: inline-block;
     padding: 5px 15px;
@@ -43,11 +48,14 @@ body {
     color: #000;
     font: normal 14px/16px Helvetica, Arial, sans-serif;
 }
+*/
 
+/*
 #add-pkcs10-block a:hover {
     background: #DAEBF8;
     cursor: pointer;
 }
+
 
 #pkcs10-data-block {
     display: none;
@@ -58,34 +66,47 @@ body {
     padding: 20px 30px;
     background: #F0F4FF;
 }
+*/
 
+/*
 #pkcs10-data-block h2 {
     margin: 0 0 16px;
     font: bold 22px/24px Helvetica, Arial, sans-serif;
 }
+*/
 
+/*
 #pkcs10-data-block p {
     margin: 0 0 12px;
 }
+*/
 
+/*
 #pkcs10-data-block p .type {
     font-weight: bold;
     display: inline-block;
     width: 176px;
 }
+*/
 
+/*
 #pkcs10-data-block .two-col {
     overflow: hidden;
     margin: 0 0 16px;
 }
+*/
 
+/*
 #pkcs10-data-block .two-col .subject {
     width: 180px;
     font-weight: bold;
     margin: 0 0 12px;
     float: left;
 }
+*/
 
+
+/*
 #pkcs10-data-block .two-col #pkcs10-subject {
     margin: 0;
     padding: 0;
@@ -109,10 +130,15 @@ body {
     margin: 0;
     list-style-type: square;
 }
+*/
 
+
+/*
 textarea {
     resize: none;
 }
+*/
+
 
 #password {
     font-family: monospace;
@@ -136,17 +162,55 @@ textarea {
 
 
 .input_group {
+    padding-top: 0.5em;
     display: inline-block;
 }
 
 label {
     float: left;
-    width: 7em;
+    width: 10em;
     text-align: left;
-    margin-top: 1em;
     margin-left: 1em;
+    display: block;
+    font: bold 18px/22px Helvetica, Arial, sans-serif;
 }
+
+
+.label {
+    float: left;
+    width: 10em;
+    text-align: left;
+    margin-left: 1em;
+    display: block;
+    font: bold 18px/22px Helvetica, Arial, sans-serif;
+}
+
 
 input {
     width: 30em;
+}
+
+#div_create {
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+#div_password {
+    display: inline-block;
+    width: 100%;
+}
+
+#password {
+    font: bold 18px/22px Monospaced;
+}
+
+button {
+    display: inline-block;
+    height: 3em;
+    width: 20em;
+    margin-left: 1em;
+    background: #ACD0EC;
+    border: solid 1px #4C6181;
+    color: #000;
+    font: bold 14px/16px Helvetica, Arial, sans-serif;
 }

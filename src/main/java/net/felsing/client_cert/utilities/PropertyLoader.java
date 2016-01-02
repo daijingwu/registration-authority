@@ -27,7 +27,7 @@ public final class PropertyLoader {
      * NOTE: LAST wins!
      */
     private static void loadProperties() {
-        propertyfileLocations.add(Constants.emergencyPropertiesFile);
+        //propertyfileLocations.add(Constants.emergencyPropertiesFile);
         propertyfileLocations.add("/media/cf/Development/ejbca-new-ra.properties.xml");
         propertyfileLocations.add("/home/newuser/ejbca-new-ra.properties.xml");
         propertyfileLocations.add("/Users/cf/Development/SignOn-Config/ejbca-new-ra.properties.xml");
@@ -41,7 +41,7 @@ public final class PropertyLoader {
                 properties=test;
                 logger.info("Using properties file "+v);
             } catch (Exception e) {
-                logger.info("Tried properties file "+v+": Not found. This is not an error, if at least one time Using properties file occurs.");
+                //logger.info("Tried properties file "+v+": Not found. This is not an error, if at least one time Using properties file occurs.");
             }
         });
         if (properties==null) {

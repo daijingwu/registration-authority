@@ -8,6 +8,9 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javax.xml.namespace.QName;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
@@ -22,17 +25,13 @@ import java.util.Properties;
 public class EjbcaToolBox {
     private static final Logger logger = LogManager.getLogger(EjbcaToolBox.class);
 
-    private URL wsdlURL;
     private EjbcaWS port;
     private Properties properties;
     private static final QName SERVICE_NAME = new QName("http://ws.protocol.core.ejbca.org/", "EjbcaWSService");
-    private static final String TLS_VERSION = "TLSv1.2";
 
 
     public EjbcaToolBox(Properties properties) {
         this.properties = properties;
-
-        System.out.println("trustStoreFile 1: "+properties.getProperty(Constants.trustStoreFile));
 
         // proxy stuff
         String proxyHost = properties.getProperty(Constants.proxyHost, null);
@@ -50,7 +49,17 @@ public class EjbcaToolBox {
             System.setProperty("http.proxyPassword", proxyPassword);
         }
 
-        wsdlURL = EjbcaWSService.WSDL_LOCATION;
+        URL wsdlURL = EjbcaWSService.WSDL_LOCATION;
+        try {
+            URL newWsdlURL = new URL (properties.getProperty("wsdlLocationUrl"));
+            File wsdlFile=new File(newWsdlURL.getFile());
+            if (!wsdlFile.canRead()) throw new FileNotFoundException("File "+wsdlFile.getAbsolutePath()+" not found");
+            wsdlURL =newWsdlURL;
+        } catch (MalformedURLException e) {
+            logger.warn("Not an URL: "+e.getMessage());
+        } catch (FileNotFoundException e) {
+            logger.warn("WSDL not found on specified location: "+e.getMessage());
+        }
         EjbcaWSService ss = new EjbcaWSService(wsdlURL, SERVICE_NAME);
         port = ss.getEjbcaWSPort();
 
@@ -95,7 +104,7 @@ public class EjbcaToolBox {
         userMatch.setMatchwith(0);
 
         JsonObject jsonObject = new JsonObject();
-        int count = 0;
+        int count;
         try {
             List<UserDataVOWS> found = port.findUser(userMatch);
             count = found.size();

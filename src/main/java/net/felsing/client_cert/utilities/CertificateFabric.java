@@ -1,7 +1,6 @@
 package net.felsing.client_cert.utilities;
 
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import org.apache.cxf.common.i18n.Exception;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

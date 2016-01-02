@@ -6,14 +6,22 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="hdr" class="net.felsing.client_cert.utilities.CsrBeans"/>
+
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8"/>
-    <title>PKCS#10 complex example</title>
+    <title>${hdr.title}</title>
 
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript">
+        var schema =${hdr.formSchema};
+        $("#test").empty().text(schema);
+    </script>
 </head>
 
 <body>
@@ -37,56 +45,24 @@
             </select>
         </p>
 
-        <div>
-
-            <div id="email_group" class="input_group">
-                <label for="email" style="font-weight:bold">email:</label>
-                <input type="text" id="email"/>
-            </div>
-
-            <div id="cn_group" class="input_group">
-                <label for="cn" style="font-weight:bold">cn:</label>
-                <input type="text" id="cn"/>
-            </div>
-
-            <div id="c_group" class="input_group">
-                <label for="country" style="font-weight:bold">Country:</label>
-                <select id="country"></select>
-            </div>
-
+        <div id="ra_form">
+            ${hdr.form}
         </div>
 
         <div id="div_create">
-            <a id="create" onclick="create_PKCS10($('#cn').val(),$('#email').val(),$('#country').val());">Create</a>
+            <button id="create" type="button" onclick="create_PKCS10($('#cn').val(),$('#e').val(),$('#country').val());">Create PKCS#12 Keystore</button>
         </div>
 
-        <a id="parse" style="display: none;" onclick="parse_PKCS10();">Parse</a>
-        <a id="verify" style="display: none;" onclick="verify_PKCS10();">Verify</a>
-
-        <div id="password"></div>
-
+        <div id="div_password">
+            <div id="lbl_password" class="label"></div>
+            <div id="password"></div>
+        </div>
     </div>
-    <div id="pkcs10-data-block" style="display:none;">
-        <h2 id="pkcs10-subject-cn"></h2>
 
-        <div class="two-col">
-            <p class="subject">Subject:</p>
-            <ul id="pkcs10-subject"></ul>
-        </div>
-        <p><span class="type">Public Key Size (Bits):</span> <span id="keysize">key size</span></p>
-
-        <p><span class="type">Signature Algorithm:</span> <span id="sig-algo">signature algorithm</span></p>
-
-        <div id="pkcs10-attributes" class="two-col" style="display:none;">
-            <p class="subject">Attributes:</p>
-            <ul id="pkcs10-exten"></ul>
-        </div>
-
-    </div>
 </div>
+
 <div id="spinner"></div>
 
-<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 <script type="application/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/PKI.js/org/pkijs/common.js"></script>
 <script type="text/javascript" src="js/ASN1.js/org/pkijs/asn1.js"></script>
