@@ -6,7 +6,7 @@
 
     <groupId>net.felsing.client_cert</groupId>
     <artifactId>client-cert</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-ALPHA</version>
 
     <properties>
         <cxf.version>3.1.4</cxf.version>
