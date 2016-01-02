@@ -233,7 +233,7 @@ function create_PKCS10(cn, email, country) {
             $('create').hide();
             openDialog();
             var jqxhr = $.ajax({
-                    url: "/req",
+                    url: "req",
                     method: "POST",
                     data: JSON.stringify(ajaxData)
                 })
