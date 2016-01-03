@@ -20,37 +20,18 @@
     <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
         var schema =${hdr.formSchema};
-        $("#test").empty().text(schema);
     </script>
 </head>
 
 <body>
 <div class="wrapper">
     <div id="add-pkcs10-block">
-        <p style="display: none">
-            <label for="hash_alg" style="font-weight:bold">Hashing algorithm:</label>
-            <select id="hash_alg">
-                <option value="alg_SHA1">SHA-1</option>
-                <option value="alg_SHA256">SHA-256</option>
-                <option value="alg_SHA384">SHA-384</option>
-                <option value="alg_SHA512">SHA-512</option>
-            </select>
-        </p>
-        <p style="display: none">
-            <label for="sign_alg" style="font-weight:bold">Signature algorithm:</label>
-            <select id="sign_alg">
-                <option value="alg_RSA15">RSASSA-PKCS1-v1_5</option>
-                <option value="alg_RSA2">RSA-PSS</option>
-                <option value="alg_ECDSA">ECDSA</option>
-            </select>
-        </p>
-
         <div id="ra_form">
             ${hdr.form}
         </div>
 
         <div id="div_create">
-            <button id="create" type="button" onclick="create_PKCS10($('#cn').val(),$('#e').val(),$('#country').val());">Create PKCS#12 Keystore</button>
+            <button id="create" type="button" onclick="create_PKCS10($('#cn').val(),$('#e').val(),$('#c').val());">Create PKCS#12 Keystore</button>
         </div>
 
         <div id="div_password">

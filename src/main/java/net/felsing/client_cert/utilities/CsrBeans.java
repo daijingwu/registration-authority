@@ -15,8 +15,7 @@ import java.util.HashMap;
  */
 public final class CsrBeans {
     private static final Logger logger = LogManager.getLogger(EjbcaToolBox.class);
-
-    static HashMap<String, String> labels;
+    private static HashMap<String, String> labels;
 
 
     public static String getAttr(String k) {
@@ -33,24 +32,28 @@ public final class CsrBeans {
             CertificateAttributes certificateAttributes = new CertificateAttributes();
             labels = certificateAttributes.getLabels();
         }
-        StringBuffer form = new StringBuffer();
+        StringBuilder form = new StringBuilder();
         labels.forEach((k, v) -> {
             v=v.replaceAll("\"","");
-            if (k.equals("c")) {
-                form.append("<div id=\"" + k + "_group\" class=\"input_group\">\n");
-                form.append("  <label for=\"" + k + "\">" + v + "</label>\n");
-                form.append("  <select id=\"country\"></select>\n");
-                form.append("</div>\n");
-            } else if (k.equals("c")) {
-                form.append("<div id=\"" + k + "_group\" class=\"input_group\">\n");
-                form.append("  <label for=\"" + k + "\">" + v + "</label>\n");
-                form.append("  <select id=\"state\"></select>\n");
-                form.append("</div>\n");
-            } else {
-                form.append("<div id=\"" + k + "_group\" class=\"input_group\">\n");
-                form.append("  <label for=\"" + k + "\">" + v + "</label>\n");
-                form.append("  <input type=\"text\" id=\"" + k + "\"/>\n");
-                form.append("</div>\n");
+            switch (k) {
+                case "c":
+                    form.append("<div id=\"").append(k).append("_group\" class=\"input_group\">\n");
+                    form.append("  <label for=\"").append(k).append("\">").append(v).append("</label>\n");
+                    form.append("  <select id=\"c\"></select>\n");
+                    form.append("</div>\n");
+                    break;
+                case "st":
+                    form.append("<div id=\"").append(k).append("_group\" class=\"input_group\">\n");
+                    form.append("  <label for=\"").append(k).append("\">").append(v).append("</label>\n");
+                    form.append("  <select id=\"st\"></select>\n");
+                    form.append("</div>\n");
+                    break;
+                default:
+                    form.append("<div id=\"").append(k).append("_group\" class=\"input_group\">\n");
+                    form.append("  <label for=\"").append(k).append("\">").append(v).append("</label>\n");
+                    form.append("  <input type=\"text\" id=\"").append(k).append("\"/>\n");
+                    form.append("</div>\n");
+                    break;
             }
         });
 

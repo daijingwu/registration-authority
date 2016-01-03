@@ -1,3 +1,61 @@
+"use strict";
+
+const oid_extnID="2.5.29.14";
+const oid_type="1.2.840.113549.1.9.14";
+
+const oid={
+    cn: "2.5.4.3",
+    c: "2.5.4.6",
+    email: "1.2.840.113549.1.9.1",
+    o: "2.5.4.10",
+    ou: "2.5.4.11",
+    l: "2.5.4.7",
+    st: "2.5.4.8",
+    street: "2.5.4.9"
+};
+
+const oid_syntax={
+    cn: "UTF8STRING",
+    c: "PRINTABLESTRING",
+    email: "UTF8STRING",
+    o: "UTF8STRING",
+    ou: "UTF8STRING",
+    l: "UTF8STRING",
+    st: "UTF8STRING",
+    street: "UTF8STRING"
+};
+
+
+function buildSubject(pkcs10_simpl) {
+    var subject="";
+    $.each(schema,function(k,v){
+        var fv=$("#"+k).val();
+        if (typeof fv!=="undefined") {
+            subject += "/" + k + "=" + fv;
+
+            var syntax=oid_syntax[k];
+            switch (syntax) {
+                case "PRINTABLESTRING":
+                    pkcs10_simpl.subject.types_and_values.push(
+                        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
+                            {type: oid[k], value: new org.pkijs.asn1.PRINTABLESTRING({value: fv})}
+                        ));
+                    break;
+                case "UTF8STRING":
+                    pkcs10_simpl.subject.types_and_values.push(
+                        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
+                            {type: oid[k], value: new org.pkijs.asn1.UTF8STRING({value: fv})}
+                        ));
+                    break;
+            }
+            console.log("pkcs10_simpl: %o",pkcs10_simpl);
+        }
+    });
+
+    return pkcs10_simpl;
+}
+
+
 //*********************************************************************************
 // #region Auxiliary functions
 //*********************************************************************************
@@ -63,42 +121,14 @@ function create_PKCS10(cn, email, country) {
     var privateKeyPem;
     var csr=null;
 
-    var hash_algorithm;
-    //var hash_option = document.getElementById("hash_alg").value;
-    var hash_option = "alg_SHA256";
-    switch (hash_option) {
-        case "alg_SHA1":
-            hash_algorithm = "sha-1";
-            break;
-        case "alg_SHA256":
-            hash_algorithm = "sha-256";
-            break;
-        case "alg_SHA384":
-            hash_algorithm = "sha-384";
-            break;
-        case "alg_SHA512":
-            hash_algorithm = "sha-512";
-            break;
-        default:
-            ;
-    }
+    //var hash_algorithm = "sha-1"; // broken
+    var hash_algorithm = "sha-256"; // works best
+    //var hash_algorithm = "sha-384";
+    //var hash_algorithm = "sha-512";
 
-    var signature_algorithm_name;
-    //var sign_option = document.getElementById("sign_alg").value;
-    var sign_option = "alg_RSA15";
-    switch (sign_option) {
-        case "alg_RSA15":
-            signature_algorithm_name = "RSASSA-PKCS1-V1_5";
-            break;
-        case "alg_RSA2":
-            signature_algorithm_name = "RSA-PSS";
-            break;
-        case "alg_ECDSA":
-            signature_algorithm_name = "ECDSA";
-            break;
-        default:
-            ;
-    }
+    var signature_algorithm_name = "RSASSA-PKCS1-V1_5"; // Works with all
+    //var signature_algorithm_name = "RSA-PSS"; // Chrome ok, FF: nok
+    //var signature_algorithm_name = "ECDSA"; // Anyone?
     // #endregion
 
     // #region Get a "crypto" extension
@@ -111,20 +141,23 @@ function create_PKCS10(cn, email, country) {
 
     // #region Put a static values
     pkcs10_simpl.version = 0;
+
+    //pkcs10_simpl=buildSubject(pkcs10_simpl);
+
     pkcs10_simpl.subject.types_and_values.push(
         new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
-            {type: "2.5.4.6", value: new org.pkijs.asn1.PRINTABLESTRING({value: country})}
+            {type: oid.c, value: new org.pkijs.asn1.PRINTABLESTRING({value: country})}
         ));
     pkcs10_simpl.subject.types_and_values.push(
         new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
-            {type: "2.5.4.3", value: new org.pkijs.asn1.UTF8STRING({value: cn})}
+            {type: oid.cn, value: new org.pkijs.asn1.UTF8STRING({value: cn})}
         ));
     pkcs10_simpl.subject.types_and_values.push(
         new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
-            {type: "1.2.840.113549.1.9.1", value: new org.pkijs.asn1.UTF8STRING({value: email})}
+            {type: oid.email, value: new org.pkijs.asn1.UTF8STRING({value: email})}
         ));
 
-    pkcs10_simpl.attributes = new Array();
+    pkcs10_simpl.attributes = [];
     // #endregion
 
     // #region Create a new key pair
@@ -182,11 +215,11 @@ function create_PKCS10(cn, email, country) {
     ).then(
         function (result) {
             pkcs10_simpl.attributes.push(new org.pkijs.simpl.ATTRIBUTE({
-                type: "1.2.840.113549.1.9.14", // pkcs-9-at-extensionRequest
+                type: oid_type, // pkcs-9-at-extensionRequest
                 values: [(new org.pkijs.simpl.EXTENSIONS({
                     extensions_array: [
                         new org.pkijs.simpl.EXTENSION({
-                            extnID: "2.5.29.14",
+                            extnID: oid_extnID,
                             critical: false,
                             extnValue: (new org.pkijs.asn1.OCTETSTRING({value_hex: result})).toBER(false)
                         })
@@ -216,7 +249,6 @@ function create_PKCS10(cn, email, country) {
             var result_string = "-----BEGIN CERTIFICATE REQUEST-----\r\n";
             result_string = result_string + formatPEM(window.btoa(arrayBufferToString(pkcs10_encoded)));
             result_string = result_string + "\r\n-----END CERTIFICATE REQUEST-----\r\n";
-            //$('#pem-text-block').val(result_string);
             return result_string;
         },
         function (error) {
@@ -406,7 +438,7 @@ $(document).ready(function() {
 function loadCountries () {
     $.get("json/countries.min.json")
         .then(function(data) {
-            var countryfield=$("#country");
+            var countryfield=$("#c");
             var countries=data.countries;
             $.each(countries,function(key,value) {
                 countryfield
