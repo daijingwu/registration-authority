@@ -6,7 +6,7 @@ const oid_type="1.2.840.113549.1.9.14";
 const oid={
     cn: "2.5.4.3",
     c: "2.5.4.6",
-    email: "1.2.840.113549.1.9.1",
+    e: "1.2.840.113549.1.9.1",
     o: "2.5.4.10",
     ou: "2.5.4.11",
     l: "2.5.4.7",
@@ -17,7 +17,7 @@ const oid={
 const oid_syntax={
     cn: "UTF8STRING",
     c: "PRINTABLESTRING",
-    email: "UTF8STRING",
+    e: "UTF8STRING",
     o: "UTF8STRING",
     ou: "UTF8STRING",
     l: "UTF8STRING",
@@ -27,12 +27,9 @@ const oid_syntax={
 
 
 function buildSubject(pkcs10_simpl) {
-    var subject="";
     $.each(schema,function(k,v){
         var fv=$("#"+k).val();
         if (typeof fv!=="undefined") {
-            subject += "/" + k + "=" + fv;
-
             var syntax=oid_syntax[k];
             switch (syntax) {
                 case "PRINTABLESTRING":
@@ -48,7 +45,6 @@ function buildSubject(pkcs10_simpl) {
                         ));
                     break;
             }
-            console.log("pkcs10_simpl: %o",pkcs10_simpl);
         }
     });
 
@@ -142,20 +138,27 @@ function create_PKCS10(cn, email, country) {
     // #region Put a static values
     pkcs10_simpl.version = 0;
 
-    //pkcs10_simpl=buildSubject(pkcs10_simpl);
-
-    pkcs10_simpl.subject.types_and_values.push(
-        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
-            {type: oid.c, value: new org.pkijs.asn1.PRINTABLESTRING({value: country})}
-        ));
-    pkcs10_simpl.subject.types_and_values.push(
-        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
-            {type: oid.cn, value: new org.pkijs.asn1.UTF8STRING({value: cn})}
-        ));
-    pkcs10_simpl.subject.types_and_values.push(
-        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
-            {type: oid.email, value: new org.pkijs.asn1.UTF8STRING({value: email})}
-        ));
+    $.each(schema,function(k,v){
+        var fv=$("#"+k).val();
+        if (typeof fv!=="undefined") {
+            var syntax=oid_syntax[k];
+            var subj_oid=oid[k];
+            switch (syntax) {
+                case "PRINTABLESTRING":
+                    pkcs10_simpl.subject.types_and_values.push(
+                        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
+                            {type: subj_oid, value: new org.pkijs.asn1.PRINTABLESTRING({value: fv})}
+                        ));
+                    break;
+                case "UTF8STRING":
+                    pkcs10_simpl.subject.types_and_values.push(
+                        new org.pkijs.simpl.ATTR_TYPE_AND_VALUE(
+                            {type: subj_oid, value: new org.pkijs.asn1.UTF8STRING({value: fv})}
+                        ));
+                    break;
+            }
+        }
+    });
 
     pkcs10_simpl.attributes = [];
     // #endregion
