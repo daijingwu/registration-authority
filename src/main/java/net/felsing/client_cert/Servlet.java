@@ -1,9 +1,15 @@
 package net.felsing.client_cert;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -66,9 +74,17 @@ public class Servlet extends HttpServlet {
             String country = attributes.get("c");
 
             String password=Utilities.generatePassword();
+
+            JsonArray certChain=new JsonArray();
             String pem=ejbcaToolBox.ejbcaCertificateRequest(cn,password,pkcs10req,email,country);
+            certChain.add(new JsonPrimitive(pem));
+            ejbcaToolBox.ejbcaGetLastCAChain().forEach((k)->{
+                certChain.add(new JsonPrimitive(k));
+            });
+            JsonObject jsonObject=new JsonObject();
+            jsonObject.add("certificateChain",certChain);
             assert pw != null;
-            pw.print(pem);
+            pw.print(jsonObject.toString());
         } catch (NullPointerException e) {
             logger.warn("Parameter missing: "+e.getMessage());
         }

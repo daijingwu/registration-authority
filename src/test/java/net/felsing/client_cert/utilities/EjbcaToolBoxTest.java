@@ -3,6 +3,7 @@ package net.felsing.client_cert.utilities;
 import com.google.gson.JsonObject;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
@@ -38,17 +39,26 @@ public class EjbcaToolBoxTest {
         System.out.println(caList);
     }
 
-    @Test
+    //@Test
     public void testEjbcaFindUser() throws Exception {
         init();
         JsonObject res=ejbcaToolBox.ejbcaFindUser("Joe Test");
         System.out.println("testEjbcaFindUser: "+res.toString());
     }
 
-    @Test
+    //@Test
     public void testEjbcaEditUser() throws Exception {
         init();
         ejbcaToolBox.ejbcaEditUser("Joe Test","geheim","joe.test@example.net");
+    }
+
+    @Test
+    public void testEjbcaGetLastCAChain() throws Exception {
+        init();
+        ArrayList<String> chain=ejbcaToolBox.ejbcaGetLastCAChain();
+        chain.forEach((k)->{
+            System.out.println(k);
+        });
     }
 
 } // class

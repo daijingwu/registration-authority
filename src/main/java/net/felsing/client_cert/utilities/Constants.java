@@ -17,11 +17,11 @@ public final class Constants {
     public static final String proxyUser="proxyUser";
     public static final String proxyPassword="proxyPassword";
 
+    public static final String certificateBegin="-----BEGIN CERTIFICATE-----";
+    public static final String certificateEnd="-----END CERTIFICATE-----";
+
     public static final String schemaFileName="schemaFileName";
     public static final String title="title";
 
     public static final String DEBUG="DEBUG";
-    public static final int maxReqLength=16384;
-    public static final String illegalReqest="request fuck up";
-
 }

@@ -159,7 +159,7 @@ function create_PKCS10(cn, email, country) {
             privateKeyPem=result;
         },
         function (error) {
-            console.log("Fucked up while export private key: " + error);
+            alert("Fucked up while export private key: " + error);
         }
     );
 
@@ -237,19 +237,18 @@ function create_PKCS10(cn, email, country) {
                     method: "POST",
                     data: JSON.stringify(ajaxData)
                 })
-                .done(function(certificateChain) {
+                .done(function(json) {
+                    var certificateChain=JSON.parse(json).certificateChain;
                     closeDialog();
                     $('#create').hide();
                     var password=genPassword();
-                    var uriContent=genPKCS12(privateKeyPem,certificateChain,password);
+                    var friendlyName="ip6li Demo PKI";
+                    var uriContent=genPKCS12(privateKeyPem,certificateChain,password,friendlyName);
                     var labelPassword="Your Password:";
                     $('#lbl_password').empty().append(labelPassword);
                     $('#password').empty().append(password);
 
-                    var a = document.createElement("a");
-                    var blob = new File([b64toBlob(uriContent,"application/x-pkcs12")], "certificate.p12");
-                    a.href = URL.createObjectURL(blob);
-                    window.location.href=a;
+                    saveData(b64toBlob(uriContent,"application/x-pkcs12"),"certificate.p12");
                 })
                 .fail(function() {
                     alert( "error" );
@@ -260,6 +259,22 @@ function create_PKCS10(cn, email, country) {
         }
     )
 }
+
+
+var saveData = (function () {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    return function (data, fileName) {
+        var url = window.URL.createObjectURL(data);
+        a.href = url;
+        a.download = fileName;
+        a.id="certificate";
+        a.click();
+    };
+}());
+
+
 
 
 function b64toBlob(b64Data, contentType, sliceSize) {
@@ -282,27 +297,24 @@ function b64toBlob(b64Data, contentType, sliceSize) {
         byteArrays.push(byteArray);
     }
 
-    var blob = new Blob(byteArrays, {type: contentType});
-    return blob;
+    return new Blob(byteArrays, {type: contentType});
 }
 
 
-function genPKCS12(privateKey,certificateChain,password) {
+function genPKCS12(privateKey, certificateChain, password, name) {
 
     var pki = forge.pki;
-    var privateKey = pki.privateKeyFromPem(privateKey);
+    var p12PrivateKey = pki.privateKeyFromPem(privateKey);
 
     // generate a p12 using AES (default)
     //var p12Asn1 = forge.pkcs12.toPkcs12Asn1(
     //  privateKey, certificateChain, 'password');
-    //var p12Asn1 = forge.pkcs12.toPkcs12Asn1(
-    //    privateKey, certificateChain, password);
 
     // generate a p12 that can be imported by Chrome/Firefox
     // (requires the use of Triple DES instead of AES)
     var p12Asn1 = forge.pkcs12.toPkcs12Asn1(
-        privateKey, certificateChain, password,
-        {algorithm: '3des'});
+        p12PrivateKey, certificateChain, password,
+        {algorithm: '3des',friendlyName: name});
 
     // base64-encode p12
     var p12Der = forge.asn1.toDer(p12Asn1).getBytes();

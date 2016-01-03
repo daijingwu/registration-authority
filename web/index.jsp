@@ -57,6 +57,10 @@
             <div id="lbl_password" class="label"></div>
             <div id="password"></div>
         </div>
+
+        <div id="div_certificate" style="display:none">
+
+        </div>
     </div>
 
 </div>

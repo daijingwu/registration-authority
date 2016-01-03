@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -174,19 +175,41 @@ public class EjbcaToolBox {
 
         final String hardTokenSn = null; // no hard token
         final String responseType = "CERTIFICATE";
-        String pem = null;
+        StringBuilder pem = new StringBuilder();
         try {
             CertificateResponse crt = port.certificateRequest(userDataVOWS, pkcs10req, 0, hardTokenSn, responseType);
             String pemCertificate = new String(crt.getData());
-            pem = "-----BEGIN CERTIFICATE-----\n"
-                    + pemCertificate + "\n"
-                    + "-----END CERTIFICATE-----";
+            pem.append(Constants.certificateBegin); pem.append("\n");
+            pem.append(pemCertificate); pem.append("\n");
+            pem.append(Constants.certificateEnd); pem.append("\n");
+
+            //pem.append(ejbcaGetLastCAChain());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return pem;
+        return pem.toString();
     }
+
+
+    public ArrayList<String> ejbcaGetLastCAChain() {
+        ArrayList<String> certChain=new ArrayList<>();
+        try {
+            List<Certificate> chain = port.getLastCAChain(properties.getProperty("caName"));
+            chain.forEach((k)-> {
+                StringBuilder pem=new StringBuilder();
+                pem.append(Constants.certificateBegin); pem.append("\n");
+                pem.append(new String(k.getCertificateData())); pem.append("\n");
+                pem.append(Constants.certificateEnd); pem.append("\n");
+                certChain.add(pem.toString());
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return certChain;
+    }
+
 
 
 } // class
