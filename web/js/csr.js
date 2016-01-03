@@ -1,9 +1,9 @@
 "use strict";
 
-const oid_extnID="2.5.29.14";
-const oid_type="1.2.840.113549.1.9.14";
+var oid_extnID="2.5.29.14";
+var oid_type="1.2.840.113549.1.9.14";
 
-const oid={
+var oid={
     cn: "2.5.4.3",
     c: "2.5.4.6",
     e: "1.2.840.113549.1.9.1",
@@ -14,7 +14,7 @@ const oid={
     street: "2.5.4.9"
 };
 
-const oid_syntax={
+var oid_syntax={
     cn: "UTF8STRING",
     c: "PRINTABLESTRING",
     e: "UTF8STRING",
@@ -245,7 +245,7 @@ function create_PKCS10(cn, email, country) {
     // #endregion
 
     sequence = sequence.then(
-        function (result) {
+        function () {
             var pkcs10_schema = pkcs10_simpl.toSchema();
             var pkcs10_encoded = pkcs10_schema.toBER(false);
 
@@ -299,7 +299,11 @@ function create_PKCS10(cn, email, country) {
 var saveData = (function () {
     var a = document.createElement("a");
     document.body.appendChild(a);
-    a.style = "display: none";
+    try {
+        a.style = "display: none";
+    } catch (e) {
+        // do nothing
+    }
     return function (data, fileName) {
         var url = window.URL.createObjectURL(data);
         a.href = url;
@@ -353,9 +357,7 @@ function genPKCS12(privateKey, certificateChain, password, name) {
 
     // base64-encode p12
     var p12Der = forge.asn1.toDer(p12Asn1).getBytes();
-    var p12b64 = forge.util.encode64(p12Der);
-
-    return p12b64;
+    return forge.util.encode64(p12Der);
 }
 
 
