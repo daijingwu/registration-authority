@@ -127,6 +127,6 @@ May be improved...
 
 # Typical Mistakes
 
-* truststore contains CA certificate used for signing EJBCA server certificate.
+* truststore must contain CA certificate used for signing EJBCA server certificate.
 * keystore must contain client certificate for EJBCA which is used to authenticate Webservice client.
 * EJBCA User (keystore) needs administrative rights at EJBCA.
