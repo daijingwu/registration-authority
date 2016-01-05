@@ -2,6 +2,7 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import net.felsing.client_cert.ejbca.*;
+import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;

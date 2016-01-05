@@ -21,7 +21,6 @@ public class JsonProcessor {
             JsonObject jsonObject = jsonParser.parse(req).getAsJsonObject();
             String reqString = jsonObject.get("pkcs10").toString();
 
-            logger.warn("matches");
             reqString = reqString.replaceAll("\\\\r", "");
             reqString = reqString.replaceAll("\\\\n", "\n");
             reqString = reqString.replaceAll("\"", "");

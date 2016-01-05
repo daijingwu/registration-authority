@@ -4,6 +4,8 @@ package net.felsing.client_cert.utilities;
 import org.apache.cxf.common.i18n.Exception;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.xml.bind.DatatypeConverter;
@@ -34,12 +36,10 @@ public class CertificateFabric {
                     new PKCS10CertificationRequest(reqBytes);
             return pkcs10CertificationRequest.getSubject().toString().replaceAll("\\+",",");
         } catch (IOException e) {
-            e.printStackTrace();
             logger.warn("getReqData IO fucked up");
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.warn("getReqData general fuck up");
+            logger.warn("general fuck up");
             return null;
         }
     }

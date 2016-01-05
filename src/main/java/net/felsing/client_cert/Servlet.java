@@ -64,11 +64,11 @@ public class Servlet extends HttpServlet {
         try {
             JsonArray certChain=new JsonArray();
 
-            RegexValidator rv=new RegexValidator(Constants.pkcs10Regex);
-            if (rv.isValid(pkcs10req)) {
-                logger.warn("matches");
-            } else {
-                logger.warn("does not match");
+            CertificateFabric certificateFabric=new CertificateFabric();
+            String subject=certificateFabric.getReqData(pkcs10req);
+            if (subject==null) {
+                logger.warn("CSR not valid");
+                return;
             }
             String pem=ejbcaToolBox.ejbcaCertificateRequest(pkcs10req);
             certChain.add(new JsonPrimitive(pem));

@@ -1,5 +1,8 @@
 package net.felsing.client_cert.utilities;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import net.felsing.client_cert.ejbca.Certificate;
+import org.apache.commons.validator.routines.RegexValidator;
 import org.junit.Test;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
@@ -13,6 +16,10 @@ import static org.junit.Assert.*;
 
 public class CertificateFabricTest {
 
+    private static String reqWrong = "" +
+            "-----BEGIN CERTIFICATE REQUEST-----\n" +
+            "blah fasel test\n" +
+            "-----END CERTIFICATE REQUEST-----";
 
     private static String reqRSA = "" +
             "-----BEGIN CERTIFICATE REQUEST-----\n" +
@@ -58,7 +65,8 @@ public class CertificateFabricTest {
 
     @Test
     public void testGetReqDataRSA() throws Exception {
-
+        System.out.println("Test testGetReqDataRSA");
+        System.out.println("======================");
         CertificateFabric certificateFabric=new CertificateFabric();
         String subject=certificateFabric.getReqData(reqRSA);
         System.out.println("subject (rsa): "+subject);
@@ -67,10 +75,25 @@ public class CertificateFabricTest {
 
     @Test
     public void testGetReqDataECC() throws Exception {
-
+        System.out.println("Test testGetReqDataECC");
+        System.out.println("======================");
         CertificateFabric certificateFabric=new CertificateFabric();
         String subject=certificateFabric.getReqData(reqECC);
         System.out.println("subject (ecc): "+subject);
     }
+
+    @Test
+    public void validRequest() throws Exception {
+        System.out.println("Test validRequest");
+        System.out.println("=================");
+        CertificateFabric certificateFabric=new CertificateFabric();
+        String subject=certificateFabric.getReqData(reqRSA);
+        System.out.println("subject: "+subject);
+        assertNotNull(subject);
+        subject=certificateFabric.getReqData(reqWrong);
+        System.out.println("subject should be null");
+        assertNull(subject);
+    }
+
 
 } // class
