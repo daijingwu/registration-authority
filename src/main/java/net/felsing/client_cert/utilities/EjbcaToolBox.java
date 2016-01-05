@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -149,10 +150,13 @@ public class EjbcaToolBox {
     }
 
 
-    public String ejbcaCertificateRequest(String username, String password, String pkcs10req, String email, String c) {
+    public String ejbcaCertificateRequest(String pkcs10req) {
+        CertificateFabric certificateFabric=new CertificateFabric();
+        String subject=certificateFabric.getReqData(pkcs10req);
+        HashMap<String,String> attributes=CertificateFabric.getAttributes(subject);
 
-        String ou = properties.getProperty("ou");
-        String o = properties.getProperty("o");
+        String password= Utilities.generatePassword();
+        String email=attributes.get("e");
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
         userDataVOWS.setCaName(properties.getProperty("caName"));
@@ -161,17 +165,31 @@ public class EjbcaToolBox {
         userDataVOWS.setEndEntityProfileName(properties.getProperty("EndEntityProfileName"));
         userDataVOWS.setPassword(password);
         userDataVOWS.setStatus(10);
-        userDataVOWS.setSubjectAltName("rfc822name=" + email);
-        userDataVOWS.setSubjectDN(
-                "CN=" + username
-                        + ",EMAIL=" + email
-                        // + ",UID=" + username
-                        + ",OU=" + ou
-                        + ",O=" + o
-                        + ",C=" + c
-        );
+
+        if (attributes.get("o")==null) {
+            attributes.put("o",properties.getProperty("o"));
+        }
+
+        if (attributes.get("ou")==null) {
+            attributes.put("ou",properties.getProperty("ou"));
+        }
+
+        StringBuilder sb=new StringBuilder();
+        attributes.forEach((k,v)-> {
+            if (sb.length()!=0) sb.append(",");
+            switch (k) {
+                case "e":
+                    sb.append("EMAILADDRESS").append("=").append(v);
+                    break;
+                default:
+                    sb.append(k.toUpperCase()).append("=").append(v);
+                    break;
+            }
+        });
+        userDataVOWS.setSubjectDN(sb.toString());
+
         userDataVOWS.setTokenType("USERGENERATED");
-        userDataVOWS.setUsername(username);
+        userDataVOWS.setUsername(attributes.get("cn"));
 
         final String hardTokenSn = null; // no hard token
         final String responseType = "CERTIFICATE";
@@ -182,8 +200,6 @@ public class EjbcaToolBox {
             pem.append(Constants.certificateBegin); pem.append("\n");
             pem.append(pemCertificate); pem.append("\n");
             pem.append(Constants.certificateEnd); pem.append("\n");
-
-            //pem.append(ejbcaGetLastCAChain());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,7 +225,6 @@ public class EjbcaToolBox {
 
         return certChain;
     }
-
 
 
 } // class

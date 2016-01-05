@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -24,6 +25,15 @@ public final class CsrBeans {
             labels = certificateAttributes.getLabels();
         }
         return labels.get(k);
+    }
+
+
+    public static ArrayList<String> getAttributeList() {
+        ArrayList<String> arrayList=new ArrayList<>();
+        labels.forEach((k,v)->{
+            arrayList.add(k);
+        });
+        return arrayList;
     }
 
 

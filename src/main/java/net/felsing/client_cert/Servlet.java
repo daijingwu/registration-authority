@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.*;
+import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javax.servlet.ServletConfig;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -58,20 +58,19 @@ public class Servlet extends HttpServlet {
         }
 
         JsonProcessor jsonProcessor=new JsonProcessor();
-        String subject = jsonProcessor.getSubject(sb.toString());
         String pkcs10req=jsonProcessor.getCertificate(sb.toString());
-        HashMap<String,String> attributes=CertificateFabric.getAttributes(subject);
 
         EjbcaToolBox ejbcaToolBox = new EjbcaToolBox(properties);
-        String cn=attributes.get("cn");
         try {
-            String email = attributes.get("e");
-            String country = attributes.get("c");
-
-            String password=Utilities.generatePassword();
-
             JsonArray certChain=new JsonArray();
-            String pem=ejbcaToolBox.ejbcaCertificateRequest(cn,password,pkcs10req,email,country);
+
+            RegexValidator rv=new RegexValidator(Constants.pkcs10Regex);
+            if (rv.isValid(pkcs10req)) {
+                logger.warn("matches");
+            } else {
+                logger.warn("does not match");
+            }
+            String pem=ejbcaToolBox.ejbcaCertificateRequest(pkcs10req);
             certChain.add(new JsonPrimitive(pem));
             ejbcaToolBox.ejbcaGetLastCAChain().forEach((k)-> certChain.add(new JsonPrimitive(k)));
             JsonObject jsonObject=new JsonObject();

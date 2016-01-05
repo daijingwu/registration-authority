@@ -23,5 +23,13 @@ public final class Constants {
     public static final String schemaFileName="schemaFileName";
     public static final String title="title";
 
+    public static final String pkcs10Regex=""+
+            "^(?:(?!-{3,}(?:BEGIN|END) NEW CERTIFICATE REQUEST)[\\s\\S])*(-{3,}"+
+            "BEGIN NEW CERTIFICATE REQUEST(?:(?!-{3,}"+
+            "END NEW CERTIFICATE REQUEST)[\\s\\S])*?-{3,}"+
+            "END NEW CERTIFICATE REQUEST-{3,})(?![\\s\\S]*?-{3,}"+
+            "BEGIN NEW CERTIFICATE REQUEST[\\s\\S]+?-{3,}"+
+            "END NEW CERTIFICATE REQUEST[\\s\\S]*?$)";
+
     public static final String DEBUG="DEBUG";
 }
