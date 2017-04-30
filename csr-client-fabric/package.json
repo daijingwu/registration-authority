@@ -7,7 +7,7 @@
   "dependencies": {
     "asn1js": "^2.0.0",
     "jquery": "~3.2.1",
-    "jqueryui": "~1.11.1"
+    "jquery-ui": "~1.12.1"
   },
   "devDependencies": {
     "rollup": "0.34.7",
@@ -21,7 +21,8 @@
     "pkcs10": "cd pkcs10 && rollem -c && cp bundle.js ../../web/js/pkcs10.js && cd ..",
     "pkcs12": "cd pkcs12 && rollem -c && cp bundle.js ../../web/js/pkcs12.js && cd ..",
     "jquery": "cp node_modules/jquery/dist/jquery.min.js ../web/js/jquery.min.js",
-    "jqueryui": "cp node_modules/jqueryui/jquery-ui.min.js ../web/js/jquery-ui.min.js && cp node_modules/jqueryui/jquery-ui.min.css ../web/css/jquery-ui.min.css && cp node_modules/jqueryui/jquery-ui.structure.min.css ../web/css/jquery-ui.structure.min.css",
+    "jqueryui:install": "cd node_modules/jquery-ui && if [ ! -f dist/jquery-ui.min.js ]; then npm install && node_modules/grunt-cli/bin/grunt concat && node_modules/grunt-cli/bin/grunt sizer_all; fi; cd ../..",
+    "jqueryui": "npm run jqueryui:install && cp node_modules/jquery-ui/dist/jquery-ui.min.js ../web/js/jquery-ui.min.js && cp node_modules/jquery-ui/dist/jquery-ui.css ../web/css/jquery-ui.min.css && cp -a node_modules/jquery-ui/themes/base/images ../web/css/images",
     "preinstall": "npm run pkijsclone && npm run pkijsclone && npm run pkijsinstall",
     "postinstall": "npm run pkcs10 && npm run pkcs12 && npm run jquery && npm run jqueryui"
   }

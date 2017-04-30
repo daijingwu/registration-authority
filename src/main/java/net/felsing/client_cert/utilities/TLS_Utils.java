@@ -34,7 +34,7 @@ public class TLS_Utils {
     }
 
 
-    public static void initializeConduitForSSL(Properties properties) throws Exception {
+    public static void initializeConduitForSSL (Properties properties) throws Exception {
 
         String trustStoreFile = properties.getProperty(Constants.trustStoreFile);
         String keyStoreFile = properties.getProperty(Constants.keyStoreFile);

@@ -51,6 +51,7 @@
 
     <dependencies>
 
+        <!-- Apache CXF -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>

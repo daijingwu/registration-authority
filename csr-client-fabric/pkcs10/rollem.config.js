@@ -7,10 +7,6 @@ export default [
 		format: "iife",
         outro: `
 window.createPKCS10 = createPKCS10;
-window.parsePKCS10 = parsePKCS10;
-window.verifyPKCS10 = verifyPKCS10;
-window.handleHashAlgOnChange = handleHashAlgOnChange;
-window.handleSignAlgOnChange = handleSignAlgOnChange;
 
 function context(name, func) {}`,
         plugins: [

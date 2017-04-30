@@ -69,7 +69,7 @@ public class EjbcaToolBox {
         Client client = ClientProxy.getClient(port);
         HTTPConduit http = (HTTPConduit) client.getConduit();
         try {
-            TLS_Utils.initializeConduitForSSL(properties);
+            TLS_Utils.initializeConduitForSSL (properties);
         } catch (Exception e) {
             e.printStackTrace();
             return;

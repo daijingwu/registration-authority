@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: net.felsing.client_cert.ejbca.EjbcaWS_EjbcaWSPort_Client
+
