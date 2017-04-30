@@ -1,0 +1,28 @@
+{
+  "name": "csr-client-fabric",
+  "version": "0.0.1",
+  "license" : "SEE LICENSE IN README.md",
+  "description": "RA solution for EJBCA",
+  "repository": "private",
+  "dependencies": {
+    "asn1js": "^2.0.0",
+    "jquery": "~3.2.1",
+    "jqueryui": "~1.11.1"
+  },
+  "devDependencies": {
+    "rollup": "0.34.7",
+    "rollup-plugin-node-resolve": "^1.7.1",
+    "rollem": "git+https://github.com/PeculiarVentures/rollem.git"
+  },
+  "scripts": {
+    "pkijsclone": "if [ ! -d PKI.js ]; then git clone https://github.com/PeculiarVentures/PKI.js.git PKI.js; fi",
+    "pkijsupdate": "cd PKI.js && git pull && cd ..",
+    "pkijsinstall": "cd PKI.js && if [ ! -f build/common.js ]; then npm install; fi && cd ..",
+    "pkcs10": "cd pkcs10 && rollem -c && cp bundle.js ../../web/js/pkcs10.js && cd ..",
+    "pkcs12": "cd pkcs12 && rollem -c && cp bundle.js ../../web/js/pkcs12.js && cd ..",
+    "jquery": "cp node_modules/jquery/dist/jquery.min.js ../web/js/jquery.min.js",
+    "jqueryui": "cp node_modules/jqueryui/jquery-ui.min.js ../web/js/jquery-ui.min.js && cp node_modules/jqueryui/jquery-ui.min.css ../web/css/jquery-ui.min.css && cp node_modules/jqueryui/jquery-ui.structure.min.css ../web/css/jquery-ui.structure.min.css",
+    "preinstall": "npm run pkijsclone && npm run pkijsclone && npm run pkijsinstall",
+    "postinstall": "npm run pkcs10 && npm run pkcs12 && npm run jquery && npm run jqueryui"
+  }
+}

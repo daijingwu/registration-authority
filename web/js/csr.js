@@ -437,6 +437,9 @@ $(document).ready(function() {
 
     loadCountries();
 
+    console.log ("create pkcs#10");
+    createPKCS10();
+
 });
 
 
