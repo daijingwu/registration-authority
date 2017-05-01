@@ -4,6 +4,11 @@
 "use strict";
 
 
+function destroyClickedElement(event) {
+    document.body.removeChild(event.target);
+}
+
+
 const signCsr = function () {
     const div_create = $('#create');
     const lbl_password = $('#lbl_password');
@@ -49,23 +54,69 @@ const createCSR = function () {
     window.csr.e = $("#e").val();
     window.csr.subjectAltNames.rfc822Name = window.csr.e;
 
-    console.log ("create pkcs#10: %o", window.csr);
-
     createPKCS10(function() {
         debugPkcs10Data();
         signCsr();
     });
 };
 
+function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, {type: contentType});
+}
+
 
 function genPKCS12() {
-    openSSLLike();
+    const pki = forge.pki;
+    const p12PrivateKey = pki.privateKeyFromPem(window.csr.privateKey);
+
+    // generate a p12 that can be imported by Chrome/Firefox
+    // (requires the use of Triple DES instead of AES)
+    const p12Asn1 = forge.pkcs12.toPkcs12Asn1(
+        p12PrivateKey,
+        window.csr.certificateChain,
+        window.csr.password,
+        {
+            algorithm: '3des',
+            friendlyName: window.csr.friendlyName
+        });
+
+    // base64-encode p12
+    let p12Der = forge.asn1.toDer(p12Asn1).getBytes();
+    const downloadLink = document.createElement("a");
+    downloadLink.download = "pkijs_pkcs12.p12";
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = window.URL.createObjectURL(b64toBlob(forge.util.encode64(p12Der),{type: "application/x-pkcs12"}));
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+
+    downloadLink.click();
 }
 
 
 function genPassword() {
     let text="";
-    const possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!§$%&/()=?#'+*~-_.:,;|";
+    //const possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!§$%&/()=?#'+*~-_.:,;|";
+    const possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i=0;i<32;i++) {
         text+=possible.charAt(Math.floor(Math.random()*possible.length));
     }
@@ -105,6 +156,10 @@ const loadCountries = function () {
 
 
 const debugPkcs10Data = function () {
+
+    return null;
+
+    //noinspection UnreachableCodeJS
     console.log ("PKCS#10");
     console.log ("=======");
     console.log ("%o", window.csr.pkcs10);

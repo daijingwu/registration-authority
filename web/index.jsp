@@ -50,7 +50,7 @@
 
 <script type="application/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/pkcs10.js"></script>
-<script type="text/javascript" src="js/pkcs12.js"></script>
+<script type="text/javascript" src="js/forge.min.js"></script>
 <script type="text/javascript" src="js/csr.js"></script>
 
 </body>

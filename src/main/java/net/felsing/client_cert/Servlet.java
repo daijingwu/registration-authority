@@ -61,6 +61,7 @@ public class Servlet extends HttpServlet {
         String pkcs10req=jsonProcessor.getCertificate(sb.toString());
 
         EjbcaToolBox ejbcaToolBox = new EjbcaToolBox(properties);
+        JsonObject jsonObject = new JsonObject();
         try {
             JsonArray certChain=new JsonArray();
 
@@ -71,14 +72,15 @@ public class Servlet extends HttpServlet {
                 return;
             }
 
-            String pem=ejbcaToolBox.ejbcaCertificateRequest(pkcs10req);
+            String pem = ejbcaToolBox.ejbcaCertificateRequest(pkcs10req);
             certChain.add(new JsonPrimitive(pem));
-            ejbcaToolBox.ejbcaGetLastCAChain().forEach((k)-> certChain.add(new JsonPrimitive(k)));
-            JsonObject jsonObject=new JsonObject();
-            jsonObject.add("certificateChain",certChain);
+            ejbcaToolBox.ejbcaGetLastCAChain().forEach((k) -> certChain.add(new JsonPrimitive(k)));
+
+            jsonObject.add("certificateChain", certChain);
             assert pw != null;
             pw.print(jsonObject.toString());
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
+            jsonObject.add("error", new JsonPrimitive("invalid request"));
             logger.warn("Parameter missing: "+e.getMessage());
         }
 

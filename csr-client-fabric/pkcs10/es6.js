@@ -86,7 +86,6 @@ function createPKCS10Internal() {
 
     //region Put a static values
     pkcs10.version = 0;
-    console.log ("subject: %o", window.csr);
     for (let key in window.csr) {
         if (window.csr.hasOwnProperty(key) && typeof oid[key] !== "undefined") {
             //noinspection JSPotentiallyInvalidConstructorUsage
@@ -139,6 +138,7 @@ function createPKCS10Internal() {
     sequence = sequence.then(result =>
     {
         const privateKeyString = String.fromCharCode.apply(null, new Uint8Array(result));
+
         let privateKeyResultString = "";
         privateKeyResultString = `${privateKeyResultString}\r\n-----BEGIN PRIVATE KEY-----\r\n`;
         privateKeyResultString = `${privateKeyResultString}${formatPEM(window.btoa(privateKeyString))}`;

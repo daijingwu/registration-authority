@@ -1,15 +1,16 @@
 .idea
 classes
 csr-client-fabric/PKI.js
+csr-client-fabric/forge
 csr-client-fabric/node_modules
 csr-client-fabric/pkcs10/bundle.js
 csr-client-fabric/pkcs12/bundle.js
 target
 web/css/jquery-ui.min.css
-web/css/jquery-ui.structure.css
 web/css/images
 web/js/jquery.min.js
 web/js/jquery-ui.min.js
 web/js/pkcs10.js
 web/js/pkcs12.js
 ejbca-new-ra.iml
+client-cert.iml.iml
