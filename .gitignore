@@ -14,4 +14,4 @@ web/js/pkcs10.js
 web/js/pkcs12.js
 web/js/forge.min.js
 ejbca-new-ra.iml
-client-cert.iml.iml
+client-cert.iml
