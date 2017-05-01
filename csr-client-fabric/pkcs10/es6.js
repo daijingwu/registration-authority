@@ -1,12 +1,13 @@
 import * as asn1js from "asn1js";
-import {arrayBufferToString, stringToArrayBuffer, toBase64, fromBase64} from "pvutils";
+//import {arrayBufferToString, stringToArrayBuffer, toBase64, fromBase64} from "pvutils";
+import {arrayBufferToString, toBase64} from "pvutils";
 import {getCrypto, getAlgorithmParameters, setEngine} from "../PKI.js/src/common";
 import CertificationRequest from "../PKI.js/src/CertificationRequest";
 import AttributeTypeAndValue from "../PKI.js/src/AttributeTypeAndValue";
 import Attribute from "../PKI.js/src/Attribute";
 import Extension from "../PKI.js/src/Extension";
 import Extensions from "../PKI.js/src/Extensions";
-import RSAPublicKey from "../PKI.js/src/RSAPublicKey";
+//import RSAPublicKey from "../PKI.js/src/RSAPublicKey";
 
 //*********************************************************************************
 let pkcs10Buffer = new ArrayBuffer(0);
@@ -83,8 +84,9 @@ function createPKCS10Internal() {
         return Promise.reject("No WebCrypto extension found");
     //endregion
 
-    //region Put a static values !!!
+    //region Put a static values
     pkcs10.version = 0;
+    console.log ("subject: %o", window.csr);
     for (let key in window.csr) {
         if (window.csr.hasOwnProperty(key) && typeof oid[key] !== "undefined") {
             //noinspection JSPotentiallyInvalidConstructorUsage
@@ -97,6 +99,7 @@ function createPKCS10Internal() {
 
     for (let key in window.csr.subjectAltNames) {
         if (window.csr.subjectAltNames.hasOwnProperty(key) && typeof oidAltNames[key] !== "undefined") {
+
             console.log ("WARNING: SubjectAltNames not supported yet: %o", key);
         }
     }
@@ -199,33 +202,7 @@ function createPKCS10(callback) {
 context("Hack for Rollup.js", () => {
     return;
 
+    //noinspection UnreachableCodeJS
     createPKCS10();
     setEngine();
 });
-//*********************************************************************************
-/*
-context("PKCS#10 Complex Example", () => {
-    //region Initial variables
-    const hashAlgs = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
-    const signAlgs = ["RSASSA-PKCS1-V1_5", "ECDSA", "RSA-PSS"];
-
-    const algorithmsMap = new Map([
-        ["SHA-1 + RSASSA-PKCS1-V1_5", "1.2.840.113549.1.1.5"],
-        ["SHA-256 + RSASSA-PKCS1-V1_5", "1.2.840.113549.1.1.11"],
-        ["SHA-384 + RSASSA-PKCS1-V1_5", "1.2.840.113549.1.1.12"],
-        ["SHA-512 + RSASSA-PKCS1-V1_5", "1.2.840.113549.1.1.13"],
-
-        ["SHA-1 + ECDSA", "1.2.840.10045.4.1"],
-        ["SHA-256 + ECDSA", "1.2.840.10045.4.3.2"],
-        ["SHA-384 + ECDSA", "1.2.840.10045.4.3.3"],
-        ["SHA-512 + ECDSA", "1.2.840.10045.4.3.4"],
-
-        ["SHA-1 + RSA-PSS", "1.2.840.113549.1.1.10"],
-        ["SHA-256 + RSA-PSS", "1.2.840.113549.1.1.10"],
-        ["SHA-384 + RSA-PSS", "1.2.840.113549.1.1.10"],
-        ["SHA-512 + RSA-PSS", "1.2.840.113549.1.1.10"]
-    ]);
-    //endregion
-});
-*/
-//*********************************************************************************

@@ -70,6 +70,7 @@ public class Servlet extends HttpServlet {
                 logger.warn("CSR not valid");
                 return;
             }
+
             String pem=ejbcaToolBox.ejbcaCertificateRequest(pkcs10req);
             certChain.add(new JsonPrimitive(pem));
             ejbcaToolBox.ejbcaGetLastCAChain().forEach((k)-> certChain.add(new JsonPrimitive(k)));

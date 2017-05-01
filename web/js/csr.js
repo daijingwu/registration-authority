@@ -26,10 +26,11 @@ const signCsr = function () {
             window.csr.certificateChain=JSON.parse(json).certificateChain;
             closeDialog();
             div_create.hide();
-
+            window.csr.password=genPassword();
+            window.csr.friendlyName=friendlyName;
             genPKCS12();
             lbl_password.empty().append(labelPassword);
-            div_password.empty().append(password);
+            div_password.empty().append(window.csr.password);
         })
         .fail(function() {
             alert( "error" );
@@ -58,8 +59,7 @@ const createCSR = function () {
 
 
 function genPKCS12() {
-    window.csr.password=genPassword();
-    passwordPrivacy();
+    openSSLLike();
 }
 
 
@@ -70,16 +70,6 @@ function genPassword() {
         text+=possible.charAt(Math.floor(Math.random()*possible.length));
     }
     return text;
-}
-
-
-function arrayBufferToBase64String(arrayBuffer) {
-    const byteArray = new Uint8Array(arrayBuffer)
-    let byteString = "";
-    for (let i=0; i<byteArray.byteLength; i++) {
-        byteString += String.fromCharCode(byteArray[i]);
-    }
-    return btoa(byteString);
 }
 
 

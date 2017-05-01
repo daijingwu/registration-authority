@@ -167,13 +167,7 @@ public class EjbcaToolBox {
         userDataVOWS.setPassword(password);
         userDataVOWS.setStatus(10);
 
-        if (attributes.get("o")==null) {
-            attributes.put("o",properties.getProperty("o"));
-        }
-
-        if (attributes.get("ou")==null) {
-            attributes.put("ou",properties.getProperty("ou"));
-        }
+        checkAttributes(attributes);
 
         StringBuilder sb=new StringBuilder();
         attributes.forEach((k,v)-> {
@@ -227,5 +221,26 @@ public class EjbcaToolBox {
         return certChain;
     }
 
+
+    private boolean checkAttributes (HashMap<String,String> attributes) {
+
+        boolean changed = false;
+
+        if (properties.getProperty("o")!=null) {
+            if (attributes.get("o") == null) {
+                attributes.put("o", properties.getProperty("o"));
+                changed = true;
+            }
+        }
+
+        if (properties.getProperty("ou")!=null) {
+            if (attributes.get("ou") == null) {
+                attributes.put("ou", properties.getProperty("ou"));
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
 
 } // class
