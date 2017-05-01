@@ -16,6 +16,7 @@
         <commons.validator.version>1.6</commons.validator.version>
         <commons.exec.version>1.3</commons.exec.version>
         <org.apache.taglibs.version>1.2.5</org.apache.taglibs.version>
+        <shiro.version>1.3.2</shiro.version>
     </properties>
 
     <build>
@@ -146,6 +147,21 @@
             <groupId>org.apache.taglibs</groupId>
             <artifactId>taglibs-standard-impl</artifactId>
             <version>${org.apache.taglibs.version}</version>
+        </dependency>
+
+        <!-- Apache Shiro (not used yet) -->
+        <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-core -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-web -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>${shiro.version}</version>
         </dependency>
 
     </dependencies>
