@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.*;
-import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javax.servlet.ServletConfig;
@@ -19,6 +18,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.SecurityUtils;
+
 
 /**
  * Created by cf on 23.08.15.
@@ -27,7 +29,7 @@ import java.util.Properties;
  */
 
 
-@WebServlet(urlPatterns = "/req")
+@WebServlet(urlPatterns = "/req",loadOnStartup = 1)
 public class Servlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(Servlet.class);
 
@@ -94,6 +96,9 @@ public class Servlet extends HttpServlet {
         if (!servletIsReady) return;
         PrintWriter pw = resp.getWriter();
 
+        Subject currentUser = SecurityUtils.getSubject();
+        logger.debug(currentUser);
+
         pw.println("Hello world!");
         pw.flush();
     }
@@ -104,8 +109,8 @@ public class Servlet extends HttpServlet {
         super.init(config);
 
         properties=PropertyLoader.getProperties();
-
         assert properties != null;
+        logger.info("Servlet ready for service");
         servletIsReady = true;
     }
 

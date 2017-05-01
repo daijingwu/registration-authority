@@ -2,6 +2,7 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.SecurityUtils;
+
+
 /**
  * Created by cf on 30.12.15.
  * Beans for CSR
@@ -17,6 +22,16 @@ import java.util.HashMap;
 public final class CsrBeans {
     private static final Logger logger = LogManager.getLogger(EjbcaToolBox.class);
     private static HashMap<String, String> labels;
+
+
+    public String getSubject () {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            return new JsonPrimitive("Authenticated").toString();
+        } else {
+            return new JsonPrimitive("Not Authenticated").toString();
+        }
+    }
 
 
     public static String getAttr(String k) {
@@ -85,7 +100,6 @@ public final class CsrBeans {
 
 
     public String getTitle() {
-
         return PropertyLoader.getProperties().getProperty(Constants.title);
     }
 

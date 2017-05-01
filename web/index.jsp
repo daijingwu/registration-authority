@@ -20,6 +20,8 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript">
         let schema =${hdr.formSchema};
+        let subject = ${hdr.subject};
+        console.log ("subject: %o",subject);
     </script>
 </head>
 
