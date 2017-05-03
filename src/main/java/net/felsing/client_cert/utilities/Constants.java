@@ -8,6 +8,9 @@ package net.felsing.client_cert.utilities;
 
 public final class Constants {
 
+    static final String propertyFilename ="ejbca-new-ra.properties.xml";
+    static final String propertyEnvname = "EJBCA_NEW_RA_PROPERTIES";
+
     public static final String trustStoreFile="trustStoreFile";
     public static final String keyStoreFile="keyStoreFile";
     public static final String trustStorePassword="trustStorePassword";

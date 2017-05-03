@@ -32,9 +32,12 @@ public final class PropertyLoader {
      */
     private static void loadProperties() {
         //propertyfileLocations.add(Constants.emergencyPropertiesFile);
-        propertyfileLocations.add("/media/cf/Development/ejbca-new-ra.properties.xml");
-        propertyfileLocations.add("/home/newuser/ejbca-new-ra.properties.xml");
-        propertyfileLocations.add("/Users/cf/Development/SignOn-Config/ejbca-new-ra.properties.xml");
+        propertyfileLocations.add("/etc/ejbca-new-ra/" + Constants.propertyFilename);
+        propertyfileLocations.add("/usr/local/etc/ejbca-new-ra/" + Constants.propertyFilename);
+
+        if (System.getenv(Constants.propertyEnvname)!=null) {
+            propertyfileLocations.add(System.getenv(Constants.propertyEnvname));
+        }
 
         propertyfileLocations.forEach((v)->{
             try {
