@@ -6,6 +6,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 import javax.servlet.ServletException;
@@ -20,13 +21,22 @@ import java.io.PrintWriter;
 @WebServlet(urlPatterns = "/login", loadOnStartup = 1)
 public class Login extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(Login.class);
+    
 
-    private void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SecurityUtils.getSubject().logout();
+        req.getRequestDispatcher("/").forward(req,resp);
+    }
+
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter pw = resp.getWriter();
-        
+
         String username = req.getParameter("loginusername");
         String password = req.getParameter("loginpassword");
-        
+
         logger.debug("Method: " + req.getMethod());
         logger.debug("Username: " + username);
         if (password!=null) {
@@ -34,7 +44,7 @@ public class Login extends HttpServlet {
         } else {
             logger.debug("Password is null");
         }
-        
+
         try {
             AuthenticationToken token = new UsernamePasswordToken(username, password);
             Subject currentUser = SecurityUtils.getSubject();
@@ -51,18 +61,9 @@ public class Login extends HttpServlet {
         pw.flush();
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/").forward(req,resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        handleRequest(req, resp);
-    }
-
+    
     @Override
     public void init() throws ServletException {
         super.init();
     }
-}
+} // class

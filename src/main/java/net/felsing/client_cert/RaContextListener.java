@@ -8,6 +8,7 @@ import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.util.Factory;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -26,6 +27,9 @@ public class RaContextListener implements ServletContextListener {
         Factory<SecurityManager> factory = new IniSecurityManagerFactory(PropertyLoader.getProperties().getProperty("shiroini"));
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
+
+        
+
         logger.info ("Shiro loaded");
 
         //Notification that the web application initialization process is starting

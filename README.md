@@ -85,6 +85,7 @@ Following properties file should explain what needs to be configured.
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
     <properties>
+        <entry key="shiroini">/Users/cf/Development/ejbca-new-ra-config/ejbca-new-ra.shiro.ini</entry>
         <entry key="wsdlLocationUrl">file:/home/ejbca/ejbcaws.wsdl</entry>
 
         <entry key="trustStoreType">jks</entry>
@@ -107,10 +108,17 @@ Following properties file should explain what needs to be configured.
         <entry key="o">example.com</entry>
 
         <entry key="title">Demo RA for EJBCA</entry>
-
+        
+        <entry key="auth.required"></entry>
     </properties>
 
 wsdlLocationUrl contains EJBCA wsdl file, you may consider to provide it as file.
+
+## Environment Variables
+
+EJBCA_NEW_RA_PROPERTIES=/home/user/myproperties.xml     
+
+CATALINA_OPTS=-DSHIROINI=/Users/cf/Development/ejbca-new-ra-config/ejbca-new-ra.shiro.ini
 
 ## ejbca-new-ra.schema.json
 
