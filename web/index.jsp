@@ -20,33 +20,54 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript">
         let schema =${hdr.formSchema};
-        let subject = ${hdr.subject};
-        console.log ("subject: %o",subject);
+        let loginStatus = ${hdr.loginStatus};
+        console.log("loginStatus: %o", loginStatus);
     </script>
 </head>
 
 <body>
-<div class="wrapper">
-    <div id="add-pkcs10-block">
-        <div id="ra_form">
-            ${hdr.form}
+<c:set var="loginStatus" value="${hdr.loginStatus}"/>
+<c:choose>
+    <c:when test="${hdr.loginStatus eq false}">
+        <div class="wrapper">
+            <form id="login" action="/login" method="post">
+                <div id="div_loginusername" class="div_input">
+                    <label for="loginusername" class="label">Username:</label>
+                    <input type="text" id="loginusername" name="loginusername"/>
+                </div>
+                <div id="div_loginpassword" class="div_input">
+                    <label for="loginpassword" class="label">Password:</label>
+                    <input type="password" id="loginpassword" name="loginpassword"/>
+                </div>
+                <div id="div_loginbutton">
+                    <button id="loginbutton" type="submit">Send</button>
+                </div>
+            </form>
         </div>
+    </c:when>
+    <c:otherwise>
+        <div class="wrapper">
+            <div id="add-pkcs10-block">
+                <div id="ra_form">
+                        ${hdr.form}
+                </div>
 
-        <div id="div_create">
-            <button id="create" type="button" onclick="createCSR();">Create PKCS#12 Keystore</button>
+                <div id="div_create">
+                    <button id="create" type="button" onclick="createCSR();">Create PKCS#12 Keystore</button>
+                </div>
+
+                <div id="div_password">
+                    <div id="lbl_password" class="label"></div>
+                    <div id="password"></div>
+                </div>
+
+                <div id="div_certificate" style="display:none">
+
+                </div>
+            </div>
         </div>
-
-        <div id="div_password">
-            <div id="lbl_password" class="label"></div>
-            <div id="password"></div>
-        </div>
-
-        <div id="div_certificate" style="display:none">
-
-        </div>
-    </div>
-
-</div>
+    </c:otherwise>
+</c:choose>
 
 <div id="spinner"></div>
 

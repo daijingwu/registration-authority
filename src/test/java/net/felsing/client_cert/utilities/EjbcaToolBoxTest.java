@@ -52,7 +52,7 @@ public class EjbcaToolBoxTest {
         ejbcaToolBox.ejbcaEditUser("Joe Test","geheim","joe.test@example.net");
     }
 
-    @Test
+    //@Test
     public void testEjbcaGetLastCAChain() throws Exception {
         init();
         ArrayList<String> chain=ejbcaToolBox.ejbcaGetLastCAChain();

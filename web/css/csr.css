@@ -85,6 +85,11 @@ input {
     width: 100%;
 }
 
+.div_input {
+    display: inline-block;
+    width: 100%;
+}
+
 #password {
     font: bold 18px/22px Monospaced;
 }

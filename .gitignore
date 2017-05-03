@@ -1,5 +1,7 @@
 .idea
+.DS_Store
 classes
+out
 csr-client-fabric/PKI.js
 csr-client-fabric/forge
 csr-client-fabric/node_modules

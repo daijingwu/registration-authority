@@ -1,3 +1,4 @@
+
 package net.felsing.client_cert.utilities;
 
 
@@ -10,8 +11,6 @@ import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Properties;
-//import java.util.concurrent.locks.Lock;
-//import java.util.concurrent.locks.ReentrantLock;
 
 
 /**

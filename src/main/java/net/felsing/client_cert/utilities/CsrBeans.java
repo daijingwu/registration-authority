@@ -97,6 +97,13 @@ public final class CsrBeans {
             return null;
         }
     }
+    
+    
+    public boolean getLoginStatus () {
+        return PropertyLoader.getProperties().getProperty(Constants.propertyAuthRequired)==null || 
+                SecurityUtils.getSubject().isAuthenticated();
+
+    }
 
 
     public String getTitle() {
