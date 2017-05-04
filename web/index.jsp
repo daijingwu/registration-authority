@@ -32,12 +32,12 @@
     <script type="text/javascript">
         let schema =${hdr.formSchema};
         let loginStatus = ${hdr.loginStatus};
-        console.log("loginStatus: %o", loginStatus);
     </script>
 </head>
 
 <body>
 <c:set var="loginStatus" value="${hdr.loginStatus}"/>
+<c:set var="loginName" value="${hdr.loginName}"/>
 <c:choose>
     <c:when test="${hdr.loginStatus eq false}">
         <div class="wrapper">
@@ -72,9 +72,7 @@
                     <div id="password"></div>
                 </div>
 
-                <div id="div_certificate" style="display:none">
-
-                </div>
+                <div id="div_certificate" style="display:none"></div>
             </div>
         </div>
     </c:otherwise>
