@@ -22,8 +22,7 @@ public final class Constants {
 
     static final String propertyFilename = "ejbca-new-ra.properties.xml";
     static final String propertyEnvname = "EJBCA_NEW_RA_PROPERTIES";
-    public static final String propertyAuthRequired = "auth.required";
-
+    static final String propertyAuthRequired = "auth.required";
 
     static final String trustStoreFile = "trustStoreFile";
     static final String keyStoreFile = "keyStoreFile";
@@ -43,4 +42,6 @@ public final class Constants {
     static final String DEBUG = "DEBUG";
     
     public static final String unsupportedRequest = "not supported request";
+
+    static final int numBits = 384;
 }

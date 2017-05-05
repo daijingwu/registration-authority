@@ -4,6 +4,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!--
+    There are no servlet related sections, because we
+    use @WebServlet annotations
+    -->
+
     <session-config>
         <session-timeout>600</session-timeout>
 
@@ -32,5 +37,15 @@
             net.felsing.client_cert.RaContextListener
         </listener-class>
     </listener>
-    
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/404.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/500.jsp</location>
+    </error-page>
+
 </web-app>

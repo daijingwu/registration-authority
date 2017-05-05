@@ -32,6 +32,7 @@
     <script type="text/javascript">
         let schema =${hdr.formSchema};
         let loginStatus = ${hdr.loginStatus};
+        let loginUsername = "${hdr.loginName}";
     </script>
 </head>
 
@@ -41,7 +42,7 @@
 <c:choose>
     <c:when test="${hdr.loginStatus eq false}">
         <div class="wrapper">
-            <form id="login" action="/login" method="post">
+            <form id="login" action="login" method="post">
                 <div id="div_loginusername" class="div_input">
                     <label for="loginusername" class="label">Username:</label>
                     <input type="text" id="loginusername" name="loginusername"/>
@@ -65,6 +66,10 @@
 
                 <div id="div_create">
                     <button id="create" type="button" onclick="createCSR();">Create PKCS#12 Keystore</button>
+                </div>
+
+                <div id="div_logoutbutton" class="div_input">
+                    <button id="logoutbutton" type="button" onclick="window.location = '/login';">Logout</button>
                 </div>
 
                 <div id="div_password">

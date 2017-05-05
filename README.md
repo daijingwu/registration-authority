@@ -14,7 +14,7 @@ To set up a deployment environment you have to do following commands:
 * git clone https://github.com/GlobalSign/ASN1.js.git
 * git clone https://github.com/GlobalSign/PKI.js.git
 
-# Production
+# Status
 
 **This software is in very early alpha status. Do not use for production!**
 
@@ -116,9 +116,12 @@ wsdlLocationUrl contains EJBCA wsdl file, you may consider to provide it as file
 
 ## Environment Variables
 
+If properties file named other than ejbca-new-ra.properties.xml or not located in
+/etc or /usr/local/etc you have to provide its location by environment:
+
 EJBCA_NEW_RA_PROPERTIES=/home/user/myproperties.xml     
 
-CATALINA_OPTS=-DSHIROINI=/Users/cf/Development/ejbca-new-ra-config/ejbca-new-ra.shiro.ini
+It tries to load properties from /home/user/myproperties.xml then.
 
 ## ejbca-new-ra.schema.json
 
@@ -138,3 +141,5 @@ May be improved...
 * truststore must contain CA certificate used for signing EJBCA server certificate.
 * keystore must contain client certificate for EJBCA which is used to authenticate Webservice client.
 * EJBCA User (keystore) needs administrative rights at EJBCA.
+* No properties file
+* shiro.ini file not found, see shiroini property in properties file

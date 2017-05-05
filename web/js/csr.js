@@ -1,5 +1,6 @@
 /* jshint browser: true */
 /* jshint jquery */
+/* globals loginUsername */
 
 "use strict";
 
@@ -55,7 +56,6 @@ const createCSR = function () {
     window.csr.subjectAltNames.rfc822Name = window.csr.e;
 
     createPKCS10(function() {
-        debugPkcs10Data();
         signCsr();
     });
 };
@@ -155,22 +155,6 @@ const loadCountries = function () {
 };
 
 
-const debugPkcs10Data = function () {
-
-    return null;
-
-    //noinspection UnreachableCodeJS
-    console.log ("PKCS#10");
-    console.log ("=======");
-    console.log ("%o", window.csr.pkcs10);
-    console.log ("=====================================================================");
-    console.log ("private key");
-    console.log ("===========");
-    console.log ("%o", window.csr.privateKey);
-    console.log ("=====================================================================");
-};
-
-
 $(document).ready(function() {
     $("#spinner").dialog({
         draggable: false,
@@ -184,6 +168,8 @@ $(document).ready(function() {
     });
 
     loadCountries();
+
+    console.log ("login username: " + loginUsername);
 
     window.createCSR = createCSR;
 

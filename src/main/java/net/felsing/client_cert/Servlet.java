@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.SecurityUtils;
 
@@ -47,10 +48,19 @@ public class Servlet extends HttpServlet {
     private static Properties properties = null;
 
 
+    private void session () {
+        Subject currentUser = SecurityUtils.getSubject();
+        Session session = currentUser.getSession();
+        logger.debug ("session: " + session.getAttribute("someKey"));
+        logger.debug ("session: " + Long.toString(session.getTimeout()));
+    }
+
+
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
 
+        session();
         StringBuilder sb = new StringBuilder();
         String line;
         try {
@@ -104,13 +114,13 @@ public class Servlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
-        PrintWriter pw = resp.getWriter();
+
+        session();
 
         Subject currentUser = SecurityUtils.getSubject();
         logger.debug(currentUser);
 
-        pw.println("Hello world!");
-        pw.flush();
+        resp.sendRedirect("./");
     }
 
 

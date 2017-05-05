@@ -1,0 +1,47 @@
+body {
+    background:#0000aa;
+    color:#ffffff;
+    font-family: courier, monospace;
+    font-size:12pt;
+    text-align:left;
+    margin:100px;
+}
+
+blink {
+    color:yellow;
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+@-webkit-keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+.neg {
+    margin:30px 100px;
+    background:#fff;
+    color:#0000aa;
+    padding:2px 8px;
+    font-weight:bold;
+}
+
+p {
+    margin:30px 100px;
+    text-align:left;
+}
+
+a,a:hover {
+    color:inherit;
+    font:inherit;
+}
+
+.menu {
+    margin:50px 100px;
+    text-align:left;
+}

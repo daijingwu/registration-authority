@@ -21,12 +21,6 @@ import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,21 +29,46 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+
+
 
 @WebServlet(urlPatterns = "/login", loadOnStartup = 1)
 public class Login extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(Login.class);
-    
+    private boolean servletIsReady = false;
+
+
+    private void session () {
+
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SecurityUtils.getSubject().logout();
-        req.getRequestDispatcher("/").forward(req,resp);
+        if (!servletIsReady) return;
+        session();
+        try {
+            logger.info("User " + SecurityUtils.getSubject().getPrincipal().toString() + " logged out");
+            SecurityUtils.getSubject().logout();
+        } catch (Exception e) {
+            // don't care about exception
+            logger.debug("Called logout even user was not logged in");
+        }
+        //req.getRequestDispatcher("/").forward(req,resp);
+        resp.sendRedirect("./");
     }
 
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!servletIsReady) return;
+        session();
         PrintWriter pw = resp.getWriter();
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
@@ -69,11 +88,15 @@ public class Login extends HttpServlet {
                 AuthenticationToken token = new UsernamePasswordToken(username, password);
                 Subject currentUser = SecurityUtils.getSubject();
                 currentUser.login(token);
+                Session session = currentUser.getSession();
+                session.setAttribute("someKey", "blahfaseltest");
                 logger.info("Authentication succeeded [" + username + "]");
+
                 req.getRequestDispatcher("/").forward(req, resp);
             } catch (AuthenticationException e) {
-                pw.println("Authentication failed");
                 logger.info("Authentication failed [" + username + "]");
+                //req.getRequestDispatcher("/failed.jsp").forward(req, resp);
+                resp.sendRedirect("failed.jsp");
             } catch (Exception e) {
                 pw.println("Internal Error, not logged in");
                 logger.error(e.getStackTrace());
@@ -90,5 +113,8 @@ public class Login extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
+        logger.info("Servlet ready for service");
+        servletIsReady = true;
     }
+
 } // class

@@ -111,7 +111,6 @@ public final class CsrBeans {
 
 
     public String getLoginName () {
-        Subject subject = SecurityUtils.getSubject();
         if (SecurityUtils.getSubject().isAuthenticated()) {
             return SecurityUtils.getSubject().getPrincipal().toString();
         } else {

@@ -1,3 +1,4 @@
+<%--
 /*
  * Copyright (c) 2016. by Christian Felsing
  * This program is free software: you can redistribute it and/or modify
@@ -14,21 +15,25 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="hdr" class="net.felsing.client_cert.utilities.CsrBeans"/>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>${hdr.title}</title>
 
-package net.felsing.client_cert.utilities;
+    <link rel="stylesheet" type="text/css" href="css/csr.css"/>
+</head>
+<body>
+<div class="wrapper">
+    Login failed
 
+    <div id="div_create">
+        <button id="create" type="button" onclick="window.location = '/';">Try Again</button>
+    </div>
 
-import java.security.SecureRandom;
-
-
-import java.math.BigInteger;
-
-
-class Utilities {
-
-    static String generatePassword () {
-        SecureRandom random = new SecureRandom();
-        return new BigInteger(Constants.numBits, random).toString(32);
-    }
-
-}
+</div>
+</body>
+</html>
