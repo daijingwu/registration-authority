@@ -5,6 +5,9 @@
 "use strict";
 
 
+let configuration = null;
+
+
 function destroyClickedElement(event) {
     document.body.removeChild(event.target);
 }
@@ -15,7 +18,7 @@ const signCsr = function () {
     const lbl_password = $('#lbl_password');
     const div_password = $('#password');
     const labelPassword="Your Password:";
-    const friendlyName="ip6li Demo PKI";
+    const friendlyName=configuration.downloadName;
 
     const ajaxData={};
     ajaxData.pkcs10=window.csr.pkcs10;
@@ -102,7 +105,7 @@ function genPKCS12() {
     // base64-encode p12
     let p12Der = forge.asn1.toDer(p12Asn1).getBytes();
     const downloadLink = document.createElement("a");
-    downloadLink.download = "pkijs_pkcs12.p12";
+    downloadLink.download = configuration.downloadName + ".p12";
     downloadLink.innerHTML = "Download File";
     downloadLink.href = window.URL.createObjectURL(b64toBlob(forge.util.encode64(p12Der),{type: "application/x-pkcs12"}));
     downloadLink.onclick = destroyClickedElement;
@@ -167,9 +170,9 @@ $(document).ready(function() {
         width: 256,
     });
 
+    configuration = JSON.parse(configurationString);
+    console.log ("configuration: %o", configuration);
     loadCountries();
-
-    console.log ("login username: " + loginUsername);
 
     window.createCSR = createCSR;
 

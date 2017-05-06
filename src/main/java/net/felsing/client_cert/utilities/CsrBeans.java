@@ -20,17 +20,28 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.HashMap;
+import java.util.Properties;
+
 import org.apache.shiro.SecurityUtils;
 
 
 public final class CsrBeans {
     private static final Logger logger = LoggerFactory.getLogger(CsrBeans.class);
     private static HashMap<String, String> labels;
+    private Properties properties = null;
+
+
+    public CsrBeans () {
+        if (properties==null) {
+            properties = PropertyLoader.getProperties();
+        }
+    }
 
 
     /*
@@ -88,7 +99,7 @@ public final class CsrBeans {
 
 
     public String getFormSchema() {
-        String schemaFile=PropertyLoader.getProperties().getProperty(Constants.schemaFileName);
+        String schemaFile=properties.getProperty(Constants.schemaFileName);
         JsonParser jsonParser=new JsonParser();
         try {
             JsonObject jsonObject=jsonParser.parse(new JsonReader(new FileReader(schemaFile))).getAsJsonObject();
@@ -101,7 +112,7 @@ public final class CsrBeans {
     
     
     public boolean getLoginStatus () {
-        return PropertyLoader.getProperties().getProperty(Constants.propertyAuthRequired)==null || 
+        return properties.getProperty(Constants.propertyAuthRequired)==null ||
                 SecurityUtils.getSubject().isAuthenticated();
 
     }
@@ -118,7 +129,15 @@ public final class CsrBeans {
 
     public String getTitle() {
 
-        return PropertyLoader.getProperties().getProperty(Constants.title);
+        return properties.getProperty(Constants.title);
+    }
+
+
+    public String getConfiguration () {
+        JsonObject localJsonObject = PropertyLoader.getJavaScriptProperties();
+        localJsonObject.add("downloadName", new JsonPrimitive(getLoginName()));
+
+        return localJsonObject.toString();
     }
 
 } // class

@@ -33,6 +33,7 @@
         let schema =${hdr.formSchema};
         let loginStatus = ${hdr.loginStatus};
         let loginUsername = "${hdr.loginName}";
+        let configurationString = '${hdr.configuration}';
     </script>
 </head>
 

@@ -22,6 +22,9 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +34,7 @@ public final class PropertyLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyLoader.class);
     private static Properties properties = null;
+    private static JsonObject jsonProperties = new JsonObject();
 
 
     /**
@@ -61,6 +65,18 @@ public final class PropertyLoader {
             logger.error ("No Property file found");
         }
 
+        properties.forEach((k,v) -> {
+            logger.info(k.toString() + " : " + v.toString());
+            String pattern = "^js\\.(.+)$";
+            if (k.toString().matches(pattern)) {
+                try {
+                    String configKey = k.toString().replaceAll(pattern, "$1");
+                    jsonProperties.add(configKey, new JsonPrimitive(v.toString()));
+                } catch (Exception e) {
+                    logger.error("Exception: ", (Object[]) e.getStackTrace());
+                }
+            }
+        });
     }
 
 
@@ -69,6 +85,12 @@ public final class PropertyLoader {
             loadProperties();
         }
         return properties;
+    }
+
+
+    public static JsonObject getJavaScriptProperties () {
+
+        return jsonProperties;
     }
 
 
