@@ -19,13 +19,12 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JsonProcessor {
-    private static final Logger logger = LogManager.getLogger(JsonProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonProcessor.class);
 
 
     public String getCertificate(String req) {
@@ -47,10 +46,9 @@ public class JsonProcessor {
     }
 
 
-    public String getSubject(String req) {
+    String getSubject(String req) {
         CertificateFabric certificateFabric = new CertificateFabric();
         String subject;
-
 
         try {
             subject = certificateFabric.getReqData(getCertificate(req).replace("œ", "@"));

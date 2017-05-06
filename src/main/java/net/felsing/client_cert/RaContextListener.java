@@ -18,28 +18,29 @@
 package net.felsing.client_cert;
 
 import net.felsing.client_cert.utilities.PropertyLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.util.Factory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 
-public class RaContextListener implements ServletContextListener {
 
-    private static final Logger logger = LogManager.getLogger(Servlet.class);
+public class RaContextListener implements ServletContextListener {
+    private static Logger logger = LoggerFactory.getLogger(RaContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
+        BasicConfigurator.configure();
         Factory<SecurityManager> factory = new IniSecurityManagerFactory(PropertyLoader.getProperties().getProperty("shiroini"));
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
-        
-        logger.info ("Shiro loaded");
+        logger.info("Shiro loaded");
     }
 
     @Override

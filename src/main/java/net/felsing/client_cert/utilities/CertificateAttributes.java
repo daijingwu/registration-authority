@@ -22,22 +22,21 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CertificateAttributes {
-    private static final Logger logger = LogManager.getLogger(EjbcaToolBox.class);
+    private static final Logger logger = LoggerFactory.getLogger(EjbcaToolBox.class);
     private HashMap<String,String> attributes=new HashMap<>();
     private HashMap<String,String> labels=new HashMap<>();
 
 
-    public CertificateAttributes () {
+    CertificateAttributes() {
         String schemaFile=PropertyLoader.getProperties().getProperty(Constants.schemaFileName);
         try {
             JsonParser jsonParser=new JsonParser();
@@ -49,9 +48,9 @@ public class CertificateAttributes {
             }
 
         } catch (FileNotFoundException e) {
-            logger.fatal("File not found: "+e.getMessage());
+            logger.error ("File not found: "+e.getMessage());
         } catch (IllegalStateException e) {
-            logger.fatal("Cannot read JSON file: "+e.getMessage());
+            logger.error ("Cannot read JSON file: "+e.getMessage());
         }
     }
 
@@ -66,13 +65,7 @@ public class CertificateAttributes {
     }
 
 
-    public String getValue (String k) {
-
-        return attributes.get(k.toLowerCase());
-    }
-
-
-    public HashMap<String,String> getLabels () {
+    HashMap<String,String> getLabels() {
 
         return labels;
     }

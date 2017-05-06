@@ -19,12 +19,11 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import net.felsing.client_cert.ejbca.*;
-import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,7 +37,7 @@ import java.util.Properties;
 
 
 public class EjbcaToolBox {
-    private static final Logger logger = LogManager.getLogger(EjbcaToolBox.class);
+    private static final Logger logger = LoggerFactory.getLogger(EjbcaToolBox.class);
 
     private EjbcaWS port;
     private Properties properties;
@@ -91,7 +90,7 @@ public class EjbcaToolBox {
     }
 
 
-    public JsonObject getAvailableCas() {
+    JsonObject getAvailableCas() {
         JsonObject jsonObject = new JsonObject();
         try {
             java.util.List<NameAndId> _getAvailableCAs__return = port.getAvailableCAs();
@@ -111,7 +110,7 @@ public class EjbcaToolBox {
     }
 
 
-    public JsonObject ejbcaFindUser(String username) {
+    JsonObject ejbcaFindUser(String username) {
 
         UserMatch userMatch = new UserMatch();
         userMatch.setMatchtype(0);
@@ -133,9 +132,9 @@ public class EjbcaToolBox {
     }
 
 
-    public JsonObject ejbcaEditUser(String username,
-                                    String password,
-                                    String email
+    JsonObject ejbcaEditUser(String username,
+                             String password,
+                             String email
     ) {
 
 

@@ -22,467 +22,467 @@ public interface EjbcaWS {
     @RequestWrapper(localName = "getHardTokenData", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetHardTokenData")
     @ResponseWrapper(localName = "getHardTokenDataResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetHardTokenDataResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.HardTokenDataWS getHardTokenData(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        boolean arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        boolean arg2
+    net.felsing.client_cert.ejbca.HardTokenDataWS getHardTokenData(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    boolean arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    boolean arg2
     ) throws NotFoundException_Exception, HardTokenDoesntExistsException_Exception, ApprovalRequestExpiredException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, EjbcaException_Exception, ApprovalRequestExecutionException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "caCertResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CaCertResponse")
     @ResponseWrapper(localName = "caCertResponseResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CaCertResponseResponse")
-    public void caCertResponse(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        byte[] arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.util.List<byte[]> arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3
+    void caCertResponse(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    byte[] arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.util.List<byte[]> arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3
     ) throws AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, CesecoreException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "createCRL", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CreateCRL")
     @ResponseWrapper(localName = "createCRLResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CreateCRLResponse")
-    public void createCRL(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    void createCRL(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws CAOfflineException_Exception, ApprovalRequestExpiredException_Exception, CADoesntExistsException_Exception, ApprovalException_Exception, CryptoTokenOfflineException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getAvailableCAsInProfile", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAvailableCAsInProfile")
     @ResponseWrapper(localName = "getAvailableCAsInProfileResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAvailableCAsInProfileResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAvailableCAsInProfile(
-        @WebParam(name = "arg0", targetNamespace = "")
-        int arg0
+    java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAvailableCAsInProfile(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    int arg0
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "pkcs12Req", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.Pkcs12Req")
     @ResponseWrapper(localName = "pkcs12ReqResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.Pkcs12ReqResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.KeyStore pkcs12Req(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        java.lang.String arg4
+    net.felsing.client_cert.ejbca.KeyStore pkcs12Req(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    java.lang.String arg4
     ) throws AuthorizationDeniedException_Exception, NotFoundException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "crmfRequest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CrmfRequest")
     @ResponseWrapper(localName = "crmfRequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CrmfRequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.CertificateResponse crmfRequest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        java.lang.String arg4
+    net.felsing.client_cert.ejbca.CertificateResponse crmfRequest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    java.lang.String arg4
     ) throws AuthorizationDeniedException_Exception, NotFoundException_Exception, EjbcaException_Exception, CesecoreException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "findUser", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.FindUser")
     @ResponseWrapper(localName = "findUserResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.FindUserResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.UserDataVOWS> findUser(
-        @WebParam(name = "arg0", targetNamespace = "")
-        net.felsing.client_cert.ejbca.UserMatch arg0
+    java.util.List<net.felsing.client_cert.ejbca.UserDataVOWS> findUser(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.UserMatch arg0
     ) throws AuthorizationDeniedException_Exception, EndEntityProfileNotFoundException_Exception, IllegalQueryException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "keyRecover", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.KeyRecover")
     @ResponseWrapper(localName = "keyRecoverResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.KeyRecoverResponse")
-    public void keyRecover(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2
+    void keyRecover(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2
     ) throws NotFoundException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "genTokenCertificates", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GenTokenCertificates")
     @ResponseWrapper(localName = "genTokenCertificatesResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GenTokenCertificatesResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.TokenCertificateResponseWS> genTokenCertificates(
-        @WebParam(name = "arg0", targetNamespace = "")
-        net.felsing.client_cert.ejbca.UserDataVOWS arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.util.List<net.felsing.client_cert.ejbca.TokenCertificateRequestWS> arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        net.felsing.client_cert.ejbca.HardTokenDataWS arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        boolean arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        boolean arg4
+    java.util.List<net.felsing.client_cert.ejbca.TokenCertificateResponseWS> genTokenCertificates(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.UserDataVOWS arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.util.List<net.felsing.client_cert.ejbca.TokenCertificateRequestWS> arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.HardTokenDataWS arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    boolean arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    boolean arg4
     ) throws ApprovalRequestExpiredException_Exception, CADoesntExistsException_Exception, HardTokenExistsException_Exception, AuthorizationDeniedException_Exception, UserDoesntFullfillEndEntityProfile_Exception, ApprovalException_Exception, EjbcaException_Exception, ApprovalRequestExecutionException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "caRenewCertRequest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CaRenewCertRequest")
     @ResponseWrapper(localName = "caRenewCertRequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CaRenewCertRequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public byte[] caRenewCertRequest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.util.List<byte[]> arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        boolean arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        boolean arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        boolean arg4,
-        @WebParam(name = "arg5", targetNamespace = "")
-        java.lang.String arg5
+    byte[] caRenewCertRequest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.util.List<byte[]> arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    boolean arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    boolean arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    boolean arg4,
+            @WebParam(name = "arg5", targetNamespace = "")
+                    java.lang.String arg5
     ) throws AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "fetchUserData", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.FetchUserData")
     @ResponseWrapper(localName = "fetchUserDataResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.FetchUserDataResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.UserDataSourceVOWS> fetchUserData(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.util.List<java.lang.String> arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1
+    java.util.List<net.felsing.client_cert.ejbca.UserDataSourceVOWS> fetchUserData(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.util.List<java.lang.String> arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception, UserDataSourceException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "pkcs10Request", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.Pkcs10Request")
     @ResponseWrapper(localName = "pkcs10RequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.Pkcs10RequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.CertificateResponse pkcs10Request(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        java.lang.String arg4
+    net.felsing.client_cert.ejbca.CertificateResponse pkcs10Request(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    java.lang.String arg4
     ) throws AuthorizationDeniedException_Exception, NotFoundException_Exception, EjbcaException_Exception, CesecoreException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "revokeCertBackdated", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeCertBackdated")
     @ResponseWrapper(localName = "revokeCertBackdatedResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeCertBackdatedResponse")
-    public void revokeCertBackdated(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        int arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3
+    void revokeCertBackdated(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    int arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3
     ) throws RevokeBackDateNotAllowedForProfileException_Exception, AlreadyRevokedException_Exception, NotFoundException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, DateNotValidException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "checkRevokationStatus", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CheckRevokationStatus")
     @ResponseWrapper(localName = "checkRevokationStatusResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CheckRevokationStatusResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.RevokeStatus checkRevokationStatus(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1
+    net.felsing.client_cert.ejbca.RevokeStatus checkRevokationStatus(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getHardTokenDatas", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetHardTokenDatas")
     @ResponseWrapper(localName = "getHardTokenDatasResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetHardTokenDatasResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.HardTokenDataWS> getHardTokenDatas(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        boolean arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        boolean arg2
+    java.util.List<net.felsing.client_cert.ejbca.HardTokenDataWS> getHardTokenDatas(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    boolean arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    boolean arg2
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "revokeToken", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeToken")
     @ResponseWrapper(localName = "revokeTokenResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeTokenResponse")
-    public void revokeToken(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        int arg1
+    void revokeToken(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    int arg1
     ) throws AlreadyRevokedException_Exception, NotFoundException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "softTokenRequest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.SoftTokenRequest")
     @ResponseWrapper(localName = "softTokenRequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.SoftTokenRequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.KeyStore softTokenRequest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        net.felsing.client_cert.ejbca.UserDataVOWS arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3
+    net.felsing.client_cert.ejbca.KeyStore softTokenRequest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.UserDataVOWS arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3
     ) throws NotFoundException_Exception, CADoesntExistsException_Exception, UserDoesntFullfillEndEntityProfile_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getLatestCRL", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetLatestCRL")
     @ResponseWrapper(localName = "getLatestCRLResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetLatestCRLResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public byte[] getLatestCRL(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        boolean arg1
+    byte[] getLatestCRL(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    boolean arg1
     ) throws EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "keyRecoverNewest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.KeyRecoverNewest")
     @ResponseWrapper(localName = "keyRecoverNewestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.KeyRecoverNewestResponse")
-    public void keyRecoverNewest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    void keyRecoverNewest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws NotFoundException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "spkacRequest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.SpkacRequest")
     @ResponseWrapper(localName = "spkacRequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.SpkacRequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.CertificateResponse spkacRequest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        java.lang.String arg4
+    net.felsing.client_cert.ejbca.CertificateResponse spkacRequest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    java.lang.String arg4
     ) throws AuthorizationDeniedException_Exception, NotFoundException_Exception, EjbcaException_Exception, CesecoreException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "editUser", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.EditUser")
     @ResponseWrapper(localName = "editUserResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.EditUserResponse")
-    public void editUser(
-        @WebParam(name = "arg0", targetNamespace = "")
-        net.felsing.client_cert.ejbca.UserDataVOWS arg0
+    void editUser(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.UserDataVOWS arg0
     ) throws CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, UserDoesntFullfillEndEntityProfile_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getAvailableCAs", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAvailableCAs")
     @ResponseWrapper(localName = "getAvailableCAsResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAvailableCAsResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAvailableCAs() throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
+    java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAvailableCAs() throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getLastCAChain", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetLastCAChain")
     @ResponseWrapper(localName = "getLastCAChainResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetLastCAChainResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.Certificate> getLastCAChain(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    java.util.List<net.felsing.client_cert.ejbca.Certificate> getLastCAChain(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getLastCertChain", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetLastCertChain")
     @ResponseWrapper(localName = "getLastCertChainResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetLastCertChainResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.Certificate> getLastCertChain(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    java.util.List<net.felsing.client_cert.ejbca.Certificate> getLastCertChain(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "deleteUserDataFromSource", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.DeleteUserDataFromSource")
     @ResponseWrapper(localName = "deleteUserDataFromSourceResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.DeleteUserDataFromSourceResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public boolean deleteUserDataFromSource(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.util.List<java.lang.String> arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        boolean arg2
+    boolean deleteUserDataFromSource(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.util.List<java.lang.String> arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    boolean arg2
     ) throws AuthorizationDeniedException_Exception, MultipleMatchException_Exception, EjbcaException_Exception, UserDataSourceException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "findCerts", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.FindCerts")
     @ResponseWrapper(localName = "findCertsResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.FindCertsResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.Certificate> findCerts(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        boolean arg1
+    java.util.List<net.felsing.client_cert.ejbca.Certificate> findCerts(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    boolean arg1
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "certificateRequest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CertificateRequest")
     @ResponseWrapper(localName = "certificateRequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CertificateRequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.CertificateResponse certificateRequest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        net.felsing.client_cert.ejbca.UserDataVOWS arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        int arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        java.lang.String arg4
+    net.felsing.client_cert.ejbca.CertificateResponse certificateRequest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.UserDataVOWS arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    int arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    java.lang.String arg4
     ) throws NotFoundException_Exception, UserDoesntFullfillEndEntityProfile_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getAvailableCertificateProfiles", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAvailableCertificateProfiles")
     @ResponseWrapper(localName = "getAvailableCertificateProfilesResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAvailableCertificateProfilesResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAvailableCertificateProfiles(
-        @WebParam(name = "arg0", targetNamespace = "")
-        int arg0
+    java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAvailableCertificateProfiles(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    int arg0
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getEjbcaVersion", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetEjbcaVersion")
     @ResponseWrapper(localName = "getEjbcaVersionResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetEjbcaVersionResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.lang.String getEjbcaVersion();
+    java.lang.String getEjbcaVersion();
 
     @WebMethod
     @RequestWrapper(localName = "customLog", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CustomLog")
     @ResponseWrapper(localName = "customLogResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CustomLogResponse")
-    public void customLog(
-        @WebParam(name = "arg0", targetNamespace = "")
-        int arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2,
-        @WebParam(name = "arg3", targetNamespace = "")
-        java.lang.String arg3,
-        @WebParam(name = "arg4", targetNamespace = "")
-        net.felsing.client_cert.ejbca.Certificate arg4,
-        @WebParam(name = "arg5", targetNamespace = "")
-        java.lang.String arg5
+    void customLog(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    int arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2,
+            @WebParam(name = "arg3", targetNamespace = "")
+                    java.lang.String arg3,
+            @WebParam(name = "arg4", targetNamespace = "")
+                    net.felsing.client_cert.ejbca.Certificate arg4,
+            @WebParam(name = "arg5", targetNamespace = "")
+                    java.lang.String arg5
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "isApproved", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.IsApproved")
     @ResponseWrapper(localName = "isApprovedResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.IsApprovedResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public int isApproved(
-        @WebParam(name = "arg0", targetNamespace = "")
-        int arg0
+    int isApproved(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    int arg0
     ) throws ApprovalException_Exception, EjbcaException_Exception, ApprovalRequestExpiredException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getAuthorizedEndEntityProfiles", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAuthorizedEndEntityProfiles")
     @ResponseWrapper(localName = "getAuthorizedEndEntityProfilesResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetAuthorizedEndEntityProfilesResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAuthorizedEndEntityProfiles() throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
+    java.util.List<net.felsing.client_cert.ejbca.NameAndId> getAuthorizedEndEntityProfiles() throws AuthorizationDeniedException_Exception, EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "revokeUser", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeUser")
     @ResponseWrapper(localName = "revokeUserResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeUserResponse")
-    public void revokeUser(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        int arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        boolean arg2
+    void revokeUser(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    int arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    boolean arg2
     ) throws AlreadyRevokedException_Exception, NotFoundException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "existsHardToken", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.ExistsHardToken")
     @ResponseWrapper(localName = "existsHardTokenResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.ExistsHardTokenResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public boolean existsHardToken(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    boolean existsHardToken(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "revokeCert", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeCert")
     @ResponseWrapper(localName = "revokeCertResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RevokeCertResponse")
-    public void revokeCert(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        int arg2
+    void revokeCert(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    int arg2
     ) throws AlreadyRevokedException_Exception, NotFoundException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, ApprovalException_Exception, EjbcaException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "cvcRequest", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CvcRequest")
     @ResponseWrapper(localName = "cvcRequestResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.CvcRequestResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public java.util.List<net.felsing.client_cert.ejbca.Certificate> cvcRequest(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1,
-        @WebParam(name = "arg2", targetNamespace = "")
-        java.lang.String arg2
+    java.util.List<net.felsing.client_cert.ejbca.Certificate> cvcRequest(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1,
+            @WebParam(name = "arg2", targetNamespace = "")
+                    java.lang.String arg2
     ) throws NotFoundException_Exception, SignRequestException_Exception, CADoesntExistsException_Exception, AuthorizationDeniedException_Exception, UserDoesntFullfillEndEntityProfile_Exception, ApprovalException_Exception, CertificateExpiredException_Exception, EjbcaException_Exception, CesecoreException_Exception, WaitingForApprovalException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "isAuthorized", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.IsAuthorized")
     @ResponseWrapper(localName = "isAuthorizedResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.IsAuthorizedResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public boolean isAuthorized(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    boolean isAuthorized(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws EjbcaException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "republishCertificate", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RepublishCertificate")
     @ResponseWrapper(localName = "republishCertificateResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.RepublishCertificateResponse")
-    public void republishCertificate(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1
+    void republishCertificate(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1
     ) throws AuthorizationDeniedException_Exception, PublisherException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getCertificate", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetCertificate")
     @ResponseWrapper(localName = "getCertificateResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetCertificateResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public net.felsing.client_cert.ejbca.Certificate getCertificate(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0,
-        @WebParam(name = "arg1", targetNamespace = "")
-        java.lang.String arg1
+    net.felsing.client_cert.ejbca.Certificate getCertificate(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0,
+            @WebParam(name = "arg1", targetNamespace = "")
+                    java.lang.String arg1
     ) throws AuthorizationDeniedException_Exception, EjbcaException_Exception, CADoesntExistsException_Exception;
 
     @WebMethod
     @RequestWrapper(localName = "getPublisherQueueLength", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetPublisherQueueLength")
     @ResponseWrapper(localName = "getPublisherQueueLengthResponse", targetNamespace = "http://ws.protocol.core.ejbca.org/", className = "net.felsing.client_cert.ejbca.GetPublisherQueueLengthResponse")
     @WebResult(name = "return", targetNamespace = "")
-    public int getPublisherQueueLength(
-        @WebParam(name = "arg0", targetNamespace = "")
-        java.lang.String arg0
+    int getPublisherQueueLength(
+            @WebParam(name = "arg0", targetNamespace = "")
+                    java.lang.String arg0
     ) throws EjbcaException_Exception;
 }

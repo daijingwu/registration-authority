@@ -19,9 +19,8 @@ package net.felsing.client_cert.utilities;
 
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.security.KeyStore;
@@ -30,15 +29,10 @@ import java.util.Properties;
 
 
 class TLS_Utils {
-    private static final Logger logger = LogManager.getLogger(TLS_Utils.class);
+    private static final Logger logger = LoggerFactory.getLogger(TLS_Utils.class);
     private static final TLSClientParameters tlsParams = new TLSClientParameters();
-    //private static volatile boolean isTlsSetForSSL = false;
-    //private static final Lock setTlsParamsLock = new ReentrantLock();
 
 
-    // ----
-    // Some other methods and things
-    // ---
     static TLSClientParameters getTlsParams() {
         return tlsParams;
     }

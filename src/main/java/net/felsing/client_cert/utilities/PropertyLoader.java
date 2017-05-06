@@ -22,18 +22,14 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.config.IniSecurityManagerFactory;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.util.Factory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public final class PropertyLoader {
     private static final ArrayList<String> propertyfileLocations=new ArrayList<>();
 
-    private static final Logger logger = LogManager.getLogger(PropertyLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyLoader.class);
     private static Properties properties = null;
 
 
@@ -62,7 +58,7 @@ public final class PropertyLoader {
             }
         });
         if (properties==null) {
-            logger.fatal("No Property file found");
+            logger.error ("No Property file found");
         }
 
     }

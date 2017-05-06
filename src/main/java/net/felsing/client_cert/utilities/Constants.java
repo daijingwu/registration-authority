@@ -23,6 +23,8 @@ public final class Constants {
     static final String propertyFilename = "ejbca-new-ra.properties.xml";
     static final String propertyEnvname = "EJBCA_NEW_RA_PROPERTIES";
     static final String propertyAuthRequired = "auth.required";
+    static final String propertyTruststoreFile = "truststore.file";
+    static final String propertyTruststorePassword = "truststore.password";
 
     static final String trustStoreFile = "trustStoreFile";
     static final String keyStoreFile = "keyStoreFile";

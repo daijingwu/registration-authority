@@ -20,24 +20,20 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.shiro.subject.Subject;
 import org.apache.shiro.SecurityUtils;
 
 
 public final class CsrBeans {
-    private static final Logger logger = LogManager.getLogger(EjbcaToolBox.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsrBeans.class);
     private static HashMap<String, String> labels;
 
 
+    /*
     public static String getAttr(String k) {
         if (labels==null) {
             CertificateAttributes certificateAttributes = new CertificateAttributes();
@@ -45,8 +41,9 @@ public final class CsrBeans {
         }
         return labels.get(k);
     }
+    */
 
-
+    /*
     public static ArrayList<String> getAttributeList() {
         ArrayList<String> arrayList=new ArrayList<>();
         labels.forEach((k,v)->{
@@ -54,7 +51,7 @@ public final class CsrBeans {
         });
         return arrayList;
     }
-
+    */
 
     public String getForm() {
         if (labels==null) {

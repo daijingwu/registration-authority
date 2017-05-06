@@ -19,8 +19,8 @@ package net.felsing.client_cert;
 
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.Constants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,7 +40,7 @@ import org.apache.shiro.subject.Subject;
 
 @WebServlet(urlPatterns = "/login", loadOnStartup = 1)
 public class Login extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(Login.class);
+    private static final Logger logger = LoggerFactory.getLogger(Login.class);
     private boolean servletIsReady = false;
 
 
@@ -60,7 +60,6 @@ public class Login extends HttpServlet {
             // don't care about exception
             logger.debug("Called logout even user was not logged in");
         }
-        //req.getRequestDispatcher("/").forward(req,resp);
         resp.sendRedirect("./");
     }
 
@@ -91,15 +90,13 @@ public class Login extends HttpServlet {
                 Session session = currentUser.getSession();
                 session.setAttribute("someKey", "blahfaseltest");
                 logger.info("Authentication succeeded [" + username + "]");
-
                 req.getRequestDispatcher("/").forward(req, resp);
             } catch (AuthenticationException e) {
                 logger.info("Authentication failed [" + username + "]");
-                //req.getRequestDispatcher("/failed.jsp").forward(req, resp);
                 resp.sendRedirect("failed.jsp");
             } catch (Exception e) {
                 pw.println("Internal Error, not logged in");
-                logger.error(e.getStackTrace());
+                logger.error ("Stack trace", (Object[]) e.getStackTrace());
             }
         } else {
             logger.error("Login called even user is already logged in");

@@ -22,8 +22,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -42,7 +42,7 @@ import org.apache.shiro.SecurityUtils;
 
 @WebServlet(urlPatterns = "/req",loadOnStartup = 1)
 public class Servlet extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(Servlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(Servlet.class);
 
     private boolean servletIsReady = false;
     private static Properties properties = null;
@@ -118,7 +118,7 @@ public class Servlet extends HttpServlet {
         session();
 
         Subject currentUser = SecurityUtils.getSubject();
-        logger.debug(currentUser);
+        logger.debug(currentUser.getPrincipal().toString());
 
         resp.sendRedirect("./");
     }
