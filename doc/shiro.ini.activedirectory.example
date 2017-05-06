@@ -1,0 +1,24 @@
+###########################################################
+# Apache Shiro configuration for
+# Active Directory
+# Since Windows 2008R2 server LDAP
+# does not authenticate on unencrypted
+# LDAP connections
+###########################################################
+
+[main]
+securityManager.sessionManager.globalSessionTimeout = 7200000
+
+contextFactory = org.apache.shiro.realm.ldap.JndiLdapContextFactory
+contextFactory.url = ldaps://dc1.samba.example.com:636
+contextFactory.systemUsername = shiro@samba.example.com
+contextFactory.systemPassword = BadPassword123456
+contextFactory.environment[java.naming.security.protocol] = TLSv1.2
+contextFactory.environment[java.naming.ldap.factory.socket] = net.felsing.client_cert.utilities.RaSSLSocketFactory
+
+activeDirectoryRealm = org.apache.shiro.realm.activedirectory.ActiveDirectoryRealm
+activeDirectoryRealm.ldapContextFactory = $contextFactory
+activeDirectoryRealm.searchBase = "CN=Users,DC=sambe,DC=example,DC=com"
+activeDirectoryRealm.principalSuffix = @samba.example.com
+activeDirectoryRealm.groupRolesMap = "CN=Domain Users,CN=Users,DC=samba,DC=example,DC=com":"shiro"
+securityManager.realm = $activeDirectoryRealm

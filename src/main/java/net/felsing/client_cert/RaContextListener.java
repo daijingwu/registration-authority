@@ -36,11 +36,12 @@ public class RaContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
+        String shiroIniFile = PropertyLoader.getProperties().getProperty("shiroini");
         BasicConfigurator.configure();
-        Factory<SecurityManager> factory = new IniSecurityManagerFactory(PropertyLoader.getProperties().getProperty("shiroini"));
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory(shiroIniFile);
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
-        logger.info("Shiro loaded");
+        logger.info("Shiro loaded, using " + shiroIniFile);
     }
 
     @Override

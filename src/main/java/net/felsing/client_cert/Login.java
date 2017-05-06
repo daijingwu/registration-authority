@@ -93,6 +93,7 @@ public class Login extends HttpServlet {
                 req.getRequestDispatcher("/").forward(req, resp);
             } catch (AuthenticationException e) {
                 logger.info("Authentication failed [" + username + "]");
+                logger.debug ("Exception", (Object[]) e.getStackTrace());
                 resp.sendRedirect("failed.jsp");
             } catch (Exception e) {
                 pw.println("Internal Error, not logged in");

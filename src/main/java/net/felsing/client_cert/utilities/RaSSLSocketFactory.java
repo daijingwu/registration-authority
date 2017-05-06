@@ -20,8 +20,8 @@ public class RaSSLSocketFactory extends SSLSocketFactory {
     private SSLSocketFactory socketFactory;
 
     private RaSSLSocketFactory() {
-        String trustStoreFile = PropertyLoader.getProperties().getProperty(Constants.trustStoreFile);
-        String trustStorePassword = PropertyLoader.getProperties().getProperty(Constants.trustStorePassword);
+        String trustStoreFile = PropertyLoader.getProperties().getProperty(Constants.ldapTruststoreFile);
+        String trustStorePassword = PropertyLoader.getProperties().getProperty(Constants.ldapTruststorePassword);
 
         if ((trustStoreFile!=null) && (trustStorePassword!=null)) {
             logger.debug("Using " + trustStoreFile);
@@ -44,7 +44,7 @@ public class RaSSLSocketFactory extends SSLSocketFactory {
             /* handle exception */
             }
         } else {
-            logger.error ("Properties not set. You must set " + Constants.trustStoreFile + " and " + Constants.trustStorePassword);
+            logger.error ("Properties not set. You must set " + Constants.ldapTruststoreFile + " and " + Constants.ldapTruststorePassword);
         }
     }
 

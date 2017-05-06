@@ -20,15 +20,20 @@ package net.felsing.client_cert.utilities;
 
 public final class Constants {
 
+    static final String ldapTruststoreFile = "ldap.truststore.file";
+    static final String ldapTruststorePassword = "ldap.truststore.password";
+
     static final String propertyFilename = "ejbca-new-ra.properties.xml";
     static final String propertyEnvname = "EJBCA_NEW_RA_PROPERTIES";
     static final String propertyAuthRequired = "auth.required";
-    static final String propertyTruststoreFile = "truststore.file";
-    static final String propertyTruststorePassword = "truststore.password";
 
-    static final String trustStoreFile = "trustStoreFile";
-    static final String keyStoreFile = "keyStoreFile";
-    static final String trustStorePassword = "trustStorePassword";
+    static final String ejbcaKeyStoreType = "ejbca.keystore.type";
+    static final String ejbcaKeyStoreFile = "ejbca.keystore.file";
+    static final String ejbcaKeyStorePassword = "ejbca.keystore.password";
+    static final String ejbcaTrustStoreType = "ejbca.truststore.type";
+    static final String ejbcaTrustStoreFile = "ejbca.truststore.file";
+    static final String ejbcaTrustStorePassword = "ejbca.truststore.password";
+    static final String ejbcaTlsProtocol = "ejbca.tls";
 
     static final String proxyHost = "proxyHost";
     static final String proxyPort = "proxyPort";

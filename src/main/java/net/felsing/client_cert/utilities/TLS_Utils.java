@@ -39,44 +39,48 @@ class TLS_Utils {
 
 
     static void initializeConduitForSSL(Properties properties) throws Exception {
+        final String keyManagerType = "SunX509";
+        final String tlsVersion = properties.getProperty(Constants.ejbcaTlsProtocol);
 
-        String trustStoreFile = properties.getProperty(Constants.trustStoreFile);
-        String keyStoreFile = properties.getProperty(Constants.keyStoreFile);
+        final String trustStoreFile = properties.getProperty(Constants.ejbcaTrustStoreFile);
+        final String trustStorePassword = properties.getProperty(Constants.ejbcaTrustStorePassword);
+
+        final String keyStoreType = properties.getProperty(Constants.ejbcaKeyStoreType);
+        final String keyStoreFile = properties.getProperty(Constants.ejbcaKeyStoreFile);
+        final String keyStorePassword = properties.getProperty(Constants.ejbcaKeyStorePassword);
+
         TrustManagerFactory tmf = null;
         KeyManagerFactory kmf = null;
 
         // set truststore
         if (trustStoreFile!=null) {
-            String trustStorePassword = properties.getProperty(Constants.trustStorePassword);
-            KeyStore trustStore = KeyStore.getInstance(properties.getProperty("trustStoreType"));
+            KeyStore trustStore = KeyStore.getInstance(properties.getProperty(Constants.ejbcaTrustStoreType));
 
             trustStore.load(new FileInputStream(trustStoreFile),
                     trustStorePassword.toCharArray());
 
-            tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf = TrustManagerFactory.getInstance(keyManagerType);
             tmf.init(trustStore);
         }
 
         // set keystore
         if (keyStoreFile!=null) {
-            String keyStorePassword = properties.getProperty("keyStorePassword");
-            KeyStore keyStore = KeyStore.getInstance(properties.getProperty("keyStoreType"));
+            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
             keyStore.load(new FileInputStream(keyStoreFile),
                     keyStorePassword.toCharArray());
 
-            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf = KeyManagerFactory.getInstance(keyManagerType);
             kmf.init(keyStore, keyStorePassword.toCharArray());
         }
 
         // configure sslcontext
-        SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+        SSLContext sslContext = SSLContext.getInstance(tlsVersion);
         if (kmf!=null && tmf!=null) {
             sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
         } else {
             logger.error("initializeConduitForSSL: KeyManagerFactory or TrustManagerFactory is null");
         }
         tlsParams.setSSLSocketFactory(sslContext.getSocketFactory());
-
     }
 
 } // class

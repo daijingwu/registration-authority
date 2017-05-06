@@ -91,6 +91,13 @@ input {
     padding-top: 0.5em;
 }
 
+.div_buttons {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    padding-top: 1em;
+}
+
 #password {
     font: bold 18px/22px Monospaced;
 }
@@ -104,4 +111,11 @@ button {
     border: solid 1px #4C6181;
     color: #000;
     font: bold 14px/16px Helvetica, Arial, sans-serif;
+}
+
+.div_title {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font: bold 3em/3.5em Helvetica, Arial, sans-serif;
 }

@@ -85,31 +85,38 @@ Following properties file should explain what needs to be configured.
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
     <properties>
-        <entry key="shiroini">/Users/cf/Development/ejbca-new-ra-config/ejbca-new-ra.shiro.ini</entry>
-        <entry key="wsdlLocationUrl">file:/home/ejbca/ejbcaws.wsdl</entry>
+    <entry key="shiroini">/etc/ejbca-ra-new-config/ejbca-new-ra.shiro.ini</entry>
+    <entry key="ldap.truststore.file">/etc/ejbca-ra-new-config/ca.jks</entry>
+    <entry key="ldap.truststore.password">changeit</entry>
 
-        <entry key="trustStoreType">jks</entry>
-        <entry key="trustStoreFile">/etc/secrets/truststore.jks</entry>
-        <entry key="trustStorePassword">changeit</entry>
+    <entry key="wsdlLocationUrl">file:/etc/ejbca-ra-new-config/ejbcaws.wsdl</entry>
 
-        <entry key="proxyHost">192.168.0.1</entry>
-        <entry key="proxyPort">3128</entry>
+    <!-- If you need a proxy server -->
+    <!--
+    <entry key="proxyHost">192.168.0.1</entry>
+    <entry key="proxyPort">3128</entry>
+    -->
+    
+    <entry key="ejbca.keystore.type">PKCS12</entry>
+    <entry key="ejbca.keystore.file">/etc/ejbca-ra-new-config/demo.ca.administrator.p12</entry>
+    <entry key="ejbca.keystore.password">A*Very*Bad*Password</entry>
+    <entry key="ejbca.truststore.type">jks</entry>
+    <entry key="ejbca.truststore.file">/etc/ejbca-ra-new-config/ejbca-new-ra.truststore.jks</entry>
+    <entry key="ejbca.truststore.password">changeit</entry>
+    <entry key="ejbca.tls">TLSv1.2</entry>
 
-        <entry key="keyStoreType">PKCS12</entry>
-        <entry key="keyStoreFile">/etc/secrets/ejbca-myca-admin.p12</entry>
-        <entry key="keyStorePassword">changeit</entry>
+    <entry key="schemaFileName">/etc/ejbca-ra-new-config/ejbca-new-ra.schema.json</entry>
 
-        <entry key="schemaFileName">/media/cf/Development/ejbca-new-ra.schema.json</entry>
+    <entry key="caName">DemoCA</entry>
+    <entry key="CertificateProfileName">democa-profile</entry>
+    <entry key="EndEntityProfileName">democa-profile</entry>
+    <entry key="o">Honest Achmeds CA</entry>
+    <entry key="ou">Used cars and aircrafts</entry>
 
-        <entry key="caName">DemoCA</entry>
-        <entry key="CertificateProfileName">DemoCertProfile</entry>
-        <entry key="EndEntityProfileName">DemoEntityProfile</entry>
-        <entry key="ou">Demo Certificates</entry>
-        <entry key="o">example.com</entry>
+    <entry key="title">Demo RA for EJBCA</entry>
 
-        <entry key="title">Demo RA for EJBCA</entry>
-        
-        <entry key="auth.required"></entry>
+    <!-- Set if you want authentication --> 
+    <entry key="auth.required"></entry>
     </properties>
 
 wsdlLocationUrl contains EJBCA wsdl file, you may consider to provide it as file.

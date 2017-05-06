@@ -39,9 +39,10 @@
 <body>
 <c:set var="loginStatus" value="${hdr.loginStatus}"/>
 <c:set var="loginName" value="${hdr.loginName}"/>
-<c:choose>
-    <c:when test="${hdr.loginStatus eq false}">
-        <div class="wrapper">
+<div class="wrapper">
+    <div id="title" class="div_title">${hdr.title}</div>
+    <c:choose>
+        <c:when test="${hdr.loginStatus eq false}">
             <form id="login" action="login" method="post">
                 <div id="div_loginusername" class="div_input">
                     <label for="loginusername" class="label">Username:</label>
@@ -51,25 +52,26 @@
                     <label for="loginpassword" class="label">Password:</label>
                     <input type="password" id="loginpassword" name="loginpassword"/>
                 </div>
-                <div id="div_loginbutton" class="div_input">
+                <div id="div_loginbutton" class="div_buttons">
                     <button id="loginbutton" type="submit">Send</button>
                 </div>
             </form>
-        </div>
-    </c:when>
-    <c:otherwise>
-        <div class="wrapper">
+        </c:when>
+        <c:otherwise>
             <div id="add-pkcs10-block">
                 <div id="ra_form">
                         ${hdr.form}
                 </div>
 
-                <div id="div_create">
-                    <button id="create" type="button" onclick="createCSR();">Create PKCS#12 Keystore</button>
-                </div>
+                <div id="div_buttons" class="div_buttons">
+                    <div id="div_create">
+                        <button id="create" type="button" onclick="createCSR();">Create PKCS#12 Keystore</button>
+                    </div>
 
-                <div id="div_logoutbutton" class="div_input">
-                    <button id="logoutbutton" type="button" onclick="window.location = '/login';">Logout</button>
+                    <div id="div_logoutbutton" class="div_input">
+                        <button id="logoutbutton" type="button" onclick="window.location.replace('/login');">Logout
+                        </button>
+                    </div>
                 </div>
 
                 <div id="div_password">
@@ -79,9 +81,10 @@
 
                 <div id="div_certificate" style="display:none"></div>
             </div>
-        </div>
-    </c:otherwise>
-</c:choose>
+
+        </c:otherwise>
+    </c:choose>
+</div>
 
 <div id="spinner"></div>
 
