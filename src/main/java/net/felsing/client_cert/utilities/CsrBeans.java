@@ -26,18 +26,18 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Properties;
+import java.net.URI;
+import java.util.*;
 
 import org.apache.shiro.SecurityUtils;
-
-
 
 
 public final class CsrBeans {
     private static final Logger logger = LoggerFactory.getLogger(CsrBeans.class);
     private static HashMap<String, String> labels;
     private Properties properties = null;
+    private String lang = null;
+    private ResourceBundle bundle = null;
 
 
     public CsrBeans () {
@@ -47,29 +47,45 @@ public final class CsrBeans {
     }
 
 
-    /*
-    public static String getAttr(String k) {
-        if (labels==null) {
-            CertificateAttributes certificateAttributes = new CertificateAttributes();
-            labels = certificateAttributes.getLabels();
-        }
-        return labels.get(k);
-    }
-    */
+    public void setLang (String lang) {
 
-    /*
-    public static ArrayList<String> getAttributeList() {
-        ArrayList<String> arrayList=new ArrayList<>();
-        labels.forEach((k,v)->{
-            arrayList.add(k);
-        });
-        return arrayList;
+        this.lang = lang;
     }
-    */
+
+
+
+    private void loadLocale (String strLocale) {
+        if (bundle==null) {
+            List<Locale.LanguageRange> languageRanges = Locale.LanguageRange.parse(strLocale);
+
+            for (Locale.LanguageRange l : languageRanges) {
+                Locale locale = new Locale(l.getRange());
+                try {
+                    bundle = ResourceBundle.getBundle("text", locale);
+                } catch (Exception e) {
+                    // ignore
+                    logger.info("loadLocale (1): " + e.getMessage());
+                }
+            }
+
+            if (bundle == null) {
+                try {
+                    bundle = ResourceBundle.getBundle("text");
+                    logger.info("create: " + bundle.getString("create"));
+                } catch (Exception e) {
+                    logger.info("loadLocale (2): " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+
+            logger.info("loadLocale: " + bundle.getString("create"));
+        }
+    }
+
 
     public String getForm() {
         if (labels==null) {
-            CertificateAttributes certificateAttributes = new CertificateAttributes();
+            CertificateAttributes certificateAttributes = new CertificateAttributes(bundle);
             labels = certificateAttributes.getLabels();
         }
         StringBuilder form = new StringBuilder();
@@ -100,19 +116,6 @@ public final class CsrBeans {
         return form.toString();
     }
 
-
-    public String getFormSchema() {
-        String schemaFile=properties.getProperty(Constants.schemaFileName);
-        JsonParser jsonParser=new JsonParser();
-        try {
-            JsonObject jsonObject=jsonParser.parse(new JsonReader(new FileReader(schemaFile))).getAsJsonObject();
-            return jsonObject.toString();
-        } catch (FileNotFoundException e) {
-            logger.error("Cannot open file: "+e.getMessage());
-            return null;
-        }
-    }
-    
     
     public boolean getLoginStatus () {
         if (properties.getProperty(Constants.propertyAuthRequired)==null) return true;
@@ -142,9 +145,32 @@ public final class CsrBeans {
     }
 
 
+    public String bundleEntry (String key) {
+
+        return bundle.getString(key);
+    }
+
+
     public String getJsConfiguration() {
+        String schemaFile=properties.getProperty(Constants.schemaFileName);
         JsonObject localJsonObject = PropertyLoader.getJavaScriptProperties();
         localJsonObject.add("downloadName", new JsonPrimitive(getLoginName()));
+        localJsonObject.add("loginStatus", new JsonPrimitive(getLoginStatus()));
+        localJsonObject.add("loginName", new JsonPrimitive(getLoginName()));
+        try {
+            JsonParser jsonParser=new JsonParser();
+            localJsonObject.add("schema", jsonParser.parse(new JsonReader(new FileReader(schemaFile))).getAsJsonObject());
+        } catch (FileNotFoundException e) {
+            logger.error("Cannot open file: "+e.getMessage());
+        }
+
+        loadLocale(lang);
+        assert (bundle!=null);
+        JsonObject jsonBundle = new JsonObject();
+        for (String key: bundle.keySet()) {
+            jsonBundle.add(key, new JsonPrimitive(bundle.getString(key)));
+        }
+        localJsonObject.add("bundle", jsonBundle);
 
         return localJsonObject.toString();
     }

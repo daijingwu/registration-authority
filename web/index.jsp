@@ -1,3 +1,4 @@
+<%@ page import="java.util.Locale" %>
 <%--
 /*
  * Copyright (c) 2016. by Christian Felsing
@@ -18,33 +19,42 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="hdr" class="net.felsing.client_cert.utilities.CsrBeans"/>
-
+<%
+    Locale locale = request.getLocale();
+    session.setAttribute("locale", locale);
+%>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>${hdr.title}</title>
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
+
+    <c:set var="loginStatus" value="${hdr.loginStatus}"/>
+    <c:set var="loginName" value="${hdr.loginName}"/>
+    <c:set var="language" value="${pageContext.request.locale.language}" scope="session" />
+    <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session" />
+    <%-- <fmt:setLocale value="${language}" /> --%>
+    <jsp:setProperty name="hdr" property="lang" value="${userLanguage}" />
 </head>
-<body jsp_schema='${hdr.formSchema}' jsp_loginStatus='${hdr.loginStatus}' jsp_loginUsername='${hdr.loginName}' jsp_configurationString='${hdr.jsConfiguration}'>
-<c:set var="loginStatus" value="${hdr.loginStatus}"/>
-<c:set var="loginName" value="${hdr.loginName}"/>
+<body jsp_configurationString='${hdr.jsConfiguration}'>
 <div class="wrapper">
     <div id="title" class="div_title">${hdr.title}</div>
     <c:choose>
         <c:when test="${hdr.loginStatus eq false}">
             <form id="login" action="login" method="post">
                 <div id="div_loginusername" class="div_input">
-                    <label for="loginusername" class="label">Username:</label>
+                    <label id="lbl_loginusername" for="loginusername" class="label">${hdr.bundleEntry("lbl_loginusername")}</label>
                     <input type="text" id="loginusername" name="loginusername"/>
                 </div>
                 <div id="div_loginpassword" class="div_input">
-                    <label for="loginpassword" class="label">Password:</label>
+                    <label id="lbl_loginpassword" for="loginpassword" class="label">${hdr.bundleEntry("lbl_loginpassword")}</label>
                     <input type="password" id="loginpassword" name="loginpassword"/>
                 </div>
                 <div id="div_loginbutton" class="div_buttons">
-                    <button id="loginbutton" type="submit">Send</button>
+                    <button id="loginbutton" type="submit">${hdr.bundleEntry("loginbutton")}</button>
                 </div>
             </form>
         </c:when>
@@ -56,11 +66,11 @@
 
                 <div id="div_buttons" class="div_buttons">
                     <div id="div_create">
-                        <button id="create" type="button" onclick="createCSR();">Create PKCS#12 Keystore</button>
+                        <button id="create" type="button" onclick="createCSR();">${hdr.bundleEntry("create")}</button>
                     </div>
 
                     <div id="div_logoutbutton" class="div_input">
-                        <button id="logoutbutton" type="button" onclick="window.location.replace('/login');">Logout
+                        <button id="logoutbutton" type="button" onclick="window.location.replace('/login');">${hdr.bundleEntry("logoutbutton")}
                         </button>
                     </div>
                 </div>

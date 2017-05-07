@@ -26,6 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,7 @@ public class CertificateAttributes {
     private HashMap<String,String> labels=new HashMap<>();
 
 
-    CertificateAttributes() {
+    CertificateAttributes(ResourceBundle bundle) {
         String schemaFile=PropertyLoader.getProperties().getProperty(Constants.schemaFileName);
         try {
             JsonParser jsonParser=new JsonParser();
@@ -44,7 +46,7 @@ public class CertificateAttributes {
 
             for (Map.Entry<String,JsonElement> entry : jsonObject.entrySet()) {
                 attributes.put(entry.getKey().toLowerCase(),"");
-                labels.put(entry.getKey().toLowerCase(),entry.getValue().toString());
+                labels.put(entry.getKey().toLowerCase(), bundle.getString(entry.getValue().toString().replaceAll("\"","")));
             }
 
         } catch (FileNotFoundException e) {

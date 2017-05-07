@@ -5,10 +5,6 @@
 
 
 let configuration = null;
-let loginstatus = null;
-let loginUsername = null;
-let schema = null;
-
 
 function destroyClickedElement(event) {
     document.body.removeChild(event.target);
@@ -19,11 +15,11 @@ const signCsr = function () {
     const div_create = $('#create');
     const lbl_password = $('#lbl_password');
     const div_password = $('#password');
-    const labelPassword="Your Password:";
-    const friendlyName=configuration.downloadName;
+    const labelPassword = "Your Password:";
+    const friendlyName = configuration.downloadName;
 
-    const ajaxData={};
-    ajaxData.pkcs10=window.csr.pkcs10;
+    const ajaxData = {};
+    ajaxData.pkcs10 = window.csr.pkcs10;
     JSON.stringify(ajaxData);
 
     div_create.hide();
@@ -33,21 +29,21 @@ const signCsr = function () {
         method: "POST",
         data: JSON.stringify(ajaxData)
     })
-        .done(function(json) {
-            window.csr.certificateChain=JSON.parse(json).certificateChain;
+        .done(function (json) {
+            window.csr.certificateChain = JSON.parse(json).certificateChain;
             closeDialog();
             div_create.hide();
-            window.csr.password=genPassword();
-            window.csr.friendlyName=friendlyName;
+            window.csr.password = genPassword();
+            window.csr.friendlyName = friendlyName;
             genPKCS12();
             lbl_password.empty().append(labelPassword);
             div_password.empty().append(window.csr.password);
         })
-        .fail(function() {
-            alert( "error" );
+        .fail(function () {
+            alert("error");
         })
-        .always(function() {
-            alert( "complete" );
+        .always(function () {
+            alert("complete");
         });
 };
 
@@ -60,7 +56,7 @@ const createCSR = function () {
     window.csr.e = $("#e").val();
     window.csr.subjectAltNames.rfc822Name = window.csr.e;
 
-    createPKCS10(function() {
+    createPKCS10(function () {
         signCsr();
     });
 };
@@ -109,7 +105,7 @@ function genPKCS12() {
     const downloadLink = document.createElement("a");
     downloadLink.download = configuration.downloadName + ".p12";
     downloadLink.innerHTML = "Download File";
-    downloadLink.href = window.URL.createObjectURL(b64toBlob(forge.util.encode64(p12Der),{type: "application/x-pkcs12"}));
+    downloadLink.href = window.URL.createObjectURL(b64toBlob(forge.util.encode64(p12Der), {type: "application/x-pkcs12"}));
     downloadLink.onclick = destroyClickedElement;
     downloadLink.style.display = "none";
     document.body.appendChild(downloadLink);
@@ -119,11 +115,11 @@ function genPKCS12() {
 
 
 function genPassword() {
-    let text="";
+    let text = "";
     //const possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!§$%&/()=?#'+*~-_.:,;|";
-    const possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i=0;i<32;i++) {
-        text+=possible.charAt(Math.floor(Math.random()*possible.length));
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (let i = 0; i < 32; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return text;
 }
@@ -132,9 +128,9 @@ function genPassword() {
 function openDialog() {
     $("#spinner").dialog("open");
     setTimeout(
-        function(){
+        function () {
             closeDialog();
-        } , 10000);
+        }, 10000);
 }
 
 
@@ -146,13 +142,13 @@ function closeDialog() {
 
 const loadCountries = function () {
     $.get("json/countries.min.json")
-        .then(function(data) {
-            const countryfield=$("#c");
-            const countries=data.countries;
-            $.each(countries,function(key,value) {
+        .then(function (data) {
+            const countryfield = $("#c");
+            const countries = data.countries;
+            $.each(countries, function (key, value) {
                 countryfield
                     .append($("<option></option>")
-                        .attr("value",key)
+                        .attr("value", key)
                         .text(value.name));
             })
 
@@ -160,7 +156,19 @@ const loadCountries = function () {
 };
 
 
-$(document).ready(function() {
+const fillLocalizedText = function () {
+    const langData = configuration.bundle;
+    for (const key in langData) {
+        if (langData.hasOwnProperty(key)) {
+            const div = $("#" + key);
+            const v = langData[key];
+            div.empty().append(v);
+        }
+    }
+};
+
+
+$(document).ready(function () {
     $("#spinner").dialog({
         draggable: false,
         resizable: false,
@@ -173,11 +181,8 @@ $(document).ready(function() {
     });
 
     const body = $("body");
-    schema = body.attr("jsp_schema");
-    loginstatus = body.attr("jsp_loginStatus");
-    loginUsername = body.attr("jsp_loginUsername");
     configuration = JSON.parse(body.attr("jsp_configurationString"));
-    console.log ("configuration: %o", configuration);
+    //fillLocalizedText();
     loadCountries();
 
     window.createCSR = createCSR;

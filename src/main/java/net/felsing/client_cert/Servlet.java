@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.*;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

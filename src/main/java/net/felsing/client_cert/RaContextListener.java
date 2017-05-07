@@ -28,11 +28,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
+import java.io.File;
 
 
 public class RaContextListener implements ServletContextListener {
     private static Logger logger = LoggerFactory.getLogger(RaContextListener.class);
+    private static String contextPath;
 
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
