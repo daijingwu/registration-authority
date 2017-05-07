@@ -21,23 +21,13 @@
 <jsp:useBean id="hdr" class="net.felsing.client_cert.utilities.CsrBeans"/>
 
 <html>
-
 <head>
     <meta charset="utf-8"/>
     <title>${hdr.title}</title>
-
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript">
-        let schema =${hdr.formSchema};
-        let loginStatus = ${hdr.loginStatus};
-        let loginUsername = "${hdr.loginName}";
-        let configurationString = '${hdr.configuration}';
-    </script>
 </head>
-
-<body>
+<body jsp_schema='${hdr.formSchema}' jsp_loginStatus='${hdr.loginStatus}' jsp_loginUsername='${hdr.loginName}' jsp_configurationString='${hdr.jsConfiguration}'>
 <c:set var="loginStatus" value="${hdr.loginStatus}"/>
 <c:set var="loginName" value="${hdr.loginName}"/>
 <div class="wrapper">
@@ -89,6 +79,7 @@
 
 <div id="spinner"></div>
 
+<script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="application/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/pkcs10.js"></script>
 <script type="text/javascript" src="js/forge.min.js"></script>

@@ -1,11 +1,13 @@
 /* jshint browser: true */
 /* jshint jquery */
-/* globals loginUsername */
 
 "use strict";
 
 
 let configuration = null;
+let loginstatus = null;
+let loginUsername = null;
+let schema = null;
 
 
 function destroyClickedElement(event) {
@@ -170,7 +172,11 @@ $(document).ready(function() {
         width: 256,
     });
 
-    configuration = JSON.parse(configurationString);
+    const body = $("body");
+    schema = body.attr("jsp_schema");
+    loginstatus = body.attr("jsp_loginStatus");
+    loginUsername = body.attr("jsp_loginUsername");
+    configuration = JSON.parse(body.attr("jsp_configurationString"));
     console.log ("configuration: %o", configuration);
     loadCountries();
 

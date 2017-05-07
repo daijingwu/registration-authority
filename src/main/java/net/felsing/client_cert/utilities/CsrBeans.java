@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
@@ -29,6 +30,8 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.shiro.SecurityUtils;
+
+
 
 
 public final class CsrBeans {
@@ -112,9 +115,15 @@ public final class CsrBeans {
     
     
     public boolean getLoginStatus () {
-        return properties.getProperty(Constants.propertyAuthRequired)==null ||
-                SecurityUtils.getSubject().isAuthenticated();
+        if (properties.getProperty(Constants.propertyAuthRequired)==null) return true;
 
+        Subject subject = SecurityUtils.getSubject();
+        boolean sufficientRole = true;
+        String raRole = properties.getProperty(Constants.propertyRaGroup);
+        if (raRole!=null) {
+            sufficientRole = subject.hasRole(raRole);
+        }
+        return subject.isAuthenticated() && sufficientRole;
     }
 
 
@@ -133,7 +142,7 @@ public final class CsrBeans {
     }
 
 
-    public String getConfiguration () {
+    public String getJsConfiguration() {
         JsonObject localJsonObject = PropertyLoader.getJavaScriptProperties();
         localJsonObject.add("downloadName", new JsonPrimitive(getLoginName()));
 
