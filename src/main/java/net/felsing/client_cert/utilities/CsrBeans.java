@@ -53,7 +53,6 @@ public final class CsrBeans {
     }
 
 
-
     private void loadLocale (String strLocale) {
         if (bundle==null) {
             List<Locale.LanguageRange> languageRanges = Locale.LanguageRange.parse(strLocale);
@@ -77,8 +76,6 @@ public final class CsrBeans {
                     e.printStackTrace();
                 }
             }
-
-            logger.info("loadLocale: " + bundle.getString("create"));
         }
     }
 

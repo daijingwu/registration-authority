@@ -65,8 +65,8 @@ public final class PropertyLoader {
             logger.error ("No Property file found");
         }
 
+        assert (properties!=null);
         properties.forEach((k,v) -> {
-            logger.info(k.toString() + " : " + v.toString());
             String pattern = "^js\\.(.+)$";
             if (k.toString().matches(pattern)) {
                 try {
