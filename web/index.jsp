@@ -74,7 +74,7 @@
 
                     <div id="div_logoutbutton" class="div_input">
                         <button id="logoutbutton" type="button"
-                                onclick="window.location.replace('/login');">${hdr.bundleEntry("logoutbutton")}
+                                onclick="window.location.replace('./login');">${hdr.bundleEntry("logoutbutton")}
                         </button>
                     </div>
                 </div>
