@@ -34,23 +34,26 @@
 
     <c:set var="loginStatus" value="${hdr.loginStatus}"/>
     <c:set var="loginName" value="${hdr.loginName}"/>
-    <c:set var="language" value="${pageContext.request.locale.language}" scope="session" />
-    <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session" />
+    <c:set var="language" value="${pageContext.request.locale.language}" scope="session"/>
+    <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
     <%-- <fmt:setLocale value="${language}" /> --%>
-    <jsp:setProperty name="hdr" property="lang" value="${userLanguage}" />
+    <jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
 </head>
 <body jsp_configurationString='${hdr.jsConfiguration}'>
 <div class="wrapper">
     <div id="title" class="div_title">${hdr.title}</div>
     <c:choose>
         <c:when test="${hdr.loginStatus eq false}">
+            ${hdr.cleanUp}
             <form id="login" action="login" method="post">
                 <div id="div_loginusername" class="div_input">
-                    <label id="lbl_loginusername" for="loginusername" class="label">${hdr.bundleEntry("lbl_loginusername")}</label>
+                    <label id="lbl_loginusername" for="loginusername"
+                           class="label">${hdr.bundleEntry("lbl_loginusername")}</label>
                     <input type="text" id="loginusername" name="loginusername"/>
                 </div>
                 <div id="div_loginpassword" class="div_input">
-                    <label id="lbl_loginpassword" for="loginpassword" class="label">${hdr.bundleEntry("lbl_loginpassword")}</label>
+                    <label id="lbl_loginpassword" for="loginpassword"
+                           class="label">${hdr.bundleEntry("lbl_loginpassword")}</label>
                     <input type="password" id="loginpassword" name="loginpassword"/>
                 </div>
                 <div id="div_loginbutton" class="div_buttons">
@@ -70,14 +73,22 @@
                     </div>
 
                     <div id="div_logoutbutton" class="div_input">
-                        <button id="logoutbutton" type="button" onclick="window.location.replace('/login');">${hdr.bundleEntry("logoutbutton")}
+                        <button id="logoutbutton" type="button"
+                                onclick="window.location.replace('/login');">${hdr.bundleEntry("logoutbutton")}
                         </button>
                     </div>
                 </div>
 
-                <div id="div_password">
-                    <div id="lbl_password" class="label"></div>
-                    <div id="password"></div>
+                <div id="pkcs12_password_area">
+                    <div id="div_password" class="pwd_toggle_off">
+                        <div id="lbl_password" class="label pwd_toggle_off"></div>
+                        <div id="password" class="pwd_toggle_off"</div>
+                    </div>
+
+                    <div id="div_passwordButton" class="pwd_toggle_off">
+                        <button id="showPass" type="button"
+                                onclick="showPassword();">${hdr.bundleEntry("showPassword")}</button>
+                    </div>
                 </div>
 
                 <div id="div_certificate" style="display:none"></div>

@@ -11,11 +11,44 @@ function destroyClickedElement(event) {
 }
 
 
+const getFieldNames = function () {
+    const fieldNames = {};
+    fieldNames.names={};
+    fieldNames.css={};
+    fieldNames.names.passwordField=$("#div_password");
+    fieldNames.names.button=$("#div_passwordButton");
+    fieldNames.names.lbl_password=$('#lbl_password');
+    fieldNames.names.div_password=$('#password');
+    fieldNames.css.on="pwd_toggle_on";
+    fieldNames.css.off="pwd_toggle_off";
+
+    return fieldNames;
+};
+
+
+const showPassword = function () {
+    const f=getFieldNames();
+    f.names.passwordField.removeClass(f.css.off).addClass(f.css.on);
+    f.names.lbl_password.removeClass(f.css.off);
+    f.names.div_password.removeClass(f.css.off);
+    f.names.button.removeClass(f.css.on).addClass(f.css.off);
+};
+
+
+const displayPassword = function() {
+    const f=getFieldNames();
+    const labelPassword = configuration.bundle.lbl_loginpassword;
+
+    f.names.lbl_password.empty().append(labelPassword);
+    f.names.div_password.empty().append(window.csr.password);
+
+    f.names.button.removeClass(f.css.off).addClass(f.css.on);
+};
+
+
 const signCsr = function () {
     const div_create = $('#create');
     const lbl_password = $('#lbl_password');
-    const div_password = $('#password');
-    const labelPassword = "Your Password:";
     const friendlyName = configuration.downloadName;
 
     const ajaxData = {};
@@ -24,7 +57,7 @@ const signCsr = function () {
 
     div_create.hide();
     openDialog();
-    const jqxhr = $.ajax({
+    $.ajax({
         url: "req",
         method: "POST",
         data: JSON.stringify(ajaxData)
@@ -36,14 +69,13 @@ const signCsr = function () {
             window.csr.password = genPassword();
             window.csr.friendlyName = friendlyName;
             genPKCS12();
-            lbl_password.empty().append(labelPassword);
-            div_password.empty().append(window.csr.password);
+            displayPassword();
         })
         .fail(function () {
-            alert("error");
+            alert(configuration.bundle.ajaxerror);
         })
         .always(function () {
-            alert("complete");
+            closeDialog();
         });
 };
 
@@ -156,18 +188,6 @@ const loadCountries = function () {
 };
 
 
-const fillLocalizedText = function () {
-    const langData = configuration.bundle;
-    for (const key in langData) {
-        if (langData.hasOwnProperty(key)) {
-            const div = $("#" + key);
-            const v = langData[key];
-            div.empty().append(v);
-        }
-    }
-};
-
-
 $(document).ready(function () {
     $("#spinner").dialog({
         draggable: false,
@@ -182,7 +202,6 @@ $(document).ready(function () {
 
     const body = $("body");
     configuration = JSON.parse(body.attr("jsp_configurationString"));
-    //fillLocalizedText();
     loadCountries();
 
     window.createCSR = createCSR;

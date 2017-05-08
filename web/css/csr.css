@@ -80,9 +80,26 @@ input {
     padding-top: 1em;
 }
 
+#pkcs12_password_area {
+    margin-top: 1em;
+}
+
+.pwd_toggle_on {
+    display: inline-block;
+}
+
+.pwd_toggle_off {
+    display: none;
+}
+
 #div_password {
     display: inline-block;
     width: 100%;
+}
+
+#div_passwordButton {
+    width:100%;
+    text-align: center;
 }
 
 .div_input {

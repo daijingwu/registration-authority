@@ -148,6 +148,17 @@ public final class CsrBeans {
     }
 
 
+    public String getCleanUp () {
+        try {
+            SecurityUtils.getSubject().logout();
+        } catch (Exception e) {
+            // hopefully really logged out now
+        }
+
+        return "";
+    }
+
+
     public String getJsConfiguration() {
         String schemaFile=properties.getProperty(Constants.schemaFileName);
         JsonObject localJsonObject = PropertyLoader.getJavaScriptProperties();

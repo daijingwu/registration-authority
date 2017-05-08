@@ -150,3 +150,5 @@ May be improved...
 * EJBCA User (keystore) needs administrative rights at EJBCA.
 * No properties file
 * shiro.ini file not found, see shiroini property in properties file
+* Changes on UTF8 properties: native2ascii -encoding UTF-8 text_zh.properties.UTF8 text_zh.properties
+
