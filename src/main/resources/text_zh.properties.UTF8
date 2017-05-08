@@ -1,0 +1,8 @@
+lbl_loginusername=用戶名
+lbl_loginpassword=口令；密碼
+loginbutton=進入系統，登錄
+create=創造；創建；創作；發明 PKCS#12 鎖匙
+logoutbutton=退出，登出
+schema_em="電子郵件系統"
+schema_cn="常見的 名字"
+schema_c="國家"
