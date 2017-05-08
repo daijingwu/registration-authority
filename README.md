@@ -8,12 +8,6 @@ A new generation RA for EJBCA
 * client certificate from EJBCA
 * Enough rights to to its job on EJBCA
 
-To set up a deployment environment you have to do following commands:
-
-* web/js
-* git clone https://github.com/GlobalSign/ASN1.js.git
-* git clone https://github.com/GlobalSign/PKI.js.git
-
 # Status
 
 **This software is in very early alpha status. Do not use for production!**
