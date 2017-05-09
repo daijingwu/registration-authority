@@ -180,9 +180,8 @@ const loadCountries = function () {
                 countryfield
                     .append($("<option></option>")
                         .attr("value", value.cca2)
-                        .text(value.name + " (" + value.cca2 + ")"));
+                        .text(value.name));
             })
-
         });
 };
 

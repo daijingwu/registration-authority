@@ -28,12 +28,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.List;
-import java.util.Locale;
+import java.text.Collator;
+import java.util.*;
 
 
 @WebServlet(urlPatterns = "/c", loadOnStartup = 1)
 public class GetCountries extends HttpServlet {
+    private Locale usedLocale = null;
+
+    private class Country implements Comparable<Country> {
+        public String cca2;
+        public String name;
+
+        @Override
+        public int compareTo(Country o) {
+            Collator collator = Collator.getInstance(usedLocale);
+            return collator.compare (name, o.name);
+        }
+    }
+
+
     private static final Logger logger = LoggerFactory.getLogger(GetCountries.class);
     private String context;
     private JsonArray countries = null;
@@ -56,6 +70,7 @@ public class GetCountries extends HttpServlet {
                     String cca2 = jsonObject.get("cca2").toString();
                     JsonObject country = new JsonObject();
                     country.add("cca2", new JsonPrimitive(cca2));
+                    country.add("name_", jsonObject.get("name").getAsJsonObject().get("common"));
                     country.add("name", jsonObject.get("translations").getAsJsonObject());
                     countries.add(country);
                 }
@@ -70,7 +85,7 @@ public class GetCountries extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final String defaultLanguage = "eng";
+        final Locale defaultLanguage = Locale.ENGLISH;
         resp.setContentType("application/json; charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String bestLanguage = null;
@@ -81,33 +96,44 @@ public class GetCountries extends HttpServlet {
             try {
                 if (bestLanguage==null) {
                     bestLanguage=locale.getISO3Language();
+                    usedLocale = locale;
                 }
             } catch (Exception e) {
                 // do nothing
             }
         }
 
-        if (bestLanguage==null) bestLanguage=defaultLanguage;
+        if (bestLanguage==null) {
+            bestLanguage=defaultLanguage.getISO3Language();
+            usedLocale = Locale.ENGLISH;
+        }
+
+        logger.info("usedLocale: " + usedLocale.getISO3Language());
+
         PrintWriter pw = resp.getWriter();
-
         loadFromJson(context);
-
-
-        JsonArray jsonArray = new JsonArray();
+        List<Country> countriesList = new ArrayList<>();
         for (JsonElement jsonElement: countries) {
-            JsonObject jsonObject = new JsonObject();
             String cca2 = jsonElement.getAsJsonObject().get("cca2").toString().replaceAll("\\\"", "");
             cca2 = cca2.replaceAll("\\\\", "");
-            logger.info ("cca2: " + cca2);
-            jsonObject.add("cca2", new JsonPrimitive(cca2));
+
+            Country countryItem = new Country();
             try {
-                jsonObject.add("name", jsonElement.getAsJsonObject().get("name").getAsJsonObject().get(bestLanguage).getAsJsonObject().get("common"));
+                countryItem.name =
+                        jsonElement.getAsJsonObject().get("name").
+                                getAsJsonObject().get(bestLanguage).
+                                getAsJsonObject().get("common").getAsString();
             } catch (NullPointerException e) {
-                jsonObject.add("name", jsonElement.getAsJsonObject().get("name").getAsJsonObject().get(defaultLanguage).getAsJsonObject().get("common"));
+                countryItem.name =
+                        jsonElement.getAsJsonObject().get("name_").getAsString();
             }
-            jsonArray.add(jsonObject);
+            countryItem.cca2 = cca2;
+            countriesList.add(countryItem);
         }
-        pw.print(jsonArray.toString());
+        Collator coll = Collator.getInstance(usedLocale);
+        coll.setStrength(Collator.PRIMARY);
+        Collections.sort(countriesList);
+        pw.print(new Gson().toJson(countriesList));
         pw.flush();
     }
 

@@ -8,6 +8,17 @@ A new generation RA for EJBCA
 * client certificate from EJBCA
 * Enough rights to to its job on EJBCA
 
+## Prepare for Build
+
+You must execute following steps, otherwise you will get a broken build:
+
+* cd csr-client-fabric && npm install && cd ..
+* cd  countries && npm install && cd ..
+
+For building you need NodeJS/NPM. Consult https://nodejs.org/ for
+installation, if your favourite distribution does not offer a
+installation package.
+
 # Status
 
 **This software is in very early alpha status. Do not use for production!**
