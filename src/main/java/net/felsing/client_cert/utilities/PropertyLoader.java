@@ -20,13 +20,22 @@ package net.felsing.client_cert.utilities;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Properties;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 
 public final class PropertyLoader {
@@ -35,6 +44,10 @@ public final class PropertyLoader {
     private static final Logger logger = LoggerFactory.getLogger(PropertyLoader.class);
     private static Properties properties = null;
     private static JsonObject jsonProperties = new JsonObject();
+
+    private static String keyManagerType = "SunX509";
+    private static TrustManager[] trustManagers;
+    private static KeyManager[] keyManagers;
 
 
     /**
@@ -58,7 +71,7 @@ public final class PropertyLoader {
                 properties=test;
                 logger.info("Using properties file "+v);
             } catch (Exception e) {
-                //logger.info("Tried properties file "+v+": Not found. This is not an error, if at least one time Using properties file occurs.");
+                logger.debug ("Tried properties file "+v+": Not found. This is not an error, if at least one time Using properties file occurs.");
             }
         });
         if (properties==null) {
@@ -77,6 +90,9 @@ public final class PropertyLoader {
                 }
             }
         });
+
+        loadKeyStore();
+        loadTrustStore();
     }
 
 
@@ -88,7 +104,7 @@ public final class PropertyLoader {
     }
 
 
-    public static JsonObject getJavaScriptProperties () {
+    static JsonObject getJavaScriptProperties() {
 
         return jsonProperties;
     }
@@ -101,5 +117,65 @@ public final class PropertyLoader {
             return false;
         }
     }
+
+
+    static TrustManager[] getTrustManagers() {
+
+        return trustManagers;
+    }
+
+
+    static KeyManager[] getKeyManagers () {
+
+        return keyManagers;
+    }
+
+
+    private static void loadTrustStore () {
+        final String trustStoreFile = properties.getProperty(Constants.ejbcaTrustStoreFile);
+        final String trustStorePassword = properties.getProperty(Constants.ejbcaTrustStorePassword);
+        if (trustStoreFile!=null) {
+            try {
+                KeyStore trustStore = KeyStore.getInstance(properties.getProperty(Constants.ejbcaTrustStoreType));
+                trustStore.load(new FileInputStream(trustStoreFile), trustStorePassword.toCharArray());
+                TrustManagerFactory tmf = TrustManagerFactory.getInstance(keyManagerType);
+                tmf.init(trustStore);
+                trustManagers = tmf.getTrustManagers();
+                logger.info ("Truststore " + trustStoreFile + " loaded");
+            } catch (NoSuchAlgorithmException|KeyStoreException|CertificateException|IOException e) {
+                trustManagers = null;
+                logger.warn("Truststore is defined, but cannot be loaded: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            logger.info ("No truststore configured");
+        }
+    }
+
+
+    private static void loadKeyStore () {
+        final String keyStoreType = properties.getProperty(Constants.ejbcaKeyStoreType);
+        final String keyStoreFile = properties.getProperty(Constants.ejbcaKeyStoreFile);
+        final String keyStorePassword = properties.getProperty(Constants.ejbcaKeyStorePassword);
+
+        if (keyStoreFile!=null) {
+            try {
+                KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+                keyStore.load(new FileInputStream(keyStoreFile),
+                        keyStorePassword.toCharArray());
+
+                KeyManagerFactory kmf = KeyManagerFactory.getInstance(keyManagerType);
+                kmf.init(keyStore, keyStorePassword.toCharArray());
+                keyManagers = kmf.getKeyManagers();
+                logger.info ("Keystore " + keyStoreFile + " loaded");
+            } catch (NoSuchAlgorithmException|KeyStoreException|CertificateException|UnrecoverableKeyException|IOException e) {
+                logger.error("Cannot load private key: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            new IOException("No private key defined, EJBCA probably will not authenticate for webservices").printStackTrace();
+        }
+    }
+
 
 } // class

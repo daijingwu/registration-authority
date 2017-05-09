@@ -1,0 +1,17 @@
+{
+  "name": "countries-fabric",
+  "version": "0.0.1",
+  "license" : "SEE LICENSE IN README.md",
+  "description": "RA solution for EJBCA",
+  "repository": "private",
+  "dependencies": {
+    },
+  "devDependencies": {
+  },
+  "scripts": {
+    "getcountries": "if [ ! -d countries ]; then git clone https://github.com/mledoze/countries.git countries; fi",
+    "installcountries": "cd countries && npm install && cd ..",
+    "preinstall": "npm run getcountries && npm run installcountries",
+    "postinstall": "cp countries/dist/countries-unescaped.json ../src/main/resources/countries.json"
+  }
+}

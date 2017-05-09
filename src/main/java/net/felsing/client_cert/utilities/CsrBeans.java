@@ -136,6 +136,12 @@ public final class CsrBeans {
     }
 
 
+    public boolean getAuthenticationEnabled () {
+
+        return properties.getProperty(Constants.propertyAuthRequired)!=null;
+    }
+
+
     public String getTitle() {
 
         return properties.getProperty(Constants.title);

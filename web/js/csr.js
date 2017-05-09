@@ -173,15 +173,14 @@ function closeDialog() {
 
 
 const loadCountries = function () {
-    $.get("json/countries.min.json")
+    $.get("./c")
         .then(function (data) {
             const countryfield = $("#c");
-            const countries = data.countries;
-            $.each(countries, function (key, value) {
+            $.each(data, function (key, value) {
                 countryfield
                     .append($("<option></option>")
-                        .attr("value", key)
-                        .text(value.name));
+                        .attr("value", value.cca2)
+                        .text(value.name + " (" + value.cca2 + ")"));
             })
 
         });

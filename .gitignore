@@ -7,6 +7,8 @@ csr-client-fabric/forge
 csr-client-fabric/node_modules
 csr-client-fabric/pkcs10/bundle.js
 csr-client-fabric/pkcs12/bundle.js
+countries/countries
+countries/node_modules
 target
 web/css/jquery-ui.min.css
 web/css/images
@@ -17,3 +19,4 @@ web/js/pkcs12.js
 web/js/forge.min.js
 ejbca-new-ra.iml
 client-cert.iml
+src/main/resources/countries.json

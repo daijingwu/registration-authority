@@ -43,59 +43,62 @@
 <div class="wrapper">
     <div id="title" class="div_title">${hdr.title}</div>
     <c:choose>
-        <c:when test="${hdr.loginStatus eq false}">
-            ${hdr.cleanUp}
-            <form id="login" action="login" method="post">
-                <div id="div_loginusername" class="div_input">
-                    <label id="lbl_loginusername" for="loginusername"
-                           class="label">${hdr.bundleEntry("lbl_loginusername")}</label>
-                    <input type="text" id="loginusername" name="loginusername"/>
-                </div>
-                <div id="div_loginpassword" class="div_input">
-                    <label id="lbl_loginpassword" for="loginpassword"
-                           class="label">${hdr.bundleEntry("lbl_loginpassword")}</label>
-                    <input type="password" id="loginpassword" name="loginpassword"/>
-                </div>
-                <div id="div_loginbutton" class="div_buttons">
-                    <button id="loginbutton" type="submit">${hdr.bundleEntry("loginbutton")}</button>
-                </div>
-            </form>
-        </c:when>
-        <c:otherwise>
-            <div id="add-pkcs10-block">
-                <div id="ra_form">
-                        ${hdr.form}
-                </div>
+    <c:when test="${hdr.loginStatus eq false}">
+        ${hdr.cleanUp}
+        <form id="login" action="login" method="post">
+            <div id="div_loginusername" class="div_input">
+                <label id="lbl_loginusername" for="loginusername"
+                       class="label">${hdr.bundleEntry("lbl_loginusername")}</label>
+                <input type="text" id="loginusername" name="loginusername"/>
+            </div>
+            <div id="div_loginpassword" class="div_input">
+                <label id="lbl_loginpassword" for="loginpassword"
+                       class="label">${hdr.bundleEntry("lbl_loginpassword")}</label>
+                <input type="password" id="loginpassword" name="loginpassword"/>
+            </div>
+            <div id="div_loginbutton" class="div_buttons">
+                <button id="loginbutton" type="submit">${hdr.bundleEntry("loginbutton")}</button>
+            </div>
+        </form>
+    </c:when>
+    <c:otherwise>
+    <div id="add-pkcs10-block">
+        <div id="ra_form">
+                ${hdr.form}
+        </div>
 
-                <div id="div_buttons" class="div_buttons">
-                    <div id="div_create">
-                        <button id="create" type="button" onclick="createCSR();">${hdr.bundleEntry("create")}</button>
-                    </div>
-
-                    <div id="div_logoutbutton" class="div_input">
-                        <button id="logoutbutton" type="button"
-                                onclick="window.location.replace('./login');">${hdr.bundleEntry("logoutbutton")}
-                        </button>
-                    </div>
-                </div>
-
-                <div id="pkcs12_password_area">
-                    <div id="div_password" class="pwd_toggle_off">
-                        <div id="lbl_password" class="label pwd_toggle_off"></div>
-                        <div id="password" class="pwd_toggle_off"</div>
-                    </div>
-
-                    <div id="div_passwordButton" class="pwd_toggle_off">
-                        <button id="showPass" type="button"
-                                onclick="showPassword();">${hdr.bundleEntry("showPassword")}</button>
-                    </div>
-                </div>
-
-                <div id="div_certificate" style="display:none"></div>
+        <div id="div_buttons" class="div_buttons">
+            <div id="div_create">
+                <button id="create" type="button" onclick="createCSR();">${hdr.bundleEntry("create")}</button>
             </div>
 
-        </c:otherwise>
-    </c:choose>
+            <c:if test="${hdr.authenticationEnabled}">
+                <div id="div_logoutbutton" class="div_input">
+                    <button id="logoutbutton" type="button"
+                            onclick="window.location.replace('./login');">${hdr.bundleEntry("logoutbutton")}
+                    </button>
+                </div>
+            </c:if>
+        </div>
+
+        <div id="pkcs12_password_area">
+            <div id="div_password" class="pwd_toggle_off">
+                <div id="lbl_password" class="label pwd_toggle_off"></div>
+                <div id="password" class="pwd_toggle_off"
+            </div>
+        </div>
+
+        <div id="div_passwordButton" class="pwd_toggle_off">
+            <button id="showPass" type="button"
+                    onclick="showPassword();">${hdr.bundleEntry("showPassword")}</button>
+        </div>
+    </div>
+
+    <div id="div_certificate" style="display:none"></div>
+</div>
+
+</c:otherwise>
+</c:choose>
 </div>
 
 <div id="spinner"></div>
