@@ -67,6 +67,10 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
+
+        resp.setContentType("application/json; charset=UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
         session();
         PrintWriter pw = resp.getWriter();
 

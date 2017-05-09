@@ -46,6 +46,13 @@ const displayPassword = function() {
 };
 
 
+const displayError = function (msg) {
+    const errormsg = $("#errormsg");
+    errormsg.empty().append (msg);
+    console.log ("!!! error: %o", msg);
+};
+
+
 const signCsr = function () {
     const div_create = $('#create');
     const lbl_password = $('#lbl_password');
@@ -63,13 +70,17 @@ const signCsr = function () {
         data: JSON.stringify(ajaxData)
     })
         .done(function (json) {
-            window.csr.certificateChain = JSON.parse(json).certificateChain;
-            closeDialog();
-            div_create.hide();
-            window.csr.password = genPassword();
-            window.csr.friendlyName = friendlyName;
-            genPKCS12();
-            displayPassword();
+            try {
+                window.csr.certificateChain = JSON.parse(json).certificateChain;
+                closeDialog();
+                div_create.hide();
+                window.csr.password = genPassword();
+                window.csr.friendlyName = friendlyName;
+                genPKCS12();
+                displayPassword();
+            } catch (err) {
+                displayError(err);
+            }
         })
         .fail(function () {
             alert(configuration.bundle.ajaxerror);

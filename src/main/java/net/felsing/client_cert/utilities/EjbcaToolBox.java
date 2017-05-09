@@ -228,7 +228,7 @@ public class EjbcaToolBox {
             pem.append(pemCertificate); pem.append("\n");
             pem.append(Constants.certificateEnd); pem.append("\n");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return pem.toString();

@@ -26,7 +26,6 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
-import java.net.URI;
 import java.util.*;
 
 import org.apache.shiro.SecurityUtils;
@@ -55,8 +54,12 @@ public final class CsrBeans {
 
     private void loadLocale (String strLocale) {
         if (bundle==null) {
-            List<Locale.LanguageRange> languageRanges = Locale.LanguageRange.parse(strLocale);
-
+            List<Locale.LanguageRange> languageRanges;
+            try {
+                languageRanges = Locale.LanguageRange.parse(strLocale);
+            } catch (Exception e) {
+                languageRanges = Locale.LanguageRange.parse("en");
+            }
             for (Locale.LanguageRange l : languageRanges) {
                 Locale locale = new Locale(l.getRange());
                 try {

@@ -26,7 +26,7 @@
     "pkcs12forge": "cp forge/dist/forge.min.js ../web/js/forge.min.js",
     "jquery": "cp node_modules/jquery/dist/jquery.min.js ../web/js/jquery.min.js",
     "jqueryui:install": "cd node_modules/jquery-ui && if [ ! -f dist/jquery-ui.min.js ]; then npm install && node_modules/grunt-cli/bin/grunt concat && node_modules/grunt-cli/bin/grunt sizer_all; fi; cd ../..",
-    "jqueryui": "npm run jqueryui:install && cp node_modules/jquery-ui/dist/jquery-ui.min.js ../web/js/jquery-ui.min.js && cp node_modules/jquery-ui/dist/jquery-ui.css ../web/css/jquery-ui.min.css && cp -a node_modules/jquery-ui/themes/base/images ../web/css/images",
+    "jqueryui": "npm run jqueryui:install && cp node_modules/jquery-ui/dist/jquery-ui.min.js ../web/js/jquery-ui.min.js && cp node_modules/jquery-ui/dist/jquery-ui.css ../web/css/jquery-ui.min.css && cp -a node_modules/jquery-ui/themes/base/images ../web/css/",
     "preinstall": "npm run pkijsclone && npm run pkijsupdate && npm run pkijsinstall && npm run forgeclone && npm run forgeupdate && npm run forgeinstall",
     "postinstall": "npm run pkcs10 && npm run pkcs12forge && npm run jquery && npm run jqueryui"
   }

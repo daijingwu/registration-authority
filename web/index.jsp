@@ -25,19 +25,20 @@
     Locale locale = request.getLocale();
     session.setAttribute("locale", locale);
 %>
+<c:set var="language" value="${pageContext.request.locale.language}" scope="session"/>
+<c:set var="loginStatus" value="${hdr.loginStatus}"/>
+<c:set var="loginName" value="${hdr.loginName}"/>
+<c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
+<%-- <fmt:setLocale value="${language}" /> --%>
+<jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${hdr.title}</title>
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
-
-    <c:set var="loginStatus" value="${hdr.loginStatus}"/>
-    <c:set var="loginName" value="${hdr.loginName}"/>
-    <c:set var="language" value="${pageContext.request.locale.language}" scope="session"/>
-    <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
-    <%-- <fmt:setLocale value="${language}" /> --%>
-    <jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
 </head>
 <body jsp_configurationString='${hdr.jsConfiguration}'>
 <div class="wrapper">
@@ -84,7 +85,7 @@
         <div id="pkcs12_password_area">
             <div id="div_password" class="pwd_toggle_off">
                 <div id="lbl_password" class="label pwd_toggle_off"></div>
-                <div id="password" class="pwd_toggle_off"
+                <div id="password" class="pwd_toggle_off">
             </div>
         </div>
 
@@ -95,6 +96,8 @@
     </div>
 
     <div id="div_certificate" style="display:none"></div>
+
+    <div id="errormsg"></div>
 </div>
 
 </c:otherwise>
