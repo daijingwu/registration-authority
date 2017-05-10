@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
+import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,22 +121,38 @@ public final class CsrBeans {
     public boolean getLoginStatus () {
         if (properties.getProperty(Constants.propertyAuthRequired)==null) return true;
 
-        Subject subject = SecurityUtils.getSubject();
-        boolean sufficientRole = true;
-        String raRole = properties.getProperty(Constants.propertyRaGroup);
-        if (raRole!=null) {
-            sufficientRole = subject.hasRole(raRole);
+        try {
+            Subject subject = SecurityUtils.getSubject();
+            boolean sufficientRole = true;
+            String raRole = properties.getProperty(Constants.propertyRaGroup);
+            if (raRole != null) {
+                sufficientRole = subject.hasRole(raRole);
+            }
+            return subject.isAuthenticated() && sufficientRole;
+        } catch (UnknownSessionException e) {
+            logger.debug("Invalid session: " + e.getMessage());
+        } catch (Exception e) {
+            logger.warn("Bad session", e);
         }
-        return subject.isAuthenticated() && sufficientRole;
+
+        return false;
     }
 
 
     public String getLoginName () {
+        String loginName = "anonymous";
+
         if (SecurityUtils.getSubject().isAuthenticated()) {
-            return SecurityUtils.getSubject().getPrincipal().toString();
-        } else {
-            return "anonymous";
+            try {
+                loginName = SecurityUtils.getSubject().getPrincipal().toString();
+            } catch (UnknownSessionException e) {
+                logger.debug("Invalid session: " + e.getMessage());
+            } catch (Exception e) {
+                logger.warn("Bad session", e);
+            }
         }
+
+        return loginName;
     }
 
 
