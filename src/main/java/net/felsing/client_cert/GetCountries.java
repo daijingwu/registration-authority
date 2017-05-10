@@ -19,6 +19,7 @@ package net.felsing.client_cert;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import net.felsing.client_cert.utilities.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.ServletConfig;
@@ -62,7 +63,7 @@ public class GetCountries extends HttpServlet {
                 String path = classpath + "/" + countriesJson;
                 logger.info("path: " + path);
 
-                JsonReader reader = new JsonReader(new FileReader(path));
+                JsonReader reader = new JsonReader(new InputStreamReader(new FileInputStream(path), Constants.utf8));
                 JsonArray rawCountries = jsonParser.parse(reader).getAsJsonArray();
 
                 for (JsonElement jsonElement : rawCountries) {

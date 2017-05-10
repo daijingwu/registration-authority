@@ -27,7 +27,6 @@ public final class Constants {
     static final String propertyEnvname = "EJBCA_NEW_RA_PROPERTIES";
     static final String propertyAuthRequired = "auth.required";
     static final String propertyRaGroup = "group.ra";
-    static final String propertyTrustAllCerts = "trust_all_certs_insecure";
 
     static final String ejbcaKeyStoreType = "ejbca.keystore.type";
     static final String ejbcaKeyStoreFile = "ejbca.keystore.file";
@@ -53,4 +52,6 @@ public final class Constants {
     public static final String unsupportedRequest = "not supported request";
 
     static final int numBits = 384;
+
+    public static final String utf8 = "UTF-8";
 }
