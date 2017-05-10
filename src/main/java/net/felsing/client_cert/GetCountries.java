@@ -99,7 +99,7 @@ public class GetCountries extends HttpServlet {
                     usedLocale = locale;
                 }
             } catch (Exception e) {
-                // do nothing
+                logger.debug("No sufficient language found for " + languageRanges.toString());
             }
         }
 
@@ -128,6 +128,7 @@ public class GetCountries extends HttpServlet {
                         jsonElement.getAsJsonObject().get("name_").getAsString();
             }
             countryItem.cca2 = cca2;
+            logger.debug(countryItem.cca2 + " : " + countryItem.name);
             countriesList.add(countryItem);
         }
         Collator coll = Collator.getInstance(usedLocale);

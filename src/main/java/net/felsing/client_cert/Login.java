@@ -19,6 +19,7 @@ package net.felsing.client_cert;
 
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.Constants;
+import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
@@ -55,6 +56,9 @@ public class Login extends HttpServlet {
         session();
         try {
             logger.info("User " + SecurityUtils.getSubject().getPrincipal().toString() + " logged out");
+
+
+
             SecurityUtils.getSubject().logout();
         } catch (Exception e) {
             // don't care about exception
@@ -88,9 +92,8 @@ public class Login extends HttpServlet {
             }
 
             try {
-                AuthenticationToken token = new UsernamePasswordToken(username, password);
                 Subject currentUser = SecurityUtils.getSubject();
-                currentUser.login(token);
+                currentUser.login(new UsernamePasswordToken(username, password));
                 Session session = currentUser.getSession();
                 session.setAttribute("someKey", "blahfaseltest");
                 logger.info("Authentication succeeded [" + username + "]");

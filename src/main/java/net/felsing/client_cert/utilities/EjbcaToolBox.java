@@ -22,7 +22,11 @@ import net.felsing.client_cert.ejbca.*;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.message.Message;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transport.http.MessageTrustDecider;
+import org.apache.cxf.transport.http.URLConnectionInfo;
+import org.apache.cxf.transport.http.UntrustedURLConnectionIOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +91,9 @@ public class EjbcaToolBox {
         HTTPConduit http = (HTTPConduit) client.getConduit();
         try {
             initializeConduitForSSL (properties);
+            if (properties.getProperty("debug.initializeTrustDecider")!=null) {
+                initializeTrustDecider(http);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -108,6 +115,21 @@ public class EjbcaToolBox {
         SSLContext sslContext = SSLContext.getInstance(tlsVersion);
         sslContext.init(keyManagers, trustManagers, new SecureRandom());
         tlsParams.setSSLSocketFactory(sslContext.getSocketFactory());
+    }
+
+
+    // used for debugging only
+    private void initializeTrustDecider (HTTPConduit httpConduit) {
+        MessageTrustDecider messageTrustDecider = new MessageTrustDecider() {
+            @Override
+            public void establishTrust(String s, URLConnectionInfo urlConnectionInfo, Message message) throws UntrustedURLConnectionIOException {
+                logger.debug(s);
+                logger.debug(urlConnectionInfo.getURI().toASCIIString());
+                logger.debug(message.toString());
+            }
+        };
+
+        httpConduit.setTrustDecider(messageTrustDecider);
     }
 
 
