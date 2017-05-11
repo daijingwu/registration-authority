@@ -19,9 +19,9 @@ package net.felsing.client_cert;
 
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.Constants;
-import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,33 +32,38 @@ import java.io.PrintWriter;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-
 
 
 @WebServlet(urlPatterns = "/login", loadOnStartup = 1)
 public class Login extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(Login.class);
     private boolean servletIsReady = false;
+    private Session session;
 
 
-    private void session () {
-
+    private void session() {
+        if (session!=null) {
+            final String someKey = "someKey";
+            if (session.getAttribute(someKey) != null) {
+                String v = session.getAttribute(someKey).toString();
+                logger.debug("get session variable " + someKey + ": " + v);
+            } else {
+                session.setAttribute(someKey, "blahfaseltest");
+                logger.debug("set session variable " + someKey);
+            }
+        }
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
-        session();
+
         try {
             logger.info("User " + SecurityUtils.getSubject().getPrincipal().toString() + " logged out");
-
-
-
             SecurityUtils.getSubject().logout();
         } catch (Exception e) {
             // don't care about exception
@@ -67,7 +72,26 @@ public class Login extends HttpServlet {
         resp.sendRedirect("./");
     }
 
-    
+
+    private void login(HttpServletRequest req, HttpServletResponse resp, String username, String password) throws IOException {
+        try {
+            Subject currentUser = SecurityUtils.getSubject();
+            currentUser.login(new UsernamePasswordToken(username, password));
+            session = currentUser.getSession();
+            session();
+            logger.info("Authentication succeeded [" + username + "]");
+            req.getRequestDispatcher("/").forward(req, resp);
+        } catch (AuthenticationException e) {
+            logger.info("Authentication failed [" + username + "]");
+            logger.debug("Exception", (Object[]) e.getStackTrace());
+            resp.sendRedirect("failed.jsp");
+        } catch (Exception e) {
+            resp.sendError(500, "Internal error");
+            logger.error("Stack trace", (Object[]) e.getStackTrace());
+        }
+    }
+
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
@@ -91,30 +115,16 @@ public class Login extends HttpServlet {
                 logger.debug("Password is null");
             }
 
-            try {
-                Subject currentUser = SecurityUtils.getSubject();
-                currentUser.login(new UsernamePasswordToken(username, password));
-                Session session = currentUser.getSession();
-                session.setAttribute("someKey", "blahfaseltest");
-                logger.info("Authentication succeeded [" + username + "]");
-                req.getRequestDispatcher("/").forward(req, resp);
-            } catch (AuthenticationException e) {
-                logger.info("Authentication failed [" + username + "]");
-                logger.debug ("Exception", (Object[]) e.getStackTrace());
-                resp.sendRedirect("failed.jsp");
-            } catch (Exception e) {
-                pw.println("Internal Error, not logged in");
-                logger.error ("Stack trace", (Object[]) e.getStackTrace());
-            }
+            login(req, resp, username, password);
         } else {
             logger.error("Login called even user is already logged in");
             pw.print(new JsonPrimitive(Constants.unsupportedRequest));
         }
-        
+
         pw.flush();
     }
 
-    
+
     @Override
     public void init() throws ServletException {
         super.init();
