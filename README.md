@@ -1,5 +1,12 @@
 A new generation RA for EJBCA
 
+# Languages
+
+* Javascript (NodeJS)
+* Java
+
+NodeJS is needed to build client side Javascript libraries.
+
 # Requirements
 
 * Java (OpenJDK) at least version 8
@@ -10,10 +17,11 @@ A new generation RA for EJBCA
 
 ## Prepare for Build
 
-You must execute following steps, otherwise you will get a broken build:
+You must execute following step 
 
-* cd csr-client-fabric && npm install && cd ..
-* cd  countries && npm install && cd ..
+**npm install**
+
+otherwise you will get a broken build and bad things will happen.
 
 For building you need NodeJS/NPM. Consult https://nodejs.org/ for
 installation, if your favourite distribution does not offer a
@@ -171,5 +179,5 @@ May be improved...
 * EJBCA User (keystore) needs administrative rights at EJBCA.
 * No properties file
 * shiro.ini file not found, see shiroini property in properties file
-* Changes on UTF8 properties: native2ascii -encoding UTF-8 text_zh.properties.UTF8 text_zh.properties
-
+* Changes on language files ignored: Did you started npm install?
+* Does not compile, or tons of Javascript errors in Browser: Did you started npm install?

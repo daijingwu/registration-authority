@@ -19,6 +19,9 @@ package net.felsing.client_cert;
 
 import com.google.gson.JsonPrimitive;
 import net.felsing.client_cert.utilities.Constants;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -37,14 +41,27 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 
+
 @WebServlet(urlPatterns = "/login", loadOnStartup = 1)
 public class Login extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(Login.class);
     private boolean servletIsReady = false;
-    private Session session;
+
+
+    private void cleanUp (Session sessionId) {
+        DefaultSecurityManager securityManager = (DefaultSecurityManager) SecurityUtils.getSecurityManager();
+        DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
+        Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
+        for (Session session: activeSessions){
+            if (sessionId.equals(session.getId())) {
+                session.stop();
+            }
+        }
+    }
 
 
     private void session() {
+        Session session = SecurityUtils.getSubject().getSession(true);
         if (session!=null) {
             final String someKey = "someKey";
             if (session.getAttribute(someKey) != null) {
@@ -65,6 +82,7 @@ public class Login extends HttpServlet {
         try {
             logger.info("User " + SecurityUtils.getSubject().getPrincipal().toString() + " logged out");
             SecurityUtils.getSubject().logout();
+            cleanUp(SecurityUtils.getSubject().getSession());
         } catch (Exception e) {
             // don't care about exception
             logger.debug("Called logout even user was not logged in");
@@ -74,10 +92,18 @@ public class Login extends HttpServlet {
 
 
     private void login(HttpServletRequest req, HttpServletResponse resp, String username, String password) throws IOException {
+        // let run shiro into exception if username or password is empty
+        // org.apache.shiro.realm.activedirectory.ActiveDirectoryRealm authenticates otherwise
+
+        if (username.matches("^$") || password.matches("^$")) {
+            resp.sendRedirect("failed.jsp");
+            return;
+        }
+
         try {
+            AuthenticationToken token =new UsernamePasswordToken(username, password);
             Subject currentUser = SecurityUtils.getSubject();
-            currentUser.login(new UsernamePasswordToken(username, password));
-            session = currentUser.getSession();
+            currentUser.login(token);
             session();
             logger.info("Authentication succeeded [" + username + "]");
             req.getRequestDispatcher("/").forward(req, resp);
@@ -128,7 +154,6 @@ public class Login extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        logger.info("Servlet ready for service");
         servletIsReady = true;
     }
 

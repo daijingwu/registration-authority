@@ -36,7 +36,6 @@ public final class CsrBeans {
     private static final Logger logger = LoggerFactory.getLogger(CsrBeans.class);
     private static HashMap<String, String> labels;
     private Properties properties = null;
-    private String lang = null;
     private ResourceBundle bundle = null;
 
 
@@ -47,13 +46,7 @@ public final class CsrBeans {
     }
 
 
-    public void setLang (String lang) {
-
-        this.lang = lang;
-    }
-
-
-    private void loadLocale (String strLocale) {
+    public void setLang (String strLocale) {
         if (bundle==null) {
             List<Locale.LanguageRange> languageRanges;
             try {
@@ -158,7 +151,7 @@ public final class CsrBeans {
     }
 
 
-    public String getLoginName () {
+    private String getLoginName() {
         String loginName = "anonymous";
 
         if (SecurityUtils.getSubject().isAuthenticated()) {
@@ -188,8 +181,13 @@ public final class CsrBeans {
 
 
     public String bundleEntry (String key) {
+        //loadLocale(lang);
 
-        return bundle.getString(key);
+        try {
+            return bundle.getString(key);
+        } catch (NullPointerException e) {
+            return "UNDEFINED";
+        }
     }
 
 
@@ -217,7 +215,6 @@ public final class CsrBeans {
             logger.error("Cannot open file: "+e.getMessage());
         }
 
-        loadLocale(lang);
         assert (bundle!=null);
         JsonObject jsonBundle = new JsonObject();
         for (String key: bundle.keySet()) {
@@ -226,6 +223,16 @@ public final class CsrBeans {
         localJsonObject.add("bundle", jsonBundle);
 
         return localJsonObject.toString();
+    }
+
+
+    public static void log (int level, String msg) {
+        switch (level) {
+            case 0: logger.error(msg); break;
+            case 1: logger.warn(msg); break;
+            case 2: logger.info(msg); break;
+            default: logger.debug(msg); break;
+        }
     }
 
 } // class

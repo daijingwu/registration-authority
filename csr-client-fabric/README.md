@@ -1,11 +1,6 @@
+# Client side certificate stuff
+
 Client side Javascript code for handle PKCS#10 and PKCS#12 stuff
-
-# Prepare
-
-npm install
-
-loads everything needed and installs compiled files to
-appropriate locations so building project creates runnable code.
 
 # Why not PeculiarVentures PKI.js?
 

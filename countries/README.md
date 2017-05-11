@@ -1,6 +1,8 @@
-# Build countries.json
+# Country list
 
-With
-npm install
-necessary files are created
- 
+Get an compile a recent country list for select box
+
+# Credits
+
+https://github.com/mledoze/countries
+

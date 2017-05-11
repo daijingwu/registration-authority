@@ -40,7 +40,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.SecurityUtils;
 
 
-@WebServlet(urlPatterns = "/req",loadOnStartup = 1)
+@WebServlet(urlPatterns = "/req",loadOnStartup = 0)
 public class Servlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(Servlet.class);
 
@@ -49,8 +49,7 @@ public class Servlet extends HttpServlet {
 
 
     private void session () {
-        Subject currentUser = SecurityUtils.getSubject();
-        Session session = currentUser.getSession();
+        Session session = SecurityUtils.getSubject().getSession(false);
         logger.debug ("session: " + session.getAttribute("someKey"));
         logger.debug ("session: " + Long.toString(session.getTimeout()));
     }
@@ -130,7 +129,6 @@ public class Servlet extends HttpServlet {
 
         properties=PropertyLoader.getProperties();
         assert properties != null;
-        logger.info("Servlet ready for service");
         servletIsReady = true;
     }
 

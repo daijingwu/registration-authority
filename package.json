@@ -1,0 +1,15 @@
+{
+  "name": "ejbca-new-ra-prepare",
+  "version": "0.0.1",
+  "license" : "SEE LICENSE IN README.md",
+  "description": "RA solution for EJBCA",
+  "repository": "private",
+  "dependencies": {
+    },
+  "scripts": {
+    "countries": "cd countries && npm install && cd ..",
+    "csr-client-fabric": "cd csr-client-fabric && npm install && cd ..",
+    "languages": "cd languages && npm install && cd ..",
+    "postinstall": "npm run countries && npm run csr-client-fabric && npm run languages && rm -rf node_modules"
+  }
+}

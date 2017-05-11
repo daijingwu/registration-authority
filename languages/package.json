@@ -1,0 +1,14 @@
+{
+  "name": "languages",
+  "version": "0.0.1",
+  "license" : "SEE LICENSE IN README.md",
+  "description": "RA solution for EJBCA",
+  "repository": "private",
+  "dependencies": {
+    },
+  "devDependencies": {
+  },
+  "scripts": {
+    "postinstall": "./compile.sh"
+  }
+}

@@ -22,9 +22,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.util.Factory;
-import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -32,12 +32,16 @@ import javax.servlet.ServletContextListener;
 public class RaContextListener implements ServletContextListener {
     private static Logger logger = LoggerFactory.getLogger(RaContextListener.class);
 
+
     @Override
-    public void contextInitialized(ServletContextEvent arg0) {
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
         String shiroIniFile = PropertyLoader.getProperties().getProperty("shiroini");
+        servletContextEvent.getServletContext().setInitParameter("shiroConfigLocations", "file:" + shiroIniFile);
+
         Factory<SecurityManager> factory = new IniSecurityManagerFactory(shiroIniFile);
         SecurityManager securityManager = factory.getInstance();
         SecurityUtils.setSecurityManager(securityManager);
+
         logger.info("Shiro loaded, using " + shiroIniFile);
     }
 
