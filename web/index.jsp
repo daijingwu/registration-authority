@@ -33,6 +33,7 @@
 <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
 <%-- <fmt:setLocale value="${language}" /> --%>
 <jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
+${hdr.getDummyLogin()}
 <!DOCTYPE html>
 <html>
 <head>
@@ -64,7 +65,7 @@
         </form>
     </shiro:guest>
     <shiro:user>
-        <% CsrBeans.log(3, "Username is " + SecurityUtils.getSubject().getPrincipal().toString()); %>}
+        <% CsrBeans.log(3, "Username is " + SecurityUtils.getSubject().getPrincipal().toString()); %>
         <div id="add-pkcs10-block">
             <div id="ra_form">
                     ${hdr.form}

@@ -94,7 +94,6 @@ public class Login extends HttpServlet {
     private void login(HttpServletRequest req, HttpServletResponse resp, String username, String password) throws IOException {
         // let run shiro into exception if username or password is empty
         // org.apache.shiro.realm.activedirectory.ActiveDirectoryRealm authenticates otherwise
-
         if (username.matches("^$") || password.matches("^$")) {
             resp.sendRedirect("failed.jsp");
             return;

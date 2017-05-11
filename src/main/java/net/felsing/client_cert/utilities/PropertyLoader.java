@@ -75,7 +75,7 @@ public final class PropertyLoader {
             }
         });
         if (properties==null) {
-            logger.error ("No Property file found");
+            logger.error ("No Property file found, that can also be caused by a syntax error in your properties file ");
         }
 
         assert (properties!=null);
@@ -176,6 +176,5 @@ public final class PropertyLoader {
             new IOException("No private key defined, EJBCA probably will not authenticate for webservices").printStackTrace();
         }
     }
-
 
 } // class

@@ -22,14 +22,21 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.*;
-
-import org.apache.shiro.SecurityUtils;
 
 
 public final class CsrBeans {
@@ -233,6 +240,27 @@ public final class CsrBeans {
             case 2: logger.info(msg); break;
             default: logger.debug(msg); break;
         }
+    }
+
+
+    public String getDummyLogin () {
+        if (PropertyLoader.getProperties().getProperty(Constants.propertyAuthRequired)==null) {
+            try {
+                if (!SecurityUtils.getSubject().isAuthenticated()) {
+                    final String username = properties.getProperty(Constants.propertyDummyUser);
+                    final String password = properties.getProperty(Constants.propertyDummyPassword);
+
+                    Subject currentUser = SecurityUtils.getSubject();
+                    currentUser.logout();
+                    AuthenticationToken token = new UsernamePasswordToken(username, password);
+                    currentUser.login(token);
+                }
+            } catch (Exception e) {
+                logger.warn ("dummyLogin: " + e.getMessage());
+            }
+        }
+
+        return "";
     }
 
 } // class

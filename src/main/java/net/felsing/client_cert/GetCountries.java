@@ -20,6 +20,7 @@ package net.felsing.client_cert;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import net.felsing.client_cert.utilities.Constants;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.ServletConfig;
@@ -90,8 +91,9 @@ public class GetCountries extends HttpServlet {
         resp.setContentType("application/json; charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
         String bestLanguage = null;
+        final String acceptLanguage = StringEscapeUtils.escapeJava(req.getHeader("Accept-Language"));
 
-        List<Locale.LanguageRange> languageRanges = Locale.LanguageRange.parse(req.getHeader("Accept-Language"));
+        List<Locale.LanguageRange> languageRanges = Locale.LanguageRange.parse(acceptLanguage);
         for (Locale.LanguageRange l : languageRanges) {
             Locale locale = new Locale(l.getRange());
             try {
@@ -100,11 +102,12 @@ public class GetCountries extends HttpServlet {
                     usedLocale = locale;
                 }
             } catch (Exception e) {
-                logger.debug("No sufficient language found for " + languageRanges.toString());
+                // do nothing
             }
         }
 
         if (bestLanguage==null) {
+            logger.debug("No sufficient language found for " + acceptLanguage);
             bestLanguage=defaultLanguage.getISO3Language();
             usedLocale = Locale.ENGLISH;
         }

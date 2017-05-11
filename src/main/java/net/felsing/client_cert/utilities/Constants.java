@@ -28,6 +28,9 @@ public final class Constants {
     static final String propertyAuthRequired = "auth.required";
     static final String propertyRaGroup = "group.ra";
 
+    static final String propertyDummyUser ="auth.dummy.user";
+    static final String propertyDummyPassword ="auth.dummy.password";
+
     static final String ejbcaKeyStoreType = "ejbca.keystore.type";
     static final String ejbcaKeyStoreFile = "ejbca.keystore.file";
     static final String ejbcaKeyStorePassword = "ejbca.keystore.password";
