@@ -152,6 +152,8 @@ wsdlLocationUrl contains EJBCA wsdl file, you may consider to provide it as file
 
 ## Environment Variables
 
+CATALINA_OPTIONS="-DshiroConfigLocations=file:<path to your shiro.ini>"
+
 If properties file named other than ejbca-new-ra.properties.xml or not located in
 /etc or /usr/local/etc you have to provide its location by environment:
 
@@ -171,6 +173,43 @@ key represents attribute and value is text shown to user in form.
     }
 
 May be improved...
+
+## shiro.ini
+
+    [main]
+    sessionManager = org.apache.shiro.web.session.mgt.DefaultWebSessionManager
+    securityManager.sessionManager=$sessionManager
+    sessionValidationScheduler = org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler
+    # Default is 3,600,000 millis = 1 hour:
+    sessionValidationScheduler.interval = 3600000
+    securityManager.sessionManager.globalSessionTimeout = 7200000
+    securityManager.sessionManager.sessionValidationScheduler = $sessionValidationScheduler
+    
+    # Only used if you need Active Directory
+    contextFactory = org.apache.shiro.realm.ldap.JndiLdapContextFactory
+    contextFactory.url = ldaps://dc1.samba4.example.com:636
+    contextFactory.systemUsername = shiro@samba4.example.com
+    contextFactory.systemPassword = A***very***b8d***Password
+    contextFactory.environment[java.naming.security.protocol] = TLSv1.2
+    contextFactory.environment[java.naming.ldap.factory.socket] = net.felsing.client_cert.utilities.RaSSLSocketFactory
+    
+    activeDirectoryRealm = org.apache.shiro.realm.activedirectory.ActiveDirectoryRealm
+    activeDirectoryRealm.ldapContextFactory = $contextFactory
+    activeDirectoryRealm.searchBase = "CN=Users,DC=samba4,DC=example,DC=com"
+    activeDirectoryRealm.groupRolesMap = "CN=shirouser,CN=Users,DC=samba4,DC=example,DC=com":"shirouser"
+    securityManager.realm = $activeDirectoryRealm
+    
+    # Simple auth: comment out all contextFactory and activeDirectoryRealm stuff  
+    #[users]
+    #joetest = Geheim1234
+    
+    [roles]
+    shirouser = shirouser
+    
+    [urls]
+    /req/** = user
+    /login/** = anon
+    /** = anon
 
 # Typical Mistakes
 
