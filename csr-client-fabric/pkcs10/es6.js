@@ -13,10 +13,14 @@ import Extensions from "../PKI.js/src/Extensions";
 let pkcs10Buffer = new ArrayBuffer(0);
 
 //const hashAlg = "SHA-1";
-const hashAlg = "SHA-256";
-const signAlg = "RSASSA-PKCS1-V1_5";
+//const hashAlg = "SHA-256";
+let hashAlg = "SHA-256";
+
+//const signAlg = "RSASSA-PKCS1-V1_5";
 //const signAlg = "RSA-PSS";
 //const signAlg = "ECDSA";
+let signAlg = "RSASSA-PKCS1-V1_5";
+
 
 const pkcs_9_at_extensionRequest = "1.2.840.113549.1.9.14";
 const extnID = "2.5.29.14";
@@ -182,6 +186,9 @@ function createPKCS10Internal() {
 }
 //*********************************************************************************
 function createPKCS10(callback) {
+    hashAlg = window.csr.hash;
+    signAlg = window.csr.sign;
+
     return Promise.resolve().then(() => createPKCS10Internal()).then(() => {
         let resultString = "-----BEGIN CERTIFICATE REQUEST-----\r\n";
         resultString = `${resultString}${formatPEM(toBase64(arrayBufferToString(pkcs10Buffer)))}`;

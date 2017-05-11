@@ -58,7 +58,7 @@ users intention for certificate usage.
 # License
 
 This code is released under conditions of GNU AFFERO GENERAL PUBLIC LICENSE,
-for details, see file license.txt
+for details, see file web/license.txt
 
 This repository uses following third party repositories:
 
@@ -122,6 +122,22 @@ Following properties file should explain what needs to be configured.
 
     <!-- Set if you want authentication --> 
     <entry key="auth.required"></entry>
+    
+    <!--
+    Space separated list of allowed hashes.
+    Possible values: SHA-256 SHA-384 SHA-512 SHA-1
+    Do not use SHA-1, it is broken and you get insecure certificates.
+    Do not define to use default value of SHA-256
+    -->
+    <entry key="hashes">SHA-256 SHA-384 SHA-512</entry>
+    <!--
+    Space separated list of allowed signatures.
+    Possible values: RSASSA-PKCS1-v1_5 RSA-PSS ECDSA
+    Do not use ECDSA, PKCS#12 creation does not work yet.
+    Do not define to use default value of RSASSA-PKCS1-v1_5
+    -->
+    <entry key="sign">RSASSA-PKCS1-v1_5 RSA-PSS ECDSA</entry>
+    
     </properties>
 
 wsdlLocationUrl contains EJBCA wsdl file, you may consider to provide it as file.

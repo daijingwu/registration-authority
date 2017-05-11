@@ -84,6 +84,22 @@ public final class CsrBeans {
     }
 
 
+    private void addCsrOptions(StringBuilder form, String what) {
+        if (properties.getProperty(what)!=null) {
+            String allowedOptions[] = properties.getProperty(what).split("\\s+");
+
+            form.append("<div id=\"").append(what).append("_group\" >\n");
+            form.append("  <label class=\"left\" for=\"").append(what).append("\">").append(bundle.getString("lbl_" + what)).append("</label>\n");
+            form.append("  <span class=\"left2\"><select id=\"").append(what).append("\">\n");
+            for (String item: allowedOptions) {
+                form.append("<option value=\"").append(item).append("\">").append(bundle.getString(item)).append("</option>\n");
+            }
+            form.append("</select></span>\n");
+            form.append("</div>\n");
+        }
+    }
+
+
     public String getForm() {
         if (labels==null) {
             CertificateAttributes certificateAttributes = new CertificateAttributes(bundle);
@@ -94,25 +110,28 @@ public final class CsrBeans {
             v=v.replaceAll("\"","");
             switch (k) {
                 case "c":
-                    form.append("<div id=\"").append(k).append("_group\" class=\"input_group\">\n");
-                    form.append("  <label for=\"").append(k).append("\">").append(v).append("</label>\n");
-                    form.append("  <select id=\"c\"></select>\n");
+                    form.append("<div id=\"").append(k).append("_group\" >\n");
+                    form.append("  <label class=\"left\" for=\"").append(k).append("\">").append(v).append("</label>\n");
+                    form.append("  <span class=\"left2\"><select id=\"c\"></select></span>\n");
                     form.append("</div>\n");
                     break;
                 case "st":
-                    form.append("<div id=\"").append(k).append("_group\" class=\"input_group\">\n");
-                    form.append("  <label for=\"").append(k).append("\">").append(v).append("</label>\n");
-                    form.append("  <select id=\"st\"></select>\n");
+                    form.append("<div id=\"").append(k).append("_group\" >\n");
+                    form.append("  <label class=\"left\" for=\"").append(k).append("\">").append(v).append("</label>\n");
+                    form.append("  <span class=\"left2\"><select id=\"st\"></select></span>\n");
                     form.append("</div>\n");
                     break;
                 default:
-                    form.append("<div id=\"").append(k).append("_group\" class=\"input_group\">\n");
-                    form.append("  <label for=\"").append(k).append("\">").append(v).append("</label>\n");
-                    form.append("  <input type=\"text\" id=\"").append(k).append("\"/>\n");
+                    form.append("<div id=\"").append(k).append("_group\" >\n");
+                    form.append("  <label class=\"left\" for=\"").append(k).append("\">").append(v).append("</label>\n");
+                    form.append("  <span class=\"left2\"><input type=\"text\" id=\"").append(k).append("\"/></span>\n");
                     form.append("</div>\n");
                     break;
             }
         });
+
+        addCsrOptions(form, "hashes");
+        addCsrOptions(form, "sign");
 
         return form.toString();
     }

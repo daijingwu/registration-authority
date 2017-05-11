@@ -45,12 +45,6 @@ body {
     border: 0px;
 }
 
-
-.input_group {
-    padding-top: 0.5em;
-    display: inline-block;
-}
-
 label {
     float: left;
     width: 10em;
@@ -58,21 +52,6 @@ label {
     margin-left: 1em;
     display: block;
     font: bold 18px/22px Helvetica, Arial, sans-serif;
-}
-
-
-.label {
-    float: left;
-    width: 10em;
-    text-align: left;
-    margin-left: 1em;
-    display: block;
-    font: bold 18px/22px Helvetica, Arial, sans-serif;
-}
-
-
-input {
-    width: 30em;
 }
 
 #div_create {
@@ -102,17 +81,30 @@ input {
     text-align: center;
 }
 
-.div_input {
-    display: inline-block;
-    width: 100%;
-    padding-top: 0.5em;
+.left {
+    float: left;
+    margin-top: 0.2em;
+}
+
+.left2 {
+    overflow: hidden;
+    display: block;
+    padding: 0 4px 0 10px;
+    margin-top: 1em;
+}
+
+.left2 input {
+    width: 29rem;
+}
+
+.left2 select {
+    width: 30rem;
 }
 
 .div_buttons {
     display: inline-block;
     text-align: center;
     width: 100%;
-    padding-top: 1em;
 }
 
 #password {
@@ -124,6 +116,7 @@ button {
     height: 3em;
     width: 20em;
     margin-left: 1em;
+    margin-top: 1em;
     background: #ACD0EC;
     border: solid 1px #4C6181;
     color: #000;

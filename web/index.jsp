@@ -49,13 +49,13 @@
             <form id="login" action="login" method="post">
                 <div id="div_loginusername" class="div_input">
                     <label id="lbl_loginusername" for="loginusername"
-                           class="label">${hdr.bundleEntry("lbl_loginusername")}</label>
-                    <input type="text" id="loginusername" name="loginusername"/>
+                           class="left">${hdr.bundleEntry("lbl_loginusername")}</label>
+                    <span class="left2"><input type="text" id="loginusername" name="loginusername"/></span>
                 </div>
                 <div id="div_loginpassword" class="div_input">
                     <label id="lbl_loginpassword" for="loginpassword"
-                           class="label">${hdr.bundleEntry("lbl_loginpassword")}</label>
-                    <input type="password" id="loginpassword" name="loginpassword"/>
+                           class="left">${hdr.bundleEntry("lbl_loginpassword")}</label>
+                    <span class="left2"><input type="password" id="loginpassword" name="loginpassword"/></span>
                 </div>
                 <div id="div_loginbutton" class="div_buttons">
                     <button id="loginbutton" type="submit">${hdr.bundleEntry("loginbutton")}</button>
