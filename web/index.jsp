@@ -2,6 +2,7 @@
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="net.felsing.client_cert.utilities.CsrBeans" %>
 <%@ page import="net.felsing.client_cert.utilities.BackgroundProcesses" %>
+<%@ page import="net.felsing.client_cert.utilities.Constants" %>
 <%--
 /*
  * Copyright (c) 2016. by Christian Felsing
@@ -35,7 +36,7 @@
 <%-- <fmt:setLocale value="${language}" /> --%>
 <jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
 <% if (!BackgroundProcesses.isEjbcaRunning()) { response.sendError(500, "Backend is dead" ); } %>
-${hdr.getDummyLogin()}
+${hdr.dummyLogin}
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,14 +53,18 @@ ${hdr.getDummyLogin()}
         ${hdr.cleanUp}
         <form id="login" action="login" method="post">
             <div id="div_loginusername" class="div_input">
-                <label id="lbl_loginusername" for="loginusername"
+                <label id="lbl_loginusername" for="<%= Constants.formUsername %>"
                        class="left">${hdr.bundleEntry("lbl_loginusername")}</label>
-                <span class="left2"><input type="text" id="loginusername" name="loginusername"/></span>
+                <span class="left2">
+                    <input type="text" id="<%= Constants.formUsername %>" name="<%= Constants.formUsername %>"/>
+                </span>
             </div>
             <div id="div_loginpassword" class="div_input">
-                <label id="lbl_loginpassword" for="loginpassword"
+                <label id="lbl_loginpassword" for="<%= Constants.formPassword %>"
                        class="left">${hdr.bundleEntry("lbl_loginpassword")}</label>
-                <span class="left2"><input type="password" id="loginpassword" name="loginpassword"/></span>
+                <span class="left2">
+                    <input type="password" id="<%= Constants.formPassword %>" name="<%= Constants.formPassword %>"/>
+                </span>
             </div>
             <div id="div_loginbutton" class="div_buttons">
                 <button id="loginbutton" type="submit">${hdr.bundleEntry("loginbutton")}</button>

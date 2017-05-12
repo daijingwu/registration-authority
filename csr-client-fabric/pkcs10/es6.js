@@ -7,21 +7,14 @@ import AttributeTypeAndValue from "../PKI.js/src/AttributeTypeAndValue";
 import Attribute from "../PKI.js/src/Attribute";
 import Extension from "../PKI.js/src/Extension";
 import Extensions from "../PKI.js/src/Extensions";
+import GeneralNames from "../PKI.js/src/GeneralNames";
+import GeneralName from "../PKI.js/src/GeneralName";
 //import RSAPublicKey from "../PKI.js/src/RSAPublicKey";
 
 //*********************************************************************************
 let pkcs10Buffer = new ArrayBuffer(0);
-
-//const hashAlg = "SHA-1";
-//const hashAlg = "SHA-256";
 let hashAlg = "SHA-256";
-
-//const signAlg = "RSASSA-PKCS1-V1_5";
-//const signAlg = "RSA-PSS";
-//const signAlg = "ECDSA";
 let signAlg = "RSASSA-PKCS1-V1_5";
-
-
 const pkcs_9_at_extensionRequest = "1.2.840.113549.1.9.14";
 const extnID = "2.5.29.14";
 
@@ -41,9 +34,17 @@ const oid={
     e: { type: "1.2.840.113549.1.9.1", asn1type: asn1js.PrintableString }
 };
 
+// https://tools.ietf.org/html/rfc2459
 const oidAltNames={
-    rfc822Name: { type: "2.5.29.17.1", asn1type: asn1js.Utf8String },
-    dNSName: { type: "2.5.29.17.2", asn1type: asn1js.Utf8String }
+    otherName: { type: 0, asn1type: asn1js.Utf8String },
+    rfc822Name: { type: 1, asn1type: asn1js.Utf8String },
+    dNSName: { type: 2, asn1type: asn1js.Utf8String },
+    x400Address: { type: 3, asn1type: asn1js.Utf8String },
+    directoryName: { type: 4, asn1type: asn1js.Utf8String },
+    ediPartyName: { type: 5, asn1type: asn1js.Utf8String },
+    uniformResourceIdentifier: { type: 6, asn1type: asn1js.Utf8String },
+    iPAddress: { type: 7, asn1type: asn1js.Utf8String },
+    registeredID: { type: 8, asn1type: asn1js.Utf8String }
 };
 
 //*********************************************************************************
@@ -99,14 +100,6 @@ function createPKCS10Internal() {
             }));
         }
     }
-
-    for (let key in window.csr.subjectAltNames) {
-        if (window.csr.subjectAltNames.hasOwnProperty(key) && typeof oidAltNames[key] !== "undefined") {
-
-            console.log ("WARNING: SubjectAltNames not supported yet: %o", key);
-        }
-    }
-
     pkcs10.attributes = [];
     //endregion
 
@@ -173,6 +166,41 @@ function createPKCS10Internal() {
                 }));
             }
         );
+    //endregion
+
+    //region add subjectAltname
+    const altNameArray=[];
+    for (let key in window.csr.subjectAltNames) {
+        if (window.csr.subjectAltNames.hasOwnProperty(key) && oidAltNames.hasOwnProperty(key)) {
+            const type = oidAltNames[key].type;
+            altNameArray.push(
+                new GeneralName({
+                    type: parseInt(type),
+                    value: window.csr.subjectAltNames[key]
+                })
+            );
+        }
+    }
+
+    const altNames = new GeneralNames({
+        names: altNameArray
+    });
+
+    pkcs10.attributes.push(new Attribute({
+        type: pkcs_9_at_extensionRequest,
+        values: [
+            (new Extensions({
+                extensions: [
+                    new Extension(
+                        {
+                            extnID: "2.5.29.17",
+                            critical: false,
+                            extnValue: altNames.toSchema().toBER()
+                        }
+                    )
+                ]
+            })).toSchema()]
+    }));
     //endregion
 
     //region Signing final PKCS#10 request

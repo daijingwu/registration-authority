@@ -129,8 +129,8 @@ public class Login extends HttpServlet {
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
 
-            String username = req.getParameter("loginusername");
-            String password = req.getParameter("loginpassword");
+            String username = req.getParameter(Constants.formUsername);
+            String password = req.getParameter(Constants.formPassword);
 
             logger.debug("Method: " + req.getMethod());
             logger.debug("Username: " + username);

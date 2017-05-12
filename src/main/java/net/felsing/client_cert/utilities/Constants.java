@@ -31,6 +31,9 @@ public final class Constants {
     static final String propertyDummyUser ="auth.dummy.user";
     static final String propertyDummyPassword ="auth.dummy.password";
 
+    public static final String formUsername = "loginusername";
+    public static final String formPassword = "loginpassword";
+
     static final String ejbcaKeyStoreType = "ejbca.keystore.type";
     static final String ejbcaKeyStoreFile = "ejbca.keystore.file";
     static final String ejbcaKeyStorePassword = "ejbca.keystore.password";

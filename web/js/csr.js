@@ -59,6 +59,7 @@ const signCsr = function () {
     const friendlyName = configuration.downloadName;
 
     const ajaxData = {};
+    console.log ("csr.js: %o", window.csr.pkcs10);
     ajaxData.pkcs10 = window.csr.pkcs10;
     JSON.stringify(ajaxData);
 
@@ -98,10 +99,9 @@ const createCSR = function () {
     window.csr.cn = $("#cn").val();
     window.csr.e = $("#e").val();
     window.csr.subjectAltNames.rfc822Name = window.csr.e;
+    window.csr.subjectAltNames.dNSName = "test.example.com";
     window.csr.hash = $("#hashes").val();
     window.csr.sign = $("#sign").val();
-
-    console.log ("window.csr: %o", window.csr);
 
     createPKCS10(function () {
         signCsr();
