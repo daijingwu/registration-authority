@@ -17,6 +17,7 @@
 
 package net.felsing.client_cert;
 
+import net.felsing.client_cert.utilities.BackgroundProcesses;
 import net.felsing.client_cert.utilities.PropertyLoader;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.IniSecurityManagerFactory;
@@ -31,10 +32,26 @@ import javax.servlet.ServletContextListener;
 
 public class RaContextListener implements ServletContextListener {
     private static Logger logger = LoggerFactory.getLogger(RaContextListener.class);
+    private static BackgroundProcesses backgroundProcesses;
+    private static boolean backgroundProcessesStarted = false;
+
 
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+        initShiro(servletContextEvent);
+        startBackgroundProcesses();
+    }
+
+
+    @Override
+    public void contextDestroyed(ServletContextEvent arg0) {
+
+        backgroundProcesses.terminate();
+    }
+
+
+    private void initShiro (ServletContextEvent servletContextEvent) {
         String shiroIniFile = PropertyLoader.getProperties().getProperty("shiroini");
         servletContextEvent.getServletContext().setInitParameter("shiroConfigLocations", "file:" + shiroIniFile);
 
@@ -45,9 +62,13 @@ public class RaContextListener implements ServletContextListener {
         logger.info("Shiro loaded, using " + shiroIniFile);
     }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent arg0) {
 
+    private static void startBackgroundProcesses () {
+        if (!backgroundProcessesStarted) {
+            backgroundProcesses = new BackgroundProcesses();
+            backgroundProcesses.start();
+            backgroundProcessesStarted=true;
+        }
     }
 
 } // class

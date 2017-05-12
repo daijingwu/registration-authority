@@ -57,4 +57,8 @@ public final class Constants {
     static final int numBits = 384;
 
     public static final String utf8 = "UTF-8";
+
+    static long threadJoinTimeout = 1000; // ms
+    static long threadInterval = 5000; //ms
+
 }

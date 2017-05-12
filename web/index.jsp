@@ -1,6 +1,7 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="org.apache.shiro.SecurityUtils" %>
 <%@ page import="net.felsing.client_cert.utilities.CsrBeans" %>
+<%@ page import="net.felsing.client_cert.utilities.BackgroundProcesses" %>
 <%--
 /*
  * Copyright (c) 2016. by Christian Felsing
@@ -33,6 +34,7 @@
 <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
 <%-- <fmt:setLocale value="${language}" /> --%>
 <jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
+<% if (!BackgroundProcesses.isEjbcaRunning()) { response.sendError(500, "Backend is dead" ); } %>
 ${hdr.getDummyLogin()}
 <!DOCTYPE html>
 <html>
@@ -86,10 +88,9 @@ ${hdr.getDummyLogin()}
             </div>
 
             <div id="pkcs12_password_area">
-                <div id="div_password" class="pwd_toggle_off">
-                    <div id="lbl_password" class="label pwd_toggle_off"></div>
-                    <div id="password" class="pwd_toggle_off">
-                    </div>
+                <div id="div_password">
+                    <label for="password" id="lbl_password" class="left pwd_toggle_off"></label>
+                    <span id="span_password"><div id="password" class="pwd_toggle_off"></div></span>
                 </div>
 
                 <div id="div_passwordButton" class="pwd_toggle_off">

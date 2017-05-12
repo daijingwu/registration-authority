@@ -112,7 +112,7 @@ public class GetCountries extends HttpServlet {
             usedLocale = Locale.ENGLISH;
         }
 
-        logger.info("usedLocale: " + usedLocale.getISO3Language());
+        logger.debug ("usedLocale: " + usedLocale.getISO3Language());
 
         PrintWriter pw = resp.getWriter();
         loadFromJson(context);

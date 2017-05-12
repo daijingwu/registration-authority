@@ -23,11 +23,6 @@ body {
 }
 
 
-#password {
-    font-family: monospace;
-}
-
-
 #spinner {
     background-image: url(../image/spinner.gif);
     background-repeat: no-repeat;
@@ -107,8 +102,20 @@ label {
     width: 100%;
 }
 
+#div_password {
+    display: inline-block;
+    width: 100%;
+}
+
+#span_password {
+    overflow: hidden;
+    display: block;
+    padding: 0 4px 0 10px;
+}
+
 #password {
-    font: bold 18px/22px Monospaced;
+    font: bold 20px/24px "Courier 10 Pitch",courier, monospace;
+    width: 30rem;
 }
 
 button {

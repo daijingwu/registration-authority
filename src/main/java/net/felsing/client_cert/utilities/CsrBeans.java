@@ -77,7 +77,6 @@ public final class CsrBeans {
                     logger.info("create: " + bundle.getString("create"));
                 } catch (Exception e) {
                     logger.info("loadLocale (2): " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }

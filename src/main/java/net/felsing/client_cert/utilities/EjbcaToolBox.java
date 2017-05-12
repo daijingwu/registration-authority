@@ -36,6 +36,7 @@ import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -133,7 +134,7 @@ public class EjbcaToolBox {
     }
 
 
-    JsonObject getAvailableCas() {
+    JsonObject getAvailableCas() throws AuthorizationDeniedException_Exception, EjbcaException_Exception {
         JsonObject jsonObject = new JsonObject();
         try {
             java.util.List<NameAndId> _getAvailableCAs__return = port.getAvailableCAs();
@@ -145,8 +146,10 @@ public class EjbcaToolBox {
 
         } catch (AuthorizationDeniedException_Exception e) {
             logger.warn("Expected exception: AuthorizationDeniedException has occurred: "+e.getMessage());
+            throw e;
         } catch (EjbcaException_Exception e) {
             logger.warn("Expected exception: EjbcaException has occurred: "+e.getMessage());
+            throw e;
         }
 
         return jsonObject;

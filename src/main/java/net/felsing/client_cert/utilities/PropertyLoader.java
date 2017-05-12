@@ -71,7 +71,7 @@ public final class PropertyLoader {
                 properties=test;
                 logger.info("Using properties file "+v);
             } catch (Exception e) {
-                logger.debug ("Tried properties file "+v+": Not found. This is not an error, if at least one time Using properties file will be found.");
+                logger.debug ("Tried properties file "+v+": Not found. This is not an error, if at least one time \"Using properties file\" will be found.");
             }
         });
         if (properties==null) {
