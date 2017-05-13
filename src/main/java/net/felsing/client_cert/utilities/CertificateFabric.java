@@ -18,19 +18,14 @@
 package net.felsing.client_cert.utilities;
 
 
-import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.pkcs.Attribute;
-import org.bouncycastle.asn1.pkcs.CertificationRequest;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.util.ASN1Dump;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.Extensions;
-import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
-import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
+import org.bouncycastle.asn1.x509.GeneralName;
+import org.bouncycastle.asn1.x509.GeneralNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 import javax.xml.bind.DatatypeConverter;
@@ -40,6 +35,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 public class CertificateFabric {
     private static final Logger logger = LoggerFactory.getLogger(CertificateFabric.class);
+    private ArrayList<ArrayList<String>> subjectAlternativeNames;
 
     public class ReqData {
         public String subject;
@@ -67,13 +63,13 @@ public class CertificateFabric {
         try {
             byte[] reqBytes;
             reqBytes = CertificateFabric.parseDERFromPEM(pkcs10string.getBytes(),
-                    "-----BEGIN CERTIFICATE REQUEST-----",
-                    "-----END CERTIFICATE REQUEST-----");
+                    Constants.csrBegin,
+                    Constants.csrEnd);
             PKCS10CertificationRequest pkcs10CertificationRequest =
                     new PKCS10CertificationRequest(reqBytes);
             reqData.subject = pkcs10CertificationRequest.getSubject().toString().replaceAll("\\+", ",");
 
-            getSubjectAlternativeNames(pkcs10CertificationRequest);
+            testReadCertificateSigningRequest(pkcs10CertificationRequest);
 
             return reqData;
         } catch (IOException e) {
@@ -101,62 +97,37 @@ public class CertificateFabric {
     }
 
 
-    private void getSubjectAlternativeNames(PKCS10CertificationRequest pkcs10CertificationRequest) {
-        Attribute[] attributes = pkcs10CertificationRequest.getAttributes();
-        for (Attribute attr : attributes) {
-            // process extension request
-            if (attr.getAttrType().equals(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest)) {
-                Extensions extensions = Extensions.getInstance(attr.getAttrValues().getObjectAt(0));
-                Enumeration e = extensions.oids();
-                while (e.hasMoreElements()) {
-                    ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) e.nextElement();
-                    Extension ext = extensions.getExtension(oid);
-                    //logger.debug(ASN1Dump.dumpAsString(ext, true));
-                    parseExtenstion(ext);
+    private void testReadCertificateSigningRequest(PKCS10CertificationRequest csr) {
+        subjectAlternativeNames = new ArrayList<>(new ArrayList<>());
+        // GeneralName.otherName is lowest and
+        // GeneralName.registeredID is highest id
+        for (int i=GeneralName.otherName; i<=GeneralName.registeredID; i++) {
+            subjectAlternativeNames.add(new ArrayList<>());
+        }
+
+        try {
+            Attribute[] certAttributes = csr.getAttributes();
+            for (Attribute attribute : certAttributes) {
+                if (attribute.getAttrType().equals(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest)) {
+                    Extensions extensions = Extensions.getInstance(attribute.getAttrValues().getObjectAt(0));
+                    GeneralNames gns = GeneralNames.fromExtensions(extensions, Extension.subjectAlternativeName);
+                    if (gns!=null) {
+                        GeneralName[] names = gns.getNames();
+                        for (GeneralName name : names) {
+                            subjectAlternativeNames.get(name.getTagNo()).add(name.getName().toString());
+                        }
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
 
-    private void parseExtenstion(Extension ext) {
+    ArrayList<ArrayList<String>> getSubjectAlternativeNames() {
 
-        ASN1ObjectIdentifier extnId = ext.getExtnId();
-        ASN1OctetString extnValue = ext.getExtnValue();
-        if (extnId.getId().equals("2.5.29.17")) {
-            DEROctetString derOctetString = (DEROctetString) extnValue;
-            try {
-                ASN1Primitive derObject = toDERObject(derOctetString.getOctets());
-                ASN1Sequence derSequence = ASN1Sequence.getInstance(derObject);
-                ASN1Encodable objectAt = derSequence.getObjectAt(0);
-                ASN1TaggedObject asn1TaggedObject = ASN1TaggedObject.getInstance(objectAt);
-                ASN1OctetString asn1OctetString = ASN1OctetString.getInstance(asn1TaggedObject.getObject());
-
-                ASN1Primitive loadedObject = asn1OctetString.getLoadedObject();
-
-                logger.debug ("Class: " + loadedObject.getClass().toString() + "\n" + ASN1Dump.dumpAsString(loadedObject, true));
-
-                DERUTF8String derutf8String = DERUTF8String.getInstance(loadedObject.getEncoded());
-                logger.debug(derutf8String.getString());
-            } catch (Exception e) {
-                logger.debug("toDERObject failed: " + e.getMessage());
-            }
-        }
-    }
-
-
-    private ASN1Primitive toDERObject(byte[] data) throws IOException {
-        ByteArrayInputStream inStream = new ByteArrayInputStream(data);
-        ASN1InputStream asnInputStream = new ASN1InputStream(inStream);
-
-        return asnInputStream.readObject();
-    }
-
-
-    public void decode(byte[] encoding) throws Exception
-    {
-        ASN1Sequence seq = ASN1Sequence.getInstance(encoding);
-        String url = DERUTF8String.getInstance(seq.getObjectAt(0)).getString();
+        return subjectAlternativeNames;
     }
 
 } // class

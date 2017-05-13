@@ -52,6 +52,8 @@ public final class Constants {
 
     static final String certificateBegin = "-----BEGIN CERTIFICATE-----";
     static final String certificateEnd = "-----END CERTIFICATE-----";
+    static final String csrBegin = "-----BEGIN CERTIFICATE REQUEST-----";
+    static final String csrEnd = "-----END CERTIFICATE REQUEST-----";
 
     static final String schemaFileName = "schemaFileName";
     public static final String title = "title";
