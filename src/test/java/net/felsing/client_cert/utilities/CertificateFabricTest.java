@@ -1,10 +1,6 @@
 package net.felsing.client_cert.utilities;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
-import net.felsing.client_cert.ejbca.Certificate;
-import org.apache.commons.validator.routines.RegexValidator;
 import org.junit.Test;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import static org.junit.Assert.*;
 
@@ -68,7 +64,7 @@ public class CertificateFabricTest {
         System.out.println("Test testGetReqDataRSA");
         System.out.println("======================");
         CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqData(reqRSA);
+        String subject=certificateFabric.getReqSubject(reqRSA).subject;
         System.out.println("subject (rsa): "+subject);
     }
 
@@ -78,7 +74,7 @@ public class CertificateFabricTest {
         System.out.println("Test testGetReqDataECC");
         System.out.println("======================");
         CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqData(reqECC);
+        String subject=certificateFabric.getReqSubject(reqECC).subject;
         System.out.println("subject (ecc): "+subject);
     }
 
@@ -87,10 +83,10 @@ public class CertificateFabricTest {
         System.out.println("Test validRequest");
         System.out.println("=================");
         CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqData(reqRSA);
+        String subject=certificateFabric.getReqSubject(reqRSA).subject;
         System.out.println("subject: "+subject);
         assertNotNull(subject);
-        subject=certificateFabric.getReqData(reqWrong);
+        subject=certificateFabric.getReqSubject(reqWrong).subject;
         System.out.println("subject should be null");
         assertNull(subject);
     }

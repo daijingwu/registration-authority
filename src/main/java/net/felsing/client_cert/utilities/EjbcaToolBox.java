@@ -36,23 +36,29 @@ import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-
+import java.util.*;
 
 
 public class EjbcaToolBox {
     private static final Logger logger = LoggerFactory.getLogger(EjbcaToolBox.class);
     private static final TLSClientParameters tlsParams = new TLSClientParameters();
-    private EjbcaWS port;
-    private Properties properties;
+    private final EjbcaWS port;
+    private final Properties properties;
     private static final QName SERVICE_NAME = new QName("http://ws.protocol.core.ejbca.org/", "EjbcaWSService");
+
+    @SuppressWarnings("unused")
+    public final static int entNew = 10;
+    @SuppressWarnings("unused")
+    public final static int entFailed = 11;
+    @SuppressWarnings("unused")
+    public final static int entInitialized = 20;
+    @SuppressWarnings("unused")
+    public final static int entInprocess = 30;
+    @SuppressWarnings("unused")
+    public final static int entGenerated = 50;
 
 
     public EjbcaToolBox(Properties properties) {
@@ -178,23 +184,24 @@ public class EjbcaToolBox {
     }
 
 
-    JsonObject ejbcaEditUser(String username,
-                             String password,
-                             String email
-    ) {
-
+    JsonObject ejbcaEditUser(Map<String, String> user) {
+        final String caName = "caName";
+        final String password = "password";
+        final String email = "email";
+        final String rfc822name = "rfc822name";
+        final String subject = "CN=" + user.get("username") + ",C=DE";
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
-        userDataVOWS.setCaName(properties.getProperty("caName"));
-        userDataVOWS.setCertificateProfileName(properties.getProperty("CertificateProfileName"));
-        userDataVOWS.setEmail(email);
-        userDataVOWS.setEndEntityProfileName(properties.getProperty("EndEntityProfileName"));
-        userDataVOWS.setPassword(password);
-        userDataVOWS.setStatus(10);
-        userDataVOWS.setSubjectAltName("rfc822name=" + email);
-        userDataVOWS.setSubjectDN("CN=" + username + ",C=DE");
+        userDataVOWS.setCaName(properties.getProperty(caName));
+        userDataVOWS.setCertificateProfileName(properties.getProperty(Constants.propertyCertificateProfileName));
+        userDataVOWS.setEmail(user.get(email));
+        userDataVOWS.setEndEntityProfileName(properties.getProperty(Constants.propertyEndEntityProfileName));
+        userDataVOWS.setPassword(user.get(password));
+        userDataVOWS.setStatus(entNew);
+        userDataVOWS.setSubjectAltName(rfc822name + "=" + user.get(email));
+        userDataVOWS.setSubjectDN(subject);
         userDataVOWS.setTokenType("USERGENERATED");
-        userDataVOWS.setUsername(username);
+        userDataVOWS.setUsername(user.get("username"));
 
         JsonObject jsonObject = new JsonObject();
         try {
@@ -210,19 +217,21 @@ public class EjbcaToolBox {
 
     public String ejbcaCertificateRequest(String pkcs10req) {
         CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqData(pkcs10req);
-        HashMap<String,String> attributes=CertificateFabric.getAttributes(subject);
+        CertificateFabric.ReqData subject=certificateFabric.getReqSubject(pkcs10req);
+        HashMap<String,String> attributes=CertificateFabric.getAttributes(subject.subject);
 
         String password= Utilities.generatePassword();
         String email=attributes.get("e");
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
-        userDataVOWS.setCaName(properties.getProperty("caName"));
-        userDataVOWS.setCertificateProfileName(properties.getProperty("CertificateProfileName"));
+        userDataVOWS.setCaName(properties.getProperty(Constants.propertyCaName));
+        userDataVOWS.setCertificateProfileName(properties.getProperty(Constants.propertyCertificateProfileName));
         userDataVOWS.setEmail(email);
-        userDataVOWS.setEndEntityProfileName(properties.getProperty("EndEntityProfileName"));
+        userDataVOWS.setEndEntityProfileName(properties.getProperty(Constants.propertyEndEntityProfileName));
         userDataVOWS.setPassword(password);
         userDataVOWS.setStatus(10);
+
+        //userDataVOWS.setSubjectAltName("rfc822name=blah@fasel.example.com");
 
         checkAttributes(attributes);
 
@@ -254,6 +263,7 @@ public class EjbcaToolBox {
             pem.append(Constants.certificateEnd); pem.append("\n");
         } catch (Exception e) {
             logger.error(e.getMessage());
+            e.printStackTrace();
         }
 
         return pem.toString();
@@ -279,6 +289,7 @@ public class EjbcaToolBox {
     }
 
 
+    @SuppressWarnings("UnusedReturnValue")
     private boolean checkAttributes (HashMap<String,String> attributes) {
 
         boolean changed = false;

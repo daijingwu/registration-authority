@@ -33,7 +33,6 @@
 <c:set var="language" value="${pageContext.request.locale.language}" scope="session"/>
 <c:set var="loginStatus" value="${hdr.loginStatus}"/>
 <c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
-<%-- <fmt:setLocale value="${language}" /> --%>
 <jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
 <% if (!BackgroundProcesses.isEjbcaRunning()) { response.sendError(500, "Backend is dead" ); } %>
 ${hdr.dummyLogin}

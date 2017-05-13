@@ -99,7 +99,6 @@ const createCSR = function () {
     window.csr.cn = $("#cn").val();
     window.csr.e = $("#e").val();
     window.csr.subjectAltNames.rfc822Name = window.csr.e;
-    window.csr.subjectAltNames.dNSName = "test.example.com";
     window.csr.hash = $("#hashes").val();
     window.csr.sign = $("#sign").val();
 

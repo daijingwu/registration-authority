@@ -1,5 +1,4 @@
 import * as asn1js from "asn1js";
-//import {arrayBufferToString, stringToArrayBuffer, toBase64, fromBase64} from "pvutils";
 import {arrayBufferToString, toBase64} from "pvutils";
 import {getCrypto, getAlgorithmParameters, setEngine} from "../PKI.js/src/common";
 import CertificationRequest from "../PKI.js/src/CertificationRequest";
@@ -9,12 +8,14 @@ import Extension from "../PKI.js/src/Extension";
 import Extensions from "../PKI.js/src/Extensions";
 import GeneralNames from "../PKI.js/src/GeneralNames";
 import GeneralName from "../PKI.js/src/GeneralName";
-//import RSAPublicKey from "../PKI.js/src/RSAPublicKey";
+
 
 //*********************************************************************************
 let pkcs10Buffer = new ArrayBuffer(0);
 let hashAlg = "SHA-256";
 let signAlg = "RSASSA-PKCS1-V1_5";
+
+
 const pkcs_9_at_extensionRequest = "1.2.840.113549.1.9.14";
 const extnID = "2.5.29.14";
 
@@ -170,37 +171,39 @@ function createPKCS10Internal() {
 
     //region add subjectAltname
     const altNameArray=[];
-    for (let key in window.csr.subjectAltNames) {
-        if (window.csr.subjectAltNames.hasOwnProperty(key) && oidAltNames.hasOwnProperty(key)) {
-            const type = oidAltNames[key].type;
-            altNameArray.push(
-                new GeneralName({
-                    type: parseInt(type),
-                    value: window.csr.subjectAltNames[key]
-                })
-            );
+    if (window.csr.subjectAltNames) {
+        for (let key in window.csr.subjectAltNames) {
+            if (window.csr.subjectAltNames.hasOwnProperty(key) && oidAltNames.hasOwnProperty(key)) {
+                const type = oidAltNames[key].type;
+                altNameArray.push(
+                    new GeneralName({
+                        type: parseInt(type),
+                        value: window.csr.subjectAltNames[key]
+                    })
+                );
+            }
         }
+
+        const altNames = new GeneralNames({
+            names: altNameArray
+        });
+
+        pkcs10.attributes.push(new Attribute({
+            type: pkcs_9_at_extensionRequest,
+            values: [
+                (new Extensions({
+                    extensions: [
+                        new Extension(
+                            {
+                                extnID: "2.5.29.17",
+                                critical: false,
+                                extnValue: altNames.toSchema().toBER()
+                            }
+                        )
+                    ]
+                })).toSchema()]
+        }));
     }
-
-    const altNames = new GeneralNames({
-        names: altNameArray
-    });
-
-    pkcs10.attributes.push(new Attribute({
-        type: pkcs_9_at_extensionRequest,
-        values: [
-            (new Extensions({
-                extensions: [
-                    new Extension(
-                        {
-                            extnID: "2.5.29.17",
-                            critical: false,
-                            extnValue: altNames.toSchema().toBER()
-                        }
-                    )
-                ]
-            })).toSchema()]
-    }));
     //endregion
 
     //region Signing final PKCS#10 request

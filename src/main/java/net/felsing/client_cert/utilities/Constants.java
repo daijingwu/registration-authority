@@ -27,6 +27,9 @@ public final class Constants {
     static final String propertyEnvname = "EJBCA_NEW_RA_PROPERTIES";
     static final String propertyAuthRequired = "auth.required";
     static final String propertyRaGroup = "group.ra";
+    static final String propertyCertificateProfileName = "CertificateProfileName";
+    static final String propertyEndEntityProfileName = "EndEntityProfileName";
+    static final String propertyCaName = "caName";
 
     static final String propertyDummyUser ="auth.dummy.user";
     static final String propertyDummyPassword ="auth.dummy.password";

@@ -15,7 +15,7 @@ public class JsonProcessorTest {
     @Test
     public void testGetSubject() throws Exception {
         JsonProcessor jsonProcessor=new JsonProcessor();
-        String subject=jsonProcessor.getSubject(req);
+        String subject=jsonProcessor.getSubject(req).subject;
         System.out.println("subject: "+subject);
     }
 }

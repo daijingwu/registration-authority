@@ -87,8 +87,8 @@ public class Servlet extends HttpServlet {
             JsonArray certChain=new JsonArray();
 
             CertificateFabric certificateFabric=new CertificateFabric();
-            String subject=certificateFabric.getReqData(pkcs10req);
-            if (subject==null) {
+            CertificateFabric.ReqData subject=certificateFabric.getReqSubject(pkcs10req);
+            if (subject.status!=0) {
                 logger.warn("CSR not valid");
                 return;
             }
