@@ -41,6 +41,7 @@ ${hdr.dummyLogin}
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1">
     <title>${hdr.title}</title>
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
@@ -109,6 +110,8 @@ ${hdr.dummyLogin}
         </div>
     </shiro:user>
 </div>
+
+<%@ include file="copyright.jsp" %>
 
 <div id="spinner"></div>
 

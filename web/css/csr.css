@@ -141,3 +141,16 @@ button {
 .div_loginfailed {
 
 }
+
+.footer {
+    width: 50em;
+    margin: 10px auto;
+    padding: 10px 50px 10px 50px;
+    border: solid 2px #CCC;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    box-shadow: 0 0 12px 3px #CDCDCD;
+    -webkit-box-shadow: 0 0 12px 3px #CDCDCD;
+    background: #FFF;
+    text-align: center;
+}
