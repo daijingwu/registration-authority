@@ -46,7 +46,8 @@ public class JsonProcessor {
     }
 
 
-    CertificateFabric.ReqData getSubject(String req) {
+    @SuppressWarnings("WeakerAccess")
+    public CertificateFabric.ReqData getSubject(String req) {
 
         return new CertificateFabric().getReqSubject(getCertificate(req));
     }

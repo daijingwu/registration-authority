@@ -19,6 +19,9 @@ public class EjbcaToolBoxTest {
 
     private Properties properties=null;
     private EjbcaToolBox ejbcaToolBox=null;
+    @SuppressWarnings("all")
+    private static String testCn = "Joe Test";
+
 
     private synchronized void init() {
         if (properties==null) {
@@ -43,7 +46,7 @@ public class EjbcaToolBoxTest {
     @Test
     public void testEjbcaFindUser() throws Exception {
         init();
-        JsonObject res=ejbcaToolBox.ejbcaFindUser("Joe Test");
+        JsonObject res=ejbcaToolBox.ejbcaFindUser(testCn);
         System.out.println("testEjbcaFindUser: "+res.toString());
     }
 

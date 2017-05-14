@@ -37,10 +37,38 @@ public class CertificateFabric {
     private static final Logger logger = LoggerFactory.getLogger(CertificateFabric.class);
     private ArrayList<ArrayList<String>> subjectAlternativeNames;
 
+
     public class ReqData {
         public String subject;
+        public ArrayList<ArrayList<String>> subjectAlternativeNames;
         public String msg;
         public int status;
+    }
+
+
+    private static class san {
+        private final static ArrayList<String> san = new ArrayList<>();
+
+        static {
+            san.add("otherName");
+            san.add("rfc822Name");
+            san.add("dNSName");
+            san.add("x400Address");
+            san.add("directoryName");
+            san.add("ediPartyName");
+            san.add("uniformResourceIdentifier");
+            san.add("iPAddress");
+            san.add("registeredID");
+        }
+
+        static String getSanOid(int oid) {
+            try {
+                return san.get(oid);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 
 
@@ -69,18 +97,19 @@ public class CertificateFabric {
                     new PKCS10CertificationRequest(reqBytes);
             reqData.subject = pkcs10CertificationRequest.getSubject().toString().replaceAll("\\+", ",");
 
-            testReadCertificateSigningRequest(pkcs10CertificationRequest);
+            getSubjectAlternativeNames(pkcs10CertificationRequest);
+            reqData.subjectAlternativeNames = subjectAlternativeNames;
 
             return reqData;
         } catch (IOException e) {
-            logger.warn("getReqSubject IO fucked up");
             reqData.msg = e.getLocalizedMessage();
             reqData.status = 1;
+            logger.warn("getReqSubject IO fucked up: " + reqData.msg);
             return reqData;
         } catch (Exception e) {
-            logger.warn("general fuck up");
             reqData.msg = e.getLocalizedMessage();
             reqData.status = 1;
+            logger.warn("general fuck up: " + reqData.msg);
             return reqData;
         }
     }
@@ -97,7 +126,7 @@ public class CertificateFabric {
     }
 
 
-    private void testReadCertificateSigningRequest(PKCS10CertificationRequest csr) {
+    private void getSubjectAlternativeNames (PKCS10CertificationRequest csr) {
         subjectAlternativeNames = new ArrayList<>(new ArrayList<>());
         // GeneralName.otherName is lowest and
         // GeneralName.registeredID is highest id
@@ -109,6 +138,7 @@ public class CertificateFabric {
             Attribute[] certAttributes = csr.getAttributes();
             for (Attribute attribute : certAttributes) {
                 if (attribute.getAttrType().equals(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest)) {
+                    // @ToDo: Is there really one object only?
                     Extensions extensions = Extensions.getInstance(attribute.getAttrValues().getObjectAt(0));
                     GeneralNames gns = GeneralNames.fromExtensions(extensions, Extension.subjectAlternativeName);
                     if (gns!=null) {
@@ -128,6 +158,12 @@ public class CertificateFabric {
     ArrayList<ArrayList<String>> getSubjectAlternativeNames() {
 
         return subjectAlternativeNames;
+    }
+
+
+    public static String getSan (int oid) {
+
+        return san.getSanOid (oid);
     }
 
 } // class

@@ -29,8 +29,6 @@ import org.apache.cxf.transport.http.URLConnectionInfo;
 import org.apache.cxf.transport.http.UntrustedURLConnectionIOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.x509.GeneralName;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -39,7 +37,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -50,36 +47,21 @@ public class EjbcaToolBox {
     private final EjbcaWS port;
     private final Properties properties;
     private static final QName SERVICE_NAME = new QName("http://ws.protocol.core.ejbca.org/", "EjbcaWSService");
-    private final static ArrayList<String> san = new ArrayList<>();
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused WeakerAccess")
     public final static int entNew = 10;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused WeakerAccess")
     public final static int entFailed = 11;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused WeakerAccess")
     public final static int entInitialized = 20;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused WeakerAccess")
     public final static int entInprocess = 30;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused WeakerAccess")
     public final static int entGenerated = 50;
-
-
-    private void setUpSanList () {
-        san.add("otherName");
-        san.add("rfc822Name");
-        san.add("dNSName");
-        san.add("x400Address");
-        san.add("directoryName");
-        san.add("ediPartyName");
-        san.add("uniformResourceIdentifier");
-        san.add("iPAddress");
-        san.add("registeredID");
-    }
 
 
     public EjbcaToolBox(Properties properties) {
         this.properties = properties;
-        setUpSanList();
 
         // proxy stuff
         String proxyHost = properties.getProperty(Constants.proxyHost, null);
@@ -251,11 +233,9 @@ public class EjbcaToolBox {
         ArrayList<ArrayList<String>> csrSanList = certificateFabric.getSubjectAlternativeNames();
         Object[] oids = csrSanList.toArray();
         for (int i=0; i<oids.length; i++) {
-            String sanId = san.get(i);
+            String sanId = CertificateFabric.getSan(i);
             ArrayList<String> values = csrSanList.get(i);
-            values.forEach((v) -> {
-                userDataVOWS.setSubjectAltName (sanId+"="+v);
-            });
+            values.forEach((v) -> userDataVOWS.setSubjectAltName (sanId+"="+v));
         }
 
         checkAttributes(attributes);

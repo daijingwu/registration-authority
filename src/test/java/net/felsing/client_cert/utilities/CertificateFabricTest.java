@@ -1,61 +1,80 @@
 package net.felsing.client_cert.utilities;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
 
-/**
- * Created by cf on 28.12.15.
- * <p>
- * Tests for CertificateFabric
+import static org.junit.Assert.*;
+/*
+ * Copyright (c) 2016. by Christian Felsing
+ * This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 public class CertificateFabricTest {
 
+    @SuppressWarnings("all")
     private static String reqWrong = "" +
             "-----BEGIN CERTIFICATE REQUEST-----\n" +
             "blah fasel test\n" +
             "-----END CERTIFICATE REQUEST-----";
 
-    private static String reqRSA = "" +
+    private static String reqRSAok = "" +
             "-----BEGIN CERTIFICATE REQUEST-----\n" +
-            "MIIEzjCCArYCAQAwgYgxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZIZXNzZW4xFDAS\n" +
-            "BgNVBAcMC1RhdW51c3N0ZWluMRgwFgYDVQQKDA90YXVudXNzdGVpbi5uZXQxDTAL\n" +
-            "BgNVBAMMBHRlc3QxKTAnBgkqhkiG9w0BCQEWGmhvc3RtYXN0ZXJAdGF1bnVzc3Rl\n" +
-            "aW4ubmV0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA5ysWBatXJwDF\n" +
-            "HiWGTF2AYLDTTebPlJEkPEJHHJ9BuJaZyi6I0p7awru+YNdafRjWBEyjuXoZUGIK\n" +
-            "BRR5/YnmKvW4dHPWhXt6j+XXwUN9z1zP0YhrT3XRgBmBT4R9tfuSXkTAnyrFHWU+\n" +
-            "WSwmah13JrZPYHLOGg9wi2ZtQ8xlSqEBpiaeBJ6IrW5mXwBCp9xA4/HoZXigIrzi\n" +
-            "roMy8xUyW+hb7QCWM5nMgOW0hqm8i8m/dw8DSo7oizdIYR/GUPjtI7N4/q3QB6Cj\n" +
-            "/CHH+Np+nB0CFki8da0gN5PsFkDkzhSRgLhfqxQ8mkLCzwdViXEre1z1TkhYJrh4\n" +
-            "OwASdjdcfc4Fh5S3ZHY3he7Hx1LN5dD3a1yCpvsC+U57NSjV+ZiQqSim3Twb5PgI\n" +
-            "fbHJJyy8meB1Y23CHhVV8yzbY72G+mzLDLtRVQcMjQuy3b2bfCya1xC2ILIjXtAa\n" +
-            "Zn/1Mkw7GQY8clYPX9u/QV4CBxZ+6O5JJoRQtD9oF3QvD9QHI1QMwE9cKL4R0p63\n" +
-            "5DX4FMTT1i2ShG/kOrsgAq1/TnjZHrJXJondG4f64fVh+h1mbq7KgW6gWliurNLd\n" +
-            "9K/nnYqpw1cuwyRlRBHbJ6L8CqW3I/wbVwzv4On8PwpBKBoQPZvHZ7wcfAHBhMY8\n" +
-            "FldqSvsPQbx6kPCY9GX6gaYcGgJi/CUCAwEAAaAAMA0GCSqGSIb3DQEBCwUAA4IC\n" +
-            "AQAXATy796go+ERGGrHyohAb8EF1n0cpTGIRBzwRRg36llqpc3FI83WZ0aJ0k+x/\n" +
-            "SgN4rfxw3UOE4JdWravSPZPoOjgRgTdVOxp5+HdQiDYwCdtnLlAU0+aWwTfT+Qin\n" +
-            "h0s2Lon9v3d7fxuTMhlWTVJB0C8NOOlr8n7mZaICDb9Ira+ZvWdDiVPmXgGFywho\n" +
-            "p+Mdb7C0rk/dZehXZXMZAn6nVHYj5llCQiNVTJQClKyzoiq7TDCQr0dLWefFcgig\n" +
-            "eNilqO+5+cs8Qf5kkK9XD4rVK9xr619NtulBbxSa17Fe36BiI/WVxSwGcDEtA/AK\n" +
-            "CvHVS2hulUC+Qt3bsNAEr6IdW292jTYPzeksjK18fZSiBORRHJh7SZMFpyf4Eojl\n" +
-            "mixnGrF7fCOjFQ/bfr8IWrJH6BTVOChAwWEjdU42IvJQreKpSjnhauf8E9guZqsn\n" +
-            "xyIQHbzMElRXdGRwfi9uVp1K8ZIcS+RaHphfveCz5aIuvTjv3yzXCO489Gz3pJWo\n" +
-            "Ihu3+n1cE2ouT6s3JH2JrOjzT+hMaKuTXT5PR+6qN4GMt0ZR3ho4VBc+EBzFh0hI\n" +
-            "1+WjGbkp0ToThs7nZAAccsYjz44AtKo+BSW/K0eV/UK6f5kJXnTndZRT4uFpfvJS\n" +
-            "R4kIAvxQLnJH+jnJHs6NpiPknCcuWWqVrega8VwnsaoG+w==\n" +
-            "-----END CERTIFICATE REQUEST-----";
+            "MIIE9zCCAt8CAQAwaTEQMA4GA1UEAwwHSm9lIEpvYjEQMA4GA1UECgwHRXhhbXBs\n" +
+            "ZTERMA8GA1UECwwIRGl2aXNpb24xEjAQBgNVBAcMCVdpZXNiYWRlbjEPMA0GA1UE\n" +
+            "CAwGSGVzc2VuMQswCQYDVQQGEwJERTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCC\n" +
+            "AgoCggIBAPfJfuO4F60VruM9g+CPzkUOQbU5KYMKUTO4lpnYR8L1+Zpx3Og6/EiR\n" +
+            "10G8nZE1WwH389HwH9SNK+agWIZM9NYYt1kXOegzK2nKqoIFWN7cxUxZl6+vP6il\n" +
+            "elFhGe9D/DWBqzhn6f2K53p1jC5z4TD5RuL9HMG6c4JjtX0Rd4fULqSMMUjXfNjH\n" +
+            "s0bntD914anwFV9Y/Z0Dllq0CoilZZpU9OQfqyzzeTWjPrQ9S3dKSyiKsYUND14s\n" +
+            "jXm7zeJDA2EnaMyfgArKFlm7VHmIpNOzv5quWX5s+BtcH555weCdFZKlhBNg7xhV\n" +
+            "C72qmHXjgQh7R0KyROFqa3cOpEW027aPyDg4xoSkSwIlJ5BOEvlFbtbzy46kslKG\n" +
+            "SxBw6crIX2tbwW6vT/uX7js7bCcWaJyvFvW/1D9bZw09q8peGX1Ga/0mg9SGQ/Mt\n" +
+            "NdSX6qL23mcRX9oDgw7+TMlMhUV9tecnUipPN97iOHlFjFbtXXK9/+6jtBS0FFIc\n" +
+            "m+xjpYwG/MVGXthzCrn5MHYJbbQK3Vxf5WYietEHiE+1ejkBGuIvHv2lWLf3gHhV\n" +
+            "Zkd+8p2+/oI6fncp5GAdWI0hBA/r3Z1iCXhlKAZcJU77A3v9fj6WQqzR0oVrwt/+\n" +
+            "3Mgx1tJOnhJK7cb65XxpZiG1+DcXsXcHZ8IuMCPE47sj1at1qpe9AgMBAAGgSTBH\n" +
+            "BgkqhkiG9w0BCQ4xOjA4MB4GA1UdEQQXMBWBE2pvZS5qb2JAZXhhbXBsZS5jb20w\n" +
+            "CQYDVR0TBAIwADALBgNVHQ8EBAMCBeAwDQYJKoZIhvcNAQELBQADggIBALtbi+ez\n" +
+            "rxcqCUgTIK4xa9GciDyjzPrJOoIFis12GpcpIdt1cZKwR+ZOhnPSjbZkDVXATtgy\n" +
+            "WSXwiQ8Rbk6ZmmLaBifxDn8iQpXn0ubCPtJ8GAClhUOAMcdgH0eCcMIwEcjp6kRY\n" +
+            "ZvJXqTeMsT1MOzs/60WPlLuZSa7lORxe/hcnUhrb7LEn1Ua4JLDoF8mzf2Hpwkgd\n" +
+            "zOVvfS85n6XwtzfEn+KvAu4Tj5pw1/uo/cKs53Zkkm7loYogHyBIVilikeGSRs8g\n" +
+            "8jFRxmhnKMTEEveplIfdNrKEIzFTmUW+pp/NgzHKfHk07YOK7o4iek2OGSfjOuUo\n" +
+            "ct5VnaSzA+TsAHhi4qKiqK7slyVlMLwQU3CImILA85uF5inPURK8O/ihDN7UX64h\n" +
+            "s8SiyMsqBb2S9F0r5EgpJEfq1RzFoYkRAsldUIN2j4iPEt/2k7uo69ZToUt+FqJ8\n" +
+            "1Brofbrvs4x+P7lx8q6whywgqoCg/FiYgsNnTn5FJmYKdp/21aDzAXpFUst/M/ov\n" +
+            "1oh97465E3+hNpCDWS35XcEibjbbiGqpiveTdRnx7N9kbyFEiPT8dRzY+eePf8MU\n" +
+            "dH4mub8lEW3jnkXd+kzedh6WfqMrvIVtfrF5pht4tRVb2ozIfyN0S/7R1dWk0sVH\n" +
+            "Fo4Ql8E1FelAq5rZefG9Gq1vRF953aEPX/UK\n" +
+            "-----END CERTIFICATE REQUEST-----\n";
 
-    private static String reqECC = "" +
+    private static String reqECDSA = "" +
             "-----BEGIN CERTIFICATE REQUEST-----\n" +
-            "MIIBOTCB4AIBADB+MQswCQYDVQQGEwJERTEPMA0GA1UECAwGSGVzc2VuMRQwEgYD\n" +
-            "VQQHDAtUYXVudXNzdGVpbjEOMAwGA1UECgwFaXA2bGkxDTALBgNVBAMMBHRlc3Qx\n" +
-            "KTAnBgkqhkiG9w0BCQEWGmhvc3RtYXN0ZXJAdGF1bnVzc3RlaW4ubmV0MFkwEwYH\n" +
-            "KoZIzj0CAQYIKoZIzj0DAQcDQgAEARn+5NVFVwY70vKMFpmcpeV1kz55Rf4L1NNv\n" +
-            "sq0P+1F3OxBRZb5R+fsrbZnf5irHly0jdblvw2tBdjkJdxeXjaAAMAoGCCqGSM49\n" +
-            "BAMCA0gAMEUCIQCqeG7YDUMksb8IPuitQE35YZQVW+kAqXEu87sFGE+LuQIgHXj+\n" +
-            "Sv5ifpv2kPSEPvl0nGYV7nPQUtC+4Xy6mzybVw4=\n" +
+            "MIIB9jCCAVcCAQAwaTEQMA4GA1UEAwwHSm9lIEpvYjEQMA4GA1UECgwHRXhhbXBs\n" +
+            "ZTERMA8GA1UECwwIRGl2aXNpb24xEjAQBgNVBAcMCVdpZXNiYWRlbjEPMA0GA1UE\n" +
+            "CAwGSGVzc2VuMQswCQYDVQQGEwJERTCBmzAQBgcqhkjOPQIBBgUrgQQAIwOBhgAE\n" +
+            "AeeLB+OoHY3BBgXAGca7gm9XLUurnjutaSA0dgqeuBdMPAcBhlwpM+SD0s+oz3uU\n" +
+            "Uc9fL6SkuJ9DOeyf+/xvIiLcADAO73hHe/la4u19gMFP0eCHfT48r/t+7Kp8siTL\n" +
+            "cTBzW5L15ngcug/y6jVsFAc4ye7zITacUFZub4AqhToPLfaKoEkwRwYJKoZIhvcN\n" +
+            "AQkOMTowODAeBgNVHREEFzAVgRNqb2Uuam9iQGV4YW1wbGUuY29tMAkGA1UdEwQC\n" +
+            "MAAwCwYDVR0PBAQDAgXgMAoGCCqGSM49BAMCA4GMADCBiAJCAKIUw7sNTie0A2dv\n" +
+            "Rco6G7em4Kd47n8+PXaafkSAuXcq3l/vnFM/A9IUk+XD0F7QpnCXNajpxxF+QKEW\n" +
+            "/IBURlg2AkIBBGnlB5dsjh9XJkC6ePwruFnBSberSt9UMkdUBaRRuaRZu120vbJm\n" +
+            "JD2xsJ6DutmHFoMqQIeVIP76FKY+e/joHus=\n" +
             "-----END CERTIFICATE REQUEST-----\n";
 
 
@@ -63,9 +82,10 @@ public class CertificateFabricTest {
     public void testGetReqDataRSA() throws Exception {
         System.out.println("Test testGetReqDataRSA");
         System.out.println("======================");
-        CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqSubject(reqRSA).subject;
-        System.out.println("subject (rsa): "+subject);
+        CertificateFabric certificateFabric = new CertificateFabric();
+        String subject = certificateFabric.getReqSubject(reqRSAok).subject;
+        System.out.println("subject (rsa): " + subject);
+        System.out.println("");
     }
 
 
@@ -73,21 +93,64 @@ public class CertificateFabricTest {
     public void testGetReqDataECC() throws Exception {
         System.out.println("Test testGetReqDataECC");
         System.out.println("======================");
-        CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqSubject(reqECC).subject;
-        System.out.println("subject (ecc): "+subject);
+        CertificateFabric certificateFabric = new CertificateFabric();
+        String subject = certificateFabric.getReqSubject(reqECDSA).subject;
+        System.out.println("subject (ecc): " + subject);
+        System.out.println("");
     }
 
+
+    private void dumpSubjectAlternativeNames(CertificateFabric.ReqData reqData) {
+        System.out.println("Subject Alternative Names");
+        System.out.println("-------------------------");
+        ArrayList<ArrayList<String>> csrSanList = reqData.subjectAlternativeNames;
+        Object[] oids = csrSanList.toArray();
+        final int[] i={0};
+        while (i[0]<oids.length) {
+            ArrayList<String> values = csrSanList.get(i[0]);
+            values.forEach((v) -> System.out.println ("    " + CertificateFabric.getSan(i[0])+"="+v));
+            i[0]++;
+        }
+    }
+
+
+    private CertificateFabric.ReqData testCSR (String csr) {
+        CertificateFabric certificateFabric = new CertificateFabric();
+        CertificateFabric.ReqData reqData = certificateFabric.getReqSubject(reqRSAok);
+        System.out.println("subject: " + reqData.subject);
+        dumpSubjectAlternativeNames(reqData);
+        return reqData;
+    }
+
+
     @Test
-    public void validRequest() throws Exception {
-        System.out.println("Test validRequest");
-        System.out.println("=================");
-        CertificateFabric certificateFabric=new CertificateFabric();
-        String subject=certificateFabric.getReqSubject(reqRSA).subject;
-        System.out.println("subject: "+subject);
-        assertNotNull(subject);
-        subject=certificateFabric.getReqSubject(reqWrong).subject;
+    public void validRequestRSA() throws Exception {
+        System.out.println("Test validRequest RSA");
+        System.out.println("=====================");
+        CertificateFabric.ReqData reqData = testCSR(reqRSAok);
+        System.out.println("");
+        assertNotNull(reqData.subject);
+    }
+
+
+    @Test
+    public void validRequestECDSA() throws Exception {
+        System.out.println("Test validRequest ECDSA");
+        System.out.println("=======================");
+        CertificateFabric.ReqData reqData = testCSR(reqECDSA);
+        System.out.println("");
+        assertNotNull(reqData.subject);
+    }
+
+
+    @Test
+    public void invalidRequest() throws Exception {
+        System.out.println("Test invalidRequest");
+        System.out.println("===================");
+        CertificateFabric certificateFabric = new CertificateFabric();
+        String subject = certificateFabric.getReqSubject(reqWrong).subject;
         System.out.println("subject should be null");
+        System.out.println("");
         assertNull(subject);
     }
 
