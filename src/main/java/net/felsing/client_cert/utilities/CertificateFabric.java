@@ -40,6 +40,7 @@ public class CertificateFabric {
 
     public class ReqData {
         public String subject;
+        @SuppressWarnings("WeakerAccess")
         public ArrayList<ArrayList<String>> subjectAlternativeNames;
         public String msg;
         public int status;
@@ -161,6 +162,7 @@ public class CertificateFabric {
     }
 
 
+    @SuppressWarnings("WeakerAccess")
     public static String getSan (int oid) {
 
         return san.getSanOid (oid);
