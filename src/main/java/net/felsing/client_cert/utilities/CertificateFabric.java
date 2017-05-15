@@ -95,6 +95,7 @@ public class CertificateFabric {
                     Constants.csrEnd);
             PKCS10CertificationRequest pkcs10CertificationRequest =
                     new PKCS10CertificationRequest(reqBytes);
+            System.out.println ("getReqSubject: " + pkcs10CertificationRequest.getSubject().toString());
             reqData.subject = pkcs10CertificationRequest.getSubject().toString().replaceAll("\\+", ",");
 
             getSubjectAlternativeNames(pkcs10CertificationRequest);

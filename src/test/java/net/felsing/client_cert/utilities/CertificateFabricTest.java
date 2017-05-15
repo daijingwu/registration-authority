@@ -31,7 +31,8 @@ public class CertificateFabricTest {
             "blah fasel test\n" +
             "-----END CERTIFICATE REQUEST-----";
 
-    private static String reqRSAok = "" +
+    @SuppressWarnings("WeakerAccess")
+    public static String reqRSAok = "" +
             "-----BEGIN CERTIFICATE REQUEST-----\n" +
             "MIIE9zCCAt8CAQAwaTEQMA4GA1UEAwwHSm9lIEpvYjEQMA4GA1UECgwHRXhhbXBs\n" +
             "ZTERMA8GA1UECwwIRGl2aXNpb24xEjAQBgNVBAcMCVdpZXNiYWRlbjEPMA0GA1UE\n" +
@@ -62,7 +63,8 @@ public class CertificateFabricTest {
             "Fo4Ql8E1FelAq5rZefG9Gq1vRF953aEPX/UK\n" +
             "-----END CERTIFICATE REQUEST-----\n";
 
-    private static String reqECDSA = "" +
+    @SuppressWarnings("WeakerAccess")
+    public static String reqECDSA = "" +
             "-----BEGIN CERTIFICATE REQUEST-----\n" +
             "MIIB9jCCAVcCAQAwaTEQMA4GA1UEAwwHSm9lIEpvYjEQMA4GA1UECgwHRXhhbXBs\n" +
             "ZTERMA8GA1UECwwIRGl2aXNpb24xEjAQBgNVBAcMCVdpZXNiYWRlbjEPMA0GA1UE\n" +

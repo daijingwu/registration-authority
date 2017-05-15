@@ -3,7 +3,6 @@ package net.felsing.client_cert.ejbca;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -17,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="errorCode" type="{http://ws.protocol.core.ejbca.org/}errorCode"/&gt;
+ *         &lt;element name="errorCode" type="{http://ws.protocol.core.ejbca.org/}errorCode" minOccurs="0"/&gt;
  *         &lt;element name="message" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
@@ -34,7 +33,6 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class ApprovalException {
 
-    @XmlElement(required = true, nillable = true)
     protected ErrorCode errorCode;
     protected String message;
 

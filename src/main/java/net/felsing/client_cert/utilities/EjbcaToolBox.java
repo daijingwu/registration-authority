@@ -39,6 +39,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class EjbcaToolBox {
@@ -186,21 +189,35 @@ public class EjbcaToolBox {
     JsonObject ejbcaEditUser(Map<String, String> user) {
         final String caName = "caName";
         final String password = "password";
-        final String email = "email";
+        final String email = "attr.email";
         final String rfc822name = "rfc822name";
-        final String subject = "CN=" + user.get("username") + ",C=DE";
+        //final String subject = "CN=" + user.get("username") + ",C=DE";
+
+        final StringBuilder subject = new StringBuilder();
+
+        Pattern r = Pattern.compile("^attr\\.(.*)");
+        user.forEach((k,v)-> {
+            Matcher m = r.matcher(k);
+            if (m.find ()) {
+                String attr = m.group(1);
+                if (subject.length()>0) subject.append(",");
+                subject.append(attr).append("=").append(v);
+            }
+        });
+
+        System.out.println ("subject: " + subject.toString());
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
         userDataVOWS.setCaName(properties.getProperty(caName));
         userDataVOWS.setCertificateProfileName(properties.getProperty(Constants.propertyCertificateProfileName));
-        userDataVOWS.setEmail(user.get(email));
+        userDataVOWS.setEmail(user.get("attr.email"));
         userDataVOWS.setEndEntityProfileName(properties.getProperty(Constants.propertyEndEntityProfileName));
+        userDataVOWS.setUsername(user.get("username"));
         userDataVOWS.setPassword(user.get(password));
         userDataVOWS.setStatus(entNew);
         userDataVOWS.setSubjectAltName(rfc822name + "=" + user.get(email));
-        userDataVOWS.setSubjectDN(subject);
+        userDataVOWS.setSubjectDN(subject.toString());
         userDataVOWS.setTokenType("USERGENERATED");
-        userDataVOWS.setUsername(user.get("username"));
 
         JsonObject jsonObject = new JsonObject();
         try {
@@ -220,23 +237,35 @@ public class EjbcaToolBox {
         HashMap<String,String> attributes=CertificateFabric.getAttributes(subject.subject);
 
         String password= Utilities.generatePassword();
-        String email=attributes.get("e");
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
+
+        ArrayList<ArrayList<String>> csrSanList = certificateFabric.getSubjectAlternativeNames();
+        Object[] oids = csrSanList.toArray();
+        final StringBuilder firstRfc822Name = new StringBuilder();
+        for (int i=0; i<oids.length; i++) {
+            String sanId = CertificateFabric.getSan(i);
+            ArrayList<String> values = csrSanList.get(i);
+            values.forEach((v) -> {
+                userDataVOWS.setSubjectAltName (sanId + "=" + v);
+                if (firstRfc822Name.length()==0) {
+                    firstRfc822Name.append(v);
+                }
+            });
+        }
+
+        String email=attributes.get("e");
+        if (email==null) {
+            // try subjectAlternativeNames
+            email=firstRfc822Name.toString();
+        }
+
         userDataVOWS.setCaName(properties.getProperty(Constants.propertyCaName));
         userDataVOWS.setCertificateProfileName(properties.getProperty(Constants.propertyCertificateProfileName));
         userDataVOWS.setEmail(email);
         userDataVOWS.setEndEntityProfileName(properties.getProperty(Constants.propertyEndEntityProfileName));
         userDataVOWS.setPassword(password);
         userDataVOWS.setStatus(10);
-
-        ArrayList<ArrayList<String>> csrSanList = certificateFabric.getSubjectAlternativeNames();
-        Object[] oids = csrSanList.toArray();
-        for (int i=0; i<oids.length; i++) {
-            String sanId = CertificateFabric.getSan(i);
-            ArrayList<String> values = csrSanList.get(i);
-            values.forEach((v) -> userDataVOWS.setSubjectAltName (sanId+"="+v));
-        }
 
         checkAttributes(attributes);
 
@@ -268,7 +297,6 @@ public class EjbcaToolBox {
             pem.append(Constants.certificateEnd); pem.append("\n");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            //e.printStackTrace();
         }
 
         return pem.toString();
