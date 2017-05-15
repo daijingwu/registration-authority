@@ -38,6 +38,7 @@ public class CertificateFabric {
     private ArrayList<ArrayList<String>> subjectAlternativeNames;
 
 
+    @SuppressWarnings("WeakerAccess")
     public class ReqData {
         public String subject;
         public ArrayList<ArrayList<String>> subjectAlternativeNames;
@@ -95,7 +96,6 @@ public class CertificateFabric {
                     Constants.csrEnd);
             PKCS10CertificationRequest pkcs10CertificationRequest =
                     new PKCS10CertificationRequest(reqBytes);
-            System.out.println ("getReqSubject: " + pkcs10CertificationRequest.getSubject().toString());
             reqData.subject = pkcs10CertificationRequest.getSubject().toString().replaceAll("\\+", ",");
 
             getSubjectAlternativeNames(pkcs10CertificationRequest);
@@ -162,6 +162,7 @@ public class CertificateFabric {
     }
 
 
+    @SuppressWarnings("WeakerAccess")
     public static String getSan (int oid) {
 
         return san.getSanOid (oid);

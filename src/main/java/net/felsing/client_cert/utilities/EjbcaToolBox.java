@@ -39,7 +39,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -140,7 +139,7 @@ public class EjbcaToolBox {
 
         httpConduit.setTrustDecider(messageTrustDecider);
     }
-
+    
 
     JsonObject getAvailableCas() throws AuthorizationDeniedException_Exception, EjbcaException_Exception {
         JsonObject jsonObject = new JsonObject();
@@ -230,13 +229,31 @@ public class EjbcaToolBox {
         return jsonObject;
     }
 
+    
+    private String findUsername () {
+        int maxCount = 10;
+        String username = null;
+        while ((username==null) && (maxCount>0)) {
+            username = Utilities.generateUsername();
+            if (!ejbcaFindUser(username).get("found").toString().equals("\"0\"")) {
+                username=null;
+                maxCount--;
+            }
+        }
 
+        return username;
+    }
+
+    
     public String ejbcaCertificateRequest(String pkcs10req) {
         CertificateFabric certificateFabric=new CertificateFabric();
         CertificateFabric.ReqData subject=certificateFabric.getReqSubject(pkcs10req);
         HashMap<String,String> attributes=CertificateFabric.getAttributes(subject.subject);
-
-        String password= Utilities.generatePassword();
+        
+        String username = findUsername();
+        if (username==null) return "BADUSERNAME";
+        
+        String password = Utilities.generatePassword();
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
 
@@ -247,9 +264,10 @@ public class EjbcaToolBox {
             String sanId = CertificateFabric.getSan(i);
             ArrayList<String> values = csrSanList.get(i);
             values.forEach((v) -> {
-                userDataVOWS.setSubjectAltName (sanId + "=" + v);
+                //userDataVOWS.setSubjectAltName (sanId + "=" + v); // ToDo: If multiple SAN will work in EJBCA
                 if (firstRfc822Name.length()==0) {
                     firstRfc822Name.append(v);
+                    userDataVOWS.setSubjectAltName (sanId + "=" + firstRfc822Name); // ToDo: Workaround until problem above is fixed
                 }
             });
         }
@@ -284,7 +302,7 @@ public class EjbcaToolBox {
         userDataVOWS.setSubjectDN(sb.toString());
 
         userDataVOWS.setTokenType("USERGENERATED");
-        userDataVOWS.setUsername(attributes.get("cn"));
+        userDataVOWS.setUsername(username);
 
         final String hardTokenSn = null; // no hard token
         final String responseType = "CERTIFICATE";

@@ -59,7 +59,6 @@ const signCsr = function () {
     const friendlyName = configuration.downloadName;
 
     const ajaxData = {};
-    console.log ("csr.js: %o", window.csr.pkcs10);
     ajaxData.pkcs10 = window.csr.pkcs10;
     JSON.stringify(ajaxData);
 

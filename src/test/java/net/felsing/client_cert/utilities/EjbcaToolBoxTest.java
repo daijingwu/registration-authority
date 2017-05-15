@@ -71,7 +71,7 @@ public class EjbcaToolBoxTest {
     }
 
 
-    //@Test
+    @Test
     public void testEjbcaUserNotExists() throws Exception {
         System.out.println ("testEjbcaUserNotExists: " + testCnNotExists);
         init();
@@ -99,7 +99,7 @@ public class EjbcaToolBoxTest {
     }
 
 
-    @Test
+    //@Test
     public void testCreateCertificate () throws Exception {
         CertificateFabric certificateFabric = new CertificateFabric();
         CertificateFabric.ReqData reqData = certificateFabric.getReqSubject(csr);
