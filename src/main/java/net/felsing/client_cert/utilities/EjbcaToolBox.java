@@ -163,7 +163,7 @@ public class EjbcaToolBox {
     }
 
 
-    JsonObject ejbcaFindUser(String username) {
+    JsonObject ejbcaFindUser (String username) {
 
         UserMatch userMatch = new UserMatch();
         userMatch.setMatchtype(0);
@@ -175,7 +175,7 @@ public class EjbcaToolBox {
         try {
             List<UserDataVOWS> found = port.findUser(userMatch);
             count = found.size();
-            jsonObject.addProperty("found", Integer.toString(count));
+            jsonObject.addProperty("found", count);
         } catch (Exception e) {
             e.printStackTrace();
             jsonObject.addProperty("result", "failed");
@@ -230,12 +230,12 @@ public class EjbcaToolBox {
     }
 
     
-    private String findUsername () {
+    private String findNewUsername() {
         int maxCount = 10;
         String username = null;
         while ((username==null) && (maxCount>0)) {
             username = Utilities.generateUsername();
-            if (!ejbcaFindUser(username).get("found").toString().equals("\"0\"")) {
+            if (!ejbcaFindUser(username).get("found").toString().equals("0")) {
                 username=null;
                 maxCount--;
             }
@@ -243,14 +243,14 @@ public class EjbcaToolBox {
 
         return username;
     }
-
+    
     
     public String ejbcaCertificateRequest(String pkcs10req) {
         CertificateFabric certificateFabric=new CertificateFabric();
         CertificateFabric.ReqData subject=certificateFabric.getReqSubject(pkcs10req);
         HashMap<String,String> attributes=CertificateFabric.getAttributes(subject.subject);
         
-        String username = findUsername();
+        String username = findNewUsername();
         if (username==null) return "BADUSERNAME";
         
         String password = Utilities.generatePassword();

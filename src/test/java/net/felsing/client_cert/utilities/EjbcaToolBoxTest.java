@@ -77,7 +77,7 @@ public class EjbcaToolBoxTest {
         init();
         JsonObject res=ejbcaToolBox.ejbcaFindUser(testCnNotExists);
         System.out.println("testEjbcaUserNotExists: "+res.get("found").toString());
-        assert (res.get("found").toString().equals("\"0\""));
+        assert (res.get("found").toString().equals("0"));
     }
 
 
