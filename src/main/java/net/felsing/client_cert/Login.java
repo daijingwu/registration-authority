@@ -68,7 +68,7 @@ public class Login extends HttpServlet {
                 String v = session.getAttribute(someKey).toString();
                 logger.debug("get session variable " + someKey + ": " + v);
             } else {
-                session.setAttribute(someKey, "blahfaseltest");
+                //session.setAttribute(someKey, "blahfaseltest");
                 logger.debug("set session variable " + someKey);
             }
         }

@@ -44,41 +44,6 @@ public class CertificateFabric {
     }
 
 
-    public static class SubjectAlternativeName {
-        private final static ArrayList<String> san = new ArrayList<>();
-        public final static String otherName = "otherName";
-        public final static String rfc822Name = "rfc822Name";
-        public final static String dNSName = "dNSName";
-        public final static String x400Address = "x400Address";
-        public final static String directoryName = "directoryName";
-        public final static String ediPartyName = "ediPartyName";
-        public final static String uniformResourceIdentifier = "uniformResourceIdentifier";
-        public final static String iPAddress = "iPAddress";
-        public final static String registeredID = "registeredID";
-
-        static {
-            san.add(otherName);
-            san.add(rfc822Name);
-            san.add(dNSName);
-            san.add(x400Address);
-            san.add(directoryName);
-            san.add(ediPartyName);
-            san.add(uniformResourceIdentifier);
-            san.add(iPAddress);
-            san.add(registeredID);
-        }
-
-        static String getSanOid(int oid) {
-            try {
-                return san.get(oid);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-
     private static byte[] parseDERFromPEM(byte[] pem, String beginDelimiter, String endDelimiter)
             throws Exception {
         String data = new String(pem);
