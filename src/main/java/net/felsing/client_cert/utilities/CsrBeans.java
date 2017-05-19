@@ -22,17 +22,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
-
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.config.Ini;
-import org.apache.shiro.config.IniSecurityManagerFactory;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Factory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
@@ -53,11 +48,12 @@ public final class CsrBeans {
     }
 
 
-    public void setLang (String strLocale) {
+    public String getLang (String strLocale) {
+        final String acceptLanguage = StringEscapeUtils.escapeJava(strLocale);
         if (bundle==null) {
             List<Locale.LanguageRange> languageRanges;
             try {
-                languageRanges = Locale.LanguageRange.parse(strLocale);
+                languageRanges = Locale.LanguageRange.parse(acceptLanguage);
             } catch (Exception e) {
                 languageRanges = Locale.LanguageRange.parse("en");
             }
@@ -80,6 +76,9 @@ public final class CsrBeans {
                 }
             }
         }
+
+        logger.debug("getLang: " + bundle.getLocale().getLanguage());
+        return "";
     }
 
 

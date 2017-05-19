@@ -1,8 +1,10 @@
 package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
-import net.felsing.client_cert.ejbca.Certificate;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import static org.junit.Assert.*;
  */
 
 public class EjbcaToolBoxTest {
+    private static final Logger logger = LoggerFactory.getLogger(EjbcaToolBoxTest.class);
 
     private Properties properties=null;
     private EjbcaToolBox ejbcaToolBox=null;
@@ -71,7 +74,7 @@ public class EjbcaToolBoxTest {
     }
 
 
-    @Test
+    //@Test
     public void testEjbcaUserNotExists() throws Exception {
         System.out.println ("testEjbcaUserNotExists: " + testCnNotExists);
         init();
@@ -81,25 +84,57 @@ public class EjbcaToolBoxTest {
     }
 
 
+    /*
+     * Subject alternative names can be:
+     * rfc822Name=<email>,
+     * dNSName=<host name>,
+     * uri=<http://host.com/>,
+     * ipaddress=<address>,
+     * upn=<MS UPN>,
+     * guid=<MS globally unique id>,
+     * directoryName=<LDAP escaped DN>,
+     * krb5principal=<Krb5 principal name>,
+     * permanentIdentifier=<Permanent Identifier values>
+     */
     //@Test
     public void testEjbcaEditUser() throws Exception {
-        final HashMap<String,String> user = new HashMap<>();
+        final HashMap<String,Object> user = new HashMap<>();
+        final HashMap<String,ArrayList<String>> sanMap = new HashMap<>();
+
+        ArrayList<String> rfc822names = new ArrayList<>();
+        rfc822names.add("joe.test.1@example.com");
+        rfc822names.add("joe.test.2@example.com");
+        sanMap.put("rfc822name",rfc822names);
+
+        ArrayList<String> msguids = new ArrayList<>();
+        msguids.add(new String (Hex.encodeHex("my gui identifier 1".getBytes())));
+        //msguids.add(new String (Hex.encodeHex("my gui identifier 2".getBytes())));
+        sanMap.put("guid", msguids);
+
+        ArrayList<String> permanentIdentifiers = new ArrayList<>();
+        permanentIdentifiers.add("my permanentIdentifier 1");
+        //permanentIdentifiers.add("my permanentIdentifier 2");
+        //sanMap.put("permanentIdentifier", permanentIdentifiers);
+        sanMap.put("uri", permanentIdentifiers);
+
         user.put("username", "Joe Test");
         user.put("password", "geheim");
+        user.put("email", "joe.test@example.net");
         user.put("entityStatus", Integer.toString(EjbcaToolBox.entNew));
 
         user.put("attr.cn", user.get("username"));
-        user.put("attr.email", "joe.test@example.net");
-        user.put("attr.organization", "junit test organization");
+        user.put("attr.o", "junit test organization");
+        user.put("attr.ou", "junit test organizational unit");
         user.put("attr.c", "DE");
+        user.put("attr.san", sanMap);
 
         System.out.println ("testEjbcaEditUser: " + user.get("username"));
         init();
-        System.out.println(ejbcaToolBox.ejbcaEditUser(user).toString());
+        System.out.println(Boolean.toString(ejbcaToolBox.ejbcaEditUser(user)));
     }
 
 
-    //@Test
+    @Test
     public void testCreateCertificate () throws Exception {
         CertificateFabric certificateFabric = new CertificateFabric();
         CertificateFabric.ReqData reqData = certificateFabric.getReqSubject(csr);
@@ -134,9 +169,12 @@ public class EjbcaToolBoxTest {
 
     //@Test
     public void testEjbcaGetLastCAChain() throws Exception {
+        System.out.println ("testEjbcaGetLastCAChain");
+        System.out.println ("--------------------------------------------------------------------------");
         init();
         ArrayList<String> chain=ejbcaToolBox.ejbcaGetLastCAChain();
         chain.forEach(System.out::println);
+        System.out.println ("--------------------------------------------------------------------------");
     }
 
 } // class

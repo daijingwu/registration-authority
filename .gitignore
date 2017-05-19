@@ -20,3 +20,6 @@ web/js/forge.min.js
 ejbca-new-ra.iml
 client-cert.iml
 src/main/resources/countries.json
+src/main/resources/text.properties
+src/main/resources/text_de.properties
+src/main/resources/text_zh.properties

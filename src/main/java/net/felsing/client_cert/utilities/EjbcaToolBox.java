@@ -19,6 +19,7 @@ package net.felsing.client_cert.utilities;
 
 import com.google.gson.JsonObject;
 import net.felsing.client_cert.ejbca.*;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -185,48 +186,60 @@ public class EjbcaToolBox {
     }
 
 
-    JsonObject ejbcaEditUser(Map<String, String> user) {
+    boolean ejbcaEditUser(Map<String, Object> user) {
         final String caName = "caName";
+        final String username = "username";
         final String password = "password";
-        final String email = "attr.email";
-        final String rfc822name = "rfc822name";
-        //final String subject = "CN=" + user.get("username") + ",C=DE";
+        final String email = "email";
+        final String tokenType = "USERGENERATED";
 
         final StringBuilder subject = new StringBuilder();
 
+        boolean success = false;
+
+        StringBuilder ejbcaSubjectAlternativeName = new StringBuilder();
         Pattern r = Pattern.compile("^attr\\.(.*)");
         user.forEach((k,v)-> {
             Matcher m = r.matcher(k);
             if (m.find ()) {
                 String attr = m.group(1);
-                if (subject.length()>0) subject.append(",");
-                subject.append(attr).append("=").append(v);
+                if (v instanceof String) {
+                    if (subject.length() > 0) subject.append(",");
+                    subject.append(attr).append("=").append(v);
+                } else if (k.equals("attr.san") && (v instanceof HashMap)) {
+                    ((Map<String,ArrayList<String>>) v).forEach((kSan,vSan) -> {
+                        vSan.forEach((entry) -> {
+                            if (ejbcaSubjectAlternativeName.length()>0) ejbcaSubjectAlternativeName.append(",");
+                            ejbcaSubjectAlternativeName.append(kSan).append("=").append(entry);
+                        });
+                    });
+                }
             }
         });
 
         System.out.println ("subject: " + subject.toString());
+        System.out.println ("subjectAlternativeNames: " + ejbcaSubjectAlternativeName.toString());
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
         userDataVOWS.setCaName(properties.getProperty(caName));
         userDataVOWS.setCertificateProfileName(properties.getProperty(Constants.propertyCertificateProfileName));
-        userDataVOWS.setEmail(user.get("attr.email"));
+        userDataVOWS.setEmail((String)user.get(email));
         userDataVOWS.setEndEntityProfileName(properties.getProperty(Constants.propertyEndEntityProfileName));
-        userDataVOWS.setUsername(user.get("username"));
-        userDataVOWS.setPassword(user.get(password));
+        userDataVOWS.setUsername((String)user.get(username));
+        userDataVOWS.setPassword((String)user.get(password));
         userDataVOWS.setStatus(entNew);
-        userDataVOWS.setSubjectAltName(rfc822name + "=" + user.get(email));
+        userDataVOWS.setSubjectAltName(ejbcaSubjectAlternativeName.toString());
         userDataVOWS.setSubjectDN(subject.toString());
-        userDataVOWS.setTokenType("USERGENERATED");
+        userDataVOWS.setTokenType(tokenType);
 
-        JsonObject jsonObject = new JsonObject();
         try {
             port.editUser(userDataVOWS);
+            success = true;
         } catch (Exception e) {
             e.printStackTrace();
-            jsonObject.addProperty("result", "failed");
         }
 
-        return jsonObject;
+        return success;
     }
 
     
@@ -249,6 +262,7 @@ public class EjbcaToolBox {
         CertificateFabric certificateFabric=new CertificateFabric();
         CertificateFabric.ReqData subject=certificateFabric.getReqSubject(pkcs10req);
         HashMap<String,String> attributes=CertificateFabric.getAttributes(subject.subject);
+        String pemData = null;
         
         String username = findNewUsername();
         if (username==null) return "BADUSERNAME";
@@ -257,20 +271,27 @@ public class EjbcaToolBox {
 
         UserDataVOWS userDataVOWS = new UserDataVOWS();
 
+        StringBuilder ejbcaSubjectAlternativeNames = new StringBuilder();
+        // RFC 4122
+        ejbcaSubjectAlternativeNames.append("uri").append("=").append("urn:uuid:").append(username);
         ArrayList<ArrayList<String>> csrSanList = certificateFabric.getSubjectAlternativeNames();
         Object[] oids = csrSanList.toArray();
         final StringBuilder firstRfc822Name = new StringBuilder();
         for (int i=0; i<oids.length; i++) {
-            String sanId = CertificateFabric.getSan(i);
+            final String sanId = CertificateFabric.getSan(i);
             ArrayList<String> values = csrSanList.get(i);
             values.forEach((v) -> {
-                //userDataVOWS.setSubjectAltName (sanId + "=" + v); // ToDo: If multiple SAN will work in EJBCA
-                if (firstRfc822Name.length()==0) {
+                if (ejbcaSubjectAlternativeNames.length()>0) {
+                    ejbcaSubjectAlternativeNames.append(",");
+                }
+                ejbcaSubjectAlternativeNames.append(sanId).append("=").append(v);
+                if ((firstRfc822Name.length()==0) &&
+                        sanId.equals(CertificateFabric.SubjectAlternativeName.rfc822Name)) {
                     firstRfc822Name.append(v);
-                    userDataVOWS.setSubjectAltName (sanId + "=" + firstRfc822Name); // ToDo: Workaround until problem above is fixed
                 }
             });
         }
+        userDataVOWS.setSubjectAltName (ejbcaSubjectAlternativeNames.toString());
 
         String email=attributes.get("e");
         if (email==null) {
@@ -313,11 +334,12 @@ public class EjbcaToolBox {
             pem.append(Constants.certificateBegin); pem.append("\n");
             pem.append(pemCertificate); pem.append("\n");
             pem.append(Constants.certificateEnd); pem.append("\n");
+            pemData = pem.toString();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
 
-        return pem.toString();
+        return pemData;
     }
 
 

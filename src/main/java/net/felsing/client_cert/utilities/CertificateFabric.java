@@ -20,10 +20,7 @@ package net.felsing.client_cert.utilities;
 
 import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.Extensions;
-import org.bouncycastle.asn1.x509.GeneralName;
-import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.asn1.x509.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -47,19 +44,28 @@ public class CertificateFabric {
     }
 
 
-    private static class san {
+    public static class SubjectAlternativeName {
         private final static ArrayList<String> san = new ArrayList<>();
+        public final static String otherName = "otherName";
+        public final static String rfc822Name = "rfc822Name";
+        public final static String dNSName = "dNSName";
+        public final static String x400Address = "x400Address";
+        public final static String directoryName = "directoryName";
+        public final static String ediPartyName = "ediPartyName";
+        public final static String uniformResourceIdentifier = "uniformResourceIdentifier";
+        public final static String iPAddress = "iPAddress";
+        public final static String registeredID = "registeredID";
 
         static {
-            san.add("otherName");
-            san.add("rfc822Name");
-            san.add("dNSName");
-            san.add("x400Address");
-            san.add("directoryName");
-            san.add("ediPartyName");
-            san.add("uniformResourceIdentifier");
-            san.add("iPAddress");
-            san.add("registeredID");
+            san.add(otherName);
+            san.add(rfc822Name);
+            san.add(dNSName);
+            san.add(x400Address);
+            san.add(directoryName);
+            san.add(ediPartyName);
+            san.add(uniformResourceIdentifier);
+            san.add(iPAddress);
+            san.add(registeredID);
         }
 
         static String getSanOid(int oid) {
@@ -165,7 +171,7 @@ public class CertificateFabric {
     @SuppressWarnings("WeakerAccess")
     public static String getSan (int oid) {
 
-        return san.getSanOid (oid);
+        return SubjectAlternativeName.getSanOid (oid);
     }
 
 } // class
