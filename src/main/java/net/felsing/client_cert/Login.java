@@ -60,21 +60,6 @@ public class Login extends HttpServlet {
     }
 
 
-    private void session() {
-        Session session = SecurityUtils.getSubject().getSession(true);
-        if (session!=null) {
-            final String someKey = "someKey";
-            if (session.getAttribute(someKey) != null) {
-                String v = session.getAttribute(someKey).toString();
-                logger.debug("get session variable " + someKey + ": " + v);
-            } else {
-                //session.setAttribute(someKey, "blahfaseltest");
-                logger.debug("set session variable " + someKey);
-            }
-        }
-    }
-
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
@@ -91,32 +76,6 @@ public class Login extends HttpServlet {
     }
 
 
-    private void login(HttpServletRequest req, HttpServletResponse resp, String username, String password) throws IOException {
-        // let run shiro into exception if username or password is empty
-        // org.apache.shiro.realm.activedirectory.ActiveDirectoryRealm authenticates otherwise
-        if (username.matches("^$") || password.matches("^$")) {
-            resp.sendRedirect("failed.jsp");
-            return;
-        }
-
-        try {
-            AuthenticationToken token =new UsernamePasswordToken(username, password);
-            Subject currentUser = SecurityUtils.getSubject();
-            currentUser.login(token);
-            session();
-            logger.info("Authentication succeeded [" + username + "]");
-            req.getRequestDispatcher("/").forward(req, resp);
-        } catch (AuthenticationException e) {
-            logger.info("Authentication failed [" + username + "]");
-            logger.debug("Exception", (Object[]) e.getStackTrace());
-            resp.sendRedirect("failed.jsp");
-        } catch (Exception e) {
-            resp.sendError(500, "Internal error");
-            logger.error("Stack trace", (Object[]) e.getStackTrace());
-        }
-    }
-
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!servletIsReady) return;
@@ -124,7 +83,6 @@ public class Login extends HttpServlet {
         resp.setContentType("application/json; charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        session();
         PrintWriter pw = resp.getWriter();
 
         if (!SecurityUtils.getSubject().isAuthenticated()) {
@@ -155,5 +113,31 @@ public class Login extends HttpServlet {
         super.init();
         servletIsReady = true;
     }
+
+
+    private void login(HttpServletRequest req, HttpServletResponse resp, String username, String password) throws IOException {
+        // let run shiro into exception if username or password is empty
+        // org.apache.shiro.realm.activedirectory.ActiveDirectoryRealm authenticates otherwise
+        if (username.matches("^$") || password.matches("^$")) {
+            resp.sendRedirect("failed.jsp");
+            return;
+        }
+
+        try {
+            AuthenticationToken token =new UsernamePasswordToken(username, password);
+            Subject currentUser = SecurityUtils.getSubject();
+            currentUser.login(token);
+            logger.info("Authentication succeeded [" + username + "]");
+            req.getRequestDispatcher("/").forward(req, resp);
+        } catch (AuthenticationException e) {
+            logger.info("Authentication failed [" + username + "]");
+            logger.debug("Exception", (Object[]) e.getStackTrace());
+            resp.sendRedirect("failed.jsp");
+        } catch (Exception e) {
+            resp.sendError(500, "Internal error");
+            logger.error("Stack trace", (Object[]) e.getStackTrace());
+        }
+    }
+
 
 } // class

@@ -1,4 +1,3 @@
-<%@ page import="java.util.Locale" %>
 <%--
 /*
  * Copyright (c) 2016. by Christian Felsing
@@ -19,19 +18,13 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="hdr" class="net.felsing.client_cert.utilities.CsrBeans"/>
-<%
-    Locale locale = request.getLocale();
-    session.setAttribute("locale", locale);
-%>
-<c:set var="language" value="${pageContext.request.locale.language}" scope="session"/>
-<c:set var="userLanguage" value="${pageContext.request.getHeader(\"Accept-Language\")}" scope="session"/>
-<jsp:setProperty name="hdr" property="lang" value="${userLanguage}"/>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:bundle basename = "text">
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>${hdr.title}</title>
+    <title>${title}</title>
     <link rel="stylesheet" type="text/css" href="css/csr.css"/>
     <link rel="stylesheet" href="css/jquery-ui.min.css">
 </head>
@@ -39,12 +32,13 @@
 <div class="wrapper">
     <div id="title" class="div_title">${hdr.title}</div>
 
-    <div class="div_loginfailed"><%= hdr.bundleEntry("login.failed") %></div>
+    <div class="div_loginfailed"><fmt:message key = "login.failed"/></div>
 
     <div id="div_create">
-        <button id="create" type="button" onclick="window.location = '/';"><%= hdr.bundleEntry("login.failed.button")%></button>
+        <button id="create" type="button" onclick="window.location = '/';"><fmt:message key = "login.failed.button"/></button>
     </div>
 
 </div>
 </body>
 </html>
+</fmt:bundle>
