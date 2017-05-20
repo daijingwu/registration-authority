@@ -22,10 +22,17 @@ import java.security.SecureRandom;
 
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 
 class Utilities {
 
+    static String generateUsername () {
+    
+        return UUID.randomUUID().toString();
+    }
+    
+    
     static String generatePassword () {
         SecureRandom random = new SecureRandom();
         return new BigInteger(Constants.numBits, random).toString(32);

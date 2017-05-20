@@ -59,7 +59,6 @@ const signCsr = function () {
     const friendlyName = configuration.downloadName;
 
     const ajaxData = {};
-    console.log ("csr.js: %o", window.csr.pkcs10);
     ajaxData.pkcs10 = window.csr.pkcs10;
     JSON.stringify(ajaxData);
 
@@ -93,18 +92,22 @@ const signCsr = function () {
 
 
 const createCSR = function () {
+    const reqEmail = $("#e").val();
     window.csr = {};
     window.csr.subjectAltNames = {};
     window.csr.c = $("#c").val();
     window.csr.cn = $("#cn").val();
-    window.csr.e = $("#e").val();
-    window.csr.subjectAltNames.rfc822Name = window.csr.e;
+    window.csr.subjectAltNames.rfc822Name = reqEmail;
     window.csr.hash = $("#hashes").val();
     window.csr.sign = $("#sign").val();
 
-    createPKCS10(function () {
-        signCsr();
-    });
+    try {
+        createPKCS10(function () {
+            signCsr();
+        });
+    } catch (e) {
+        alert(configuration.bundle.createPKCS10failed);
+    }
 };
 
 function b64toBlob(b64Data, contentType, sliceSize) {

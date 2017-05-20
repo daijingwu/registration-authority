@@ -20,10 +20,7 @@ package net.felsing.client_cert.utilities;
 
 import org.bouncycastle.asn1.pkcs.Attribute;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.Extensions;
-import org.bouncycastle.asn1.x509.GeneralName;
-import org.bouncycastle.asn1.x509.GeneralNames;
+import org.bouncycastle.asn1.x509.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -38,38 +35,13 @@ public class CertificateFabric {
     private ArrayList<ArrayList<String>> subjectAlternativeNames;
 
 
+    @SuppressWarnings("WeakerAccess")
     public class ReqData {
         public String subject;
         @SuppressWarnings("WeakerAccess")
         public ArrayList<ArrayList<String>> subjectAlternativeNames;
         public String msg;
         public int status;
-    }
-
-
-    private static class san {
-        private final static ArrayList<String> san = new ArrayList<>();
-
-        static {
-            san.add("otherName");
-            san.add("rfc822Name");
-            san.add("dNSName");
-            san.add("x400Address");
-            san.add("directoryName");
-            san.add("ediPartyName");
-            san.add("uniformResourceIdentifier");
-            san.add("iPAddress");
-            san.add("registeredID");
-        }
-
-        static String getSanOid(int oid) {
-            try {
-                return san.get(oid);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
     }
 
 
@@ -165,7 +137,7 @@ public class CertificateFabric {
     @SuppressWarnings("WeakerAccess")
     public static String getSan (int oid) {
 
-        return san.getSanOid (oid);
+        return SubjectAlternativeName.getSanOid (oid);
     }
 
 } // class

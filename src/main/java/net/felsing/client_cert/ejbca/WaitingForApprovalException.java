@@ -1,14 +1,8 @@
 
 package net.felsing.client_cert.ejbca;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -22,8 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="approvalId" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
- *         &lt;element name="approvalId" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
+ *         &lt;element name="approvalId" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="message" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
@@ -35,54 +28,60 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WaitingForApprovalException", propOrder = {
-    "content"
+    "approvalId",
+    "message"
 })
 public class WaitingForApprovalException {
 
-    @XmlElementRefs({
-        @XmlElementRef(name = "approvalId", type = JAXBElement.class, required = false),
-        @XmlElementRef(name = "message", type = JAXBElement.class, required = false)
-    })
-    protected List<JAXBElement<? extends Serializable>> content;
+    protected Integer approvalId;
+    protected String message;
 
     /**
-     * Ruft das restliche Contentmodell ab. 
+     * Ruft den Wert der approvalId-Eigenschaft ab.
      * 
-     * <p>
-     * Sie rufen diese "catch-all"-Eigenschaft aus folgendem Grund ab: 
-     * Der Feldname "ApprovalId" wird von zwei verschiedenen Teilen eines Schemas verwendet. Siehe: 
-     * Zeile 670 von file:/Users/cf/IdeaProjects/ejbca-new-ra/src/main/java/net/felsing/client_cert/ejbca/ejbcaws2.wsdl
-     * Zeile 669 von file:/Users/cf/IdeaProjects/ejbca-new-ra/src/main/java/net/felsing/client_cert/ejbca/ejbcaws2.wsdl
-     * <p>
-     * Um diese Eigenschaft zu entfernen, wenden Sie eine Eigenschaftenanpassung für eine
-     * der beiden folgenden Deklarationen an, um deren Namen zu ändern: 
-     * Gets the value of the content property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link Integer }{@code >}
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * 
-     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
      */
-    public List<JAXBElement<? extends Serializable>> getContent() {
-        if (content == null) {
-            content = new ArrayList<JAXBElement<? extends Serializable>>();
-        }
-        return this.content;
+    public Integer getApprovalId() {
+        return approvalId;
+    }
+
+    /**
+     * Legt den Wert der approvalId-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setApprovalId(Integer value) {
+        this.approvalId = value;
+    }
+
+    /**
+     * Ruft den Wert der message-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Legt den Wert der message-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setMessage(String value) {
+        this.message = value;
     }
 
 }

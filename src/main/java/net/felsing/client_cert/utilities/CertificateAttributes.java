@@ -38,7 +38,7 @@ public class CertificateAttributes {
     private HashMap<String,String> labels=new HashMap<>();
 
 
-    CertificateAttributes(ResourceBundle bundle) {
+    public CertificateAttributes(ResourceBundle bundle) {
         String schemaFile=PropertyLoader.getProperties().getProperty(Constants.schemaFileName);
         try {
             JsonParser jsonParser=new JsonParser();
@@ -67,7 +67,7 @@ public class CertificateAttributes {
     }
 
 
-    HashMap<String,String> getLabels() {
+    public HashMap<String,String> getLabels() {
 
         return labels;
     }

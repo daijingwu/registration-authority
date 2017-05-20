@@ -72,12 +72,8 @@ This repository uses following third party repositories:
 
 * https://jquery.com
 * https://jqueryui.com/
+* https://github.com/PeculiarVentures/PKI.js
 * https://github.com/digitalbazaar/forge
-
-not included in that repository, see *requirements*:
-
-* https://github.com/GlobalSign/PKI.js
-* https://github.com/GlobalSign/ASN1.js
 
 Please refer to that URLs to get their license conditions. These files are
 not enclosed to this repository.

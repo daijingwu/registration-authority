@@ -104,7 +104,7 @@ public final class PropertyLoader {
     }
 
 
-    static JsonObject getJavaScriptProperties() {
+    public static JsonObject getJavaScriptProperties() {
 
         return jsonProperties;
     }

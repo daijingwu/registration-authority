@@ -23,6 +23,7 @@ import net.felsing.client_cert.utilities.Constants;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,7 +46,7 @@ public class GetCountries extends HttpServlet {
         @Override
         public int compareTo(Country o) {
             Collator collator = Collator.getInstance(usedLocale);
-            return collator.compare (name, o.name);
+            return collator.compare(name, o.name);
         }
     }
 
@@ -56,7 +57,7 @@ public class GetCountries extends HttpServlet {
 
 
     private void loadFromJson(String classpath) {
-        if (countries==null) {
+        if (countries == null) {
             String countriesJson = "countries.json";
             JsonParser jsonParser = new JsonParser();
             countries = new JsonArray();
@@ -88,17 +89,19 @@ public class GetCountries extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final Locale defaultLanguage = Locale.ENGLISH;
+        String bestLanguage = null;
         resp.setContentType("application/json; charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
-        String bestLanguage = null;
+
         final String acceptLanguage = StringEscapeUtils.escapeJava(req.getHeader("Accept-Language"));
 
         List<Locale.LanguageRange> languageRanges = Locale.LanguageRange.parse(acceptLanguage);
         for (Locale.LanguageRange l : languageRanges) {
-            Locale locale = new Locale(l.getRange());
             try {
-                if (bestLanguage==null) {
-                    bestLanguage=locale.getISO3Language();
+                if (bestLanguage == null) {
+                    Locale locale = new Locale(l.getRange().split("-")[0]);
+                    bestLanguage = locale.getISO3Language();
+                    logger.debug("bestLanguage: " + bestLanguage);
                     usedLocale = locale;
                 }
             } catch (Exception e) {
@@ -106,18 +109,19 @@ public class GetCountries extends HttpServlet {
             }
         }
 
-        if (bestLanguage==null) {
+        if (bestLanguage == null) {
             logger.debug("No sufficient language found for " + acceptLanguage);
-            bestLanguage=defaultLanguage.getISO3Language();
+            bestLanguage = defaultLanguage.getISO3Language();
             usedLocale = Locale.ENGLISH;
         }
 
-        logger.debug ("usedLocale: " + usedLocale.getISO3Language());
+
+        logger.debug("usedLocale: " + usedLocale.getISO3Language());
 
         PrintWriter pw = resp.getWriter();
         loadFromJson(context);
         List<Country> countriesList = new ArrayList<>();
-        for (JsonElement jsonElement: countries) {
+        for (JsonElement jsonElement : countries) {
             String cca2 = jsonElement.getAsJsonObject().get("cca2").toString().replaceAll("\\\"", "");
             cca2 = cca2.replaceAll("\\\\", "");
 
